@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	queuecore "github.com/faustbrian/golib/pkg/queue/core"
-	queuejob "github.com/faustbrian/golib/pkg/queue/job"
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
-	schedulerqueue "github.com/faustbrian/golib/pkg/scheduler/queue"
+	queuecore "github.com/faustbrian/go-queue/core"
+	queuejob "github.com/faustbrian/go-queue/job"
+	scheduler "github.com/faustbrian/go-scheduler"
+	schedulerqueue "github.com/faustbrian/go-scheduler/queue"
 	"go.opentelemetry.io/otel/trace"
 )
 

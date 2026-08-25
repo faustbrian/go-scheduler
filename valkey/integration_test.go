@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/golib/pkg/scheduler/lease"
-	"github.com/faustbrian/golib/pkg/scheduler/lease/conformance"
-	schedulervalkey "github.com/faustbrian/golib/pkg/scheduler/valkey"
+	"github.com/faustbrian/go-scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease/conformance"
+	schedulervalkey "github.com/faustbrian/go-scheduler/valkey"
 	valkeygo "github.com/valkey-io/valkey-go"
 )
 

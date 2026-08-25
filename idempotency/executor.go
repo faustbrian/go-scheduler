@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"time"
 
-	goidempotency "github.com/faustbrian/golib/pkg/idempotency"
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
+	goidempotency "github.com/faustbrian/go-idempotency"
+	scheduler "github.com/faustbrian/go-scheduler"
 )
 
 var (

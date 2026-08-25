@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/faustbrian/golib/pkg/scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease"
 	valkeygo "github.com/valkey-io/valkey-go"
 )
 

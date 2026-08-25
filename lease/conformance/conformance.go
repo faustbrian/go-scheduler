@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/golib/pkg/scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease"
 )
 
 // Harness supplies a store and controllable backend time to conformance tests.

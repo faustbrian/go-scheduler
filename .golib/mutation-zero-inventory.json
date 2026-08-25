@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "packages": [
+    {
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module_directory": ".",
+      "package_directory": "lease",
+      "reason": "The package is contracts and data declarations plus a direct negated time comparison; the complete enabled Gremlins operator set discovers no viable transformations, so expiry boundary tests remain mandatory.",
+      "source_digest": "afc590a36376f1d4f37e3ab07f3f831554f0dbd424bce76be63a973554648bd9"
+    }
+  ]
+}

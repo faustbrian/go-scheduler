@@ -8,15 +8,15 @@ import (
 	"sync"
 	"time"
 
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
-	gotelemetry "github.com/faustbrian/golib/pkg/telemetry"
+	scheduler "github.com/faustbrian/go-scheduler"
+	gotelemetry "github.com/faustbrian/go-telemetry"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/trace"
 )
 
-const scopeName = "github.com/faustbrian/golib/pkg/scheduler"
+const scopeName = "github.com/faustbrian/go-scheduler"
 
 // ErrInvalidConfiguration reports missing telemetry dependencies.
 var ErrInvalidConfiguration = errors.New("scheduler telemetry: logger and providers are required")

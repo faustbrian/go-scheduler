@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
-	"github.com/faustbrian/golib/pkg/scheduler/lease"
-	"github.com/faustbrian/golib/pkg/scheduler/memory"
-	"github.com/faustbrian/golib/pkg/scheduler/schedulercli"
+	scheduler "github.com/faustbrian/go-scheduler"
+	"github.com/faustbrian/go-scheduler/lease"
+	"github.com/faustbrian/go-scheduler/memory"
+	"github.com/faustbrian/go-scheduler/schedulercli"
 )
 
 type errorWriter struct{}

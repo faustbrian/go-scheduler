@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
-	"github.com/faustbrian/golib/pkg/scheduler/lease"
-	"github.com/faustbrian/golib/pkg/scheduler/schedulerhttp"
+	scheduler "github.com/faustbrian/go-scheduler"
+	"github.com/faustbrian/go-scheduler/lease"
+	"github.com/faustbrian/go-scheduler/schedulerhttp"
 )
 
 type errorStore struct{ recoverErr error }

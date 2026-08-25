@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
-	schedulerqueue "github.com/faustbrian/golib/pkg/scheduler/queue"
+	scheduler "github.com/faustbrian/go-scheduler"
+	schedulerqueue "github.com/faustbrian/go-scheduler/queue"
 )
 
 func BenchmarkDispatchEnvelope(b *testing.B) {

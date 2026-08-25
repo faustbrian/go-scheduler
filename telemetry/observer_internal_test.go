@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"testing"
 
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
+	scheduler "github.com/faustbrian/go-scheduler"
 )
 
 func TestObserverContextAndLogLevelContracts(t *testing.T) {

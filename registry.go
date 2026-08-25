@@ -10,8 +10,8 @@ import (
 	"slices"
 	"time"
 
-	schedulercron "github.com/faustbrian/golib/pkg/scheduler/cron"
-	"github.com/faustbrian/golib/pkg/scheduler/lease"
+	schedulercron "github.com/faustbrian/go-scheduler/cron"
+	"github.com/faustbrian/go-scheduler/lease"
 )
 
 var (

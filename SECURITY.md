@@ -2,8 +2,8 @@
 
 ## Supported versions
 
-The project is pre-v1. Security fixes are applied to the latest release and the
-default branch. Older pre-v1 versions are not maintained.
+Security fixes are applied to the latest stable v1 release and the default
+branch. Older releases are not maintained unless documented otherwise.
 
 ## Reporting a vulnerability
 

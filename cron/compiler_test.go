@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	schedulercron "github.com/faustbrian/golib/pkg/scheduler/cron"
+	schedulercron "github.com/faustbrian/go-scheduler/cron"
 )
 
 func TestCompileCalculatesInExplicitTimezone(t *testing.T) {

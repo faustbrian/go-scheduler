@@ -9,9 +9,9 @@ import (
 	"errors"
 	"time"
 
-	queuecore "github.com/faustbrian/golib/pkg/queue/core"
-	queuejob "github.com/faustbrian/golib/pkg/queue/job"
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
+	queuecore "github.com/faustbrian/go-queue/core"
+	queuejob "github.com/faustbrian/go-queue/job"
+	scheduler "github.com/faustbrian/go-scheduler"
 	"go.opentelemetry.io/otel/propagation"
 )
 

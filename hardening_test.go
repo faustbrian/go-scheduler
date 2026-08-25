@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
+	scheduler "github.com/faustbrian/go-scheduler"
 	robfigcron "github.com/robfig/cron/v3"
 )
 

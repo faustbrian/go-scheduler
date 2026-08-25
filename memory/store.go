@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/faustbrian/golib/pkg/scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease"
 )
 
 // Store keeps fenced leases in memory for tests and single-process tools.

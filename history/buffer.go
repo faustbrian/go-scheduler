@@ -5,7 +5,7 @@ import (
 	"errors"
 	"sync"
 
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
+	scheduler "github.com/faustbrian/go-scheduler"
 )
 
 // MaxCapacity is the largest supported in-memory event history.

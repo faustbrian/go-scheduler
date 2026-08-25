@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/faustbrian/golib/pkg/scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease"
 )
 
 // MaxPrefixBytes bounds the configured Valkey key prefix.

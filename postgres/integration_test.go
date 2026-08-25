@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	schedulerlease "github.com/faustbrian/golib/pkg/scheduler/lease"
-	"github.com/faustbrian/golib/pkg/scheduler/lease/conformance"
-	schedulerpostgres "github.com/faustbrian/golib/pkg/scheduler/postgres"
+	schedulerlease "github.com/faustbrian/go-scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease/conformance"
+	schedulerpostgres "github.com/faustbrian/go-scheduler/postgres"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 

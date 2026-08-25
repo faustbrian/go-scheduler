@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/faustbrian/golib/pkg/correlation"
-	"github.com/faustbrian/golib/pkg/scheduler"
-	"github.com/faustbrian/golib/pkg/scheduler/memory"
-	"github.com/faustbrian/golib/pkg/scheduler/schedulerservice"
+	"github.com/faustbrian/go-correlation"
+	"github.com/faustbrian/go-scheduler"
+	"github.com/faustbrian/go-scheduler/memory"
+	"github.com/faustbrian/go-scheduler/schedulerservice"
 )
 
 func ExampleNew() {

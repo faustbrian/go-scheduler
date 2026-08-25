@@ -6,14 +6,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/golib/pkg/correlation"
-	queuecorrelation "github.com/faustbrian/golib/pkg/correlation/queue"
-	schedulecorrelation "github.com/faustbrian/golib/pkg/correlation/schedule"
-	"github.com/faustbrian/golib/pkg/scheduler"
-	"github.com/faustbrian/golib/pkg/scheduler/memory"
-	"github.com/faustbrian/golib/pkg/scheduler/schedulerservice"
-	"github.com/faustbrian/golib/pkg/scheduler/schedulertest"
-	"github.com/faustbrian/golib/pkg/service"
+	"github.com/faustbrian/go-correlation"
+	queuecorrelation "github.com/faustbrian/go-correlation/queue"
+	schedulecorrelation "github.com/faustbrian/go-correlation/schedule"
+	"github.com/faustbrian/go-scheduler"
+	"github.com/faustbrian/go-scheduler/memory"
+	"github.com/faustbrian/go-scheduler/schedulerservice"
+	"github.com/faustbrian/go-scheduler/schedulertest"
+	"github.com/faustbrian/go-service"
 )
 
 type executorFunc func(context.Context, scheduler.Context) error

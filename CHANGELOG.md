@@ -5,12 +5,15 @@ and releases use Semantic Versioning.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-08-25
+
 ### Documentation
 
 - Link the package README to the repository-wide Golib documentation portal.
 
 ### Changed
 
+- Publish the module from its standalone `github.com/faustbrian/go-scheduler` identity while preserving its documented API and behavior.
 - Make fuzz-target discovery portable to minimal CI runners without ripgrep.
 - Replace obsolete owned-module pseudo-version pins with the monorepo's local
   `v0.0.0` source-proxy coordinates; release tooling continues to emit exact
@@ -76,3 +79,6 @@ and releases use Semantic Versioning.
 - multi-replica, crash-window, and live backend fault conformance suites
 - threat model, rollout and crash matrices, and benchmark release baseline
 - bounded runner observer registration
+
+[Unreleased]: https://github.com/faustbrian/go-scheduler/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/faustbrian/go-scheduler/releases/tag/v1.0.0

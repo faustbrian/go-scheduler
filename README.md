@@ -1,10 +1,20 @@
 # scheduler
 
+[![CI](https://github.com/faustbrian/go-scheduler/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/faustbrian/go-scheduler/actions/workflows/ci.yml)
+[![CodeQL](https://img.shields.io/badge/CodeQL-required-blue)](https://github.com/faustbrian/go-scheduler/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-100%25_required-blue)](CONTRIBUTING.md#verification)
+[![Mutation](https://img.shields.io/badge/mutation-100%25_required-blue)](CONTRIBUTING.md#verification)
+[![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
+[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-scheduler.svg)](https://pkg.go.dev/github.com/faustbrian/go-scheduler)
+[![Release](https://img.shields.io/github/v/release/faustbrian/go-scheduler?sort=semver)](https://github.com/faustbrian/go-scheduler/releases)
+[![Go](https://img.shields.io/badge/go-1.26.6-00ADD8?logo=go)](https://go.dev/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 `scheduler` is a code-defined application scheduler for Go services running
 on Kubernetes. Multiple scheduler replicas coordinate through fenced leases,
 while durable business work is dispatched to `queue` workers.
 
-The module is pre-v1. It does not claim exactly-once execution: leases reduce
+The module follows stable v1 compatibility. It does not claim exactly-once execution: leases reduce
 duplicate dispatch, and jobs must remain idempotent.
 
 ## Requirements

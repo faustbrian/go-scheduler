@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
-	"github.com/faustbrian/golib/pkg/scheduler/lease"
+	scheduler "github.com/faustbrian/go-scheduler"
+	"github.com/faustbrian/go-scheduler/lease"
 )
 
 const maxRequestBytes = 4 << 10

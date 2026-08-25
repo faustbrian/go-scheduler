@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/golib/pkg/scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease"
 )
 
 func TestLeaseExpiryBoundary(t *testing.T) {

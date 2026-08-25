@@ -1,5 +1,5 @@
-PACKAGE github.com/faustbrian/golib/pkg/scheduler
-package scheduler // import "github.com/faustbrian/golib/pkg/scheduler"
+PACKAGE github.com/faustbrian/go-scheduler
+package scheduler // import "github.com/faustbrian/go-scheduler"
 
 Package scheduler defines code-based schedules and distributed execution.
 
@@ -673,8 +673,8 @@ type TimeWindow struct {
     TimeWindow is an inclusive recurring local-time constraint. Start and End
     are offsets since local midnight; Excluded inverts the allowed window.
 
-PACKAGE github.com/faustbrian/golib/pkg/scheduler/cron
-package cron // import "github.com/faustbrian/golib/pkg/scheduler/cron"
+PACKAGE github.com/faustbrian/go-scheduler/cron
+package cron // import "github.com/faustbrian/go-scheduler/cron"
 
 Package cron compiles documented five- or six-field cron expressions in an
 explicit IANA time zone without exposing the underlying parser implementation.
@@ -702,8 +702,8 @@ func Compile(expression, timezone string) (Schedule, error)
     robfig/cron/v3. Calendar searches cover a complete 400-year Gregorian cycle
     before reporting no future occurrence.
 
-PACKAGE github.com/faustbrian/golib/pkg/scheduler/history
-package history // import "github.com/faustbrian/golib/pkg/scheduler/history"
+PACKAGE github.com/faustbrian/go-scheduler/history
+package history // import "github.com/faustbrian/go-scheduler/history"
 
 Package history provides bounded in-memory scheduler event history.
 
@@ -735,8 +735,8 @@ func (buffer *Buffer) Entries() []scheduler.Event
 func (buffer *Buffer) Observe(event scheduler.Event)
     Observe appends an event and evicts the oldest event when full.
 
-PACKAGE github.com/faustbrian/golib/pkg/scheduler/idempotency
-package idempotency // import "github.com/faustbrian/golib/pkg/scheduler/idempotency"
+PACKAGE github.com/faustbrian/go-scheduler/idempotency
+package idempotency // import "github.com/faustbrian/go-scheduler/idempotency"
 
 Package idempotency integrates occurrence ownership with idempotency.
 
@@ -769,8 +769,8 @@ type Options struct {
 }
     Options configures the tenant namespace and ownership lease.
 
-PACKAGE github.com/faustbrian/golib/pkg/scheduler/lease
-package lease // import "github.com/faustbrian/golib/pkg/scheduler/lease"
+PACKAGE github.com/faustbrian/go-scheduler/lease
+package lease // import "github.com/faustbrian/go-scheduler/lease"
 
 Package lease defines distributed ownership and fencing contracts.
 
@@ -834,8 +834,8 @@ type Store interface {
 }
     Store provides fenced lease acquisition, renewal, release, and recovery.
 
-PACKAGE github.com/faustbrian/golib/pkg/scheduler/memory
-package memory // import "github.com/faustbrian/golib/pkg/scheduler/memory"
+PACKAGE github.com/faustbrian/go-scheduler/memory
+package memory // import "github.com/faustbrian/go-scheduler/memory"
 
 Package memory provides a deterministic process-local lease store.
 
@@ -878,8 +878,8 @@ func (store *Store) Recover(ctx context.Context, key string, fencingToken uint64
 func (store *Store) Release(ctx context.Context, owned lease.Lease) error
     Release removes a lease only when ownership still matches.
 
-PACKAGE github.com/faustbrian/golib/pkg/scheduler/postgres
-package postgres // import "github.com/faustbrian/golib/pkg/scheduler/postgres"
+PACKAGE github.com/faustbrian/go-scheduler/postgres
+package postgres // import "github.com/faustbrian/go-scheduler/postgres"
 
 Package postgres provides persistent server-time fenced leases.
 
@@ -944,8 +944,8 @@ func (store *Store) Recover(ctx context.Context, key string, fencingToken uint64
 func (store *Store) Release(ctx context.Context, owned lease.Lease) error
     Release marks a currently owned lease inactive.
 
-PACKAGE github.com/faustbrian/golib/pkg/scheduler/queue
-package queue // import "github.com/faustbrian/golib/pkg/scheduler/queue"
+PACKAGE github.com/faustbrian/go-scheduler/queue
+package queue // import "github.com/faustbrian/go-scheduler/queue"
 
 Package queue dispatches schedule occurrences through queue.
 
@@ -989,8 +989,8 @@ type Envelope struct {
 }
     Envelope is the version-independent occurrence payload sent to workers.
 
-PACKAGE github.com/faustbrian/golib/pkg/scheduler/schedulercli
-package schedulercli // import "github.com/faustbrian/golib/pkg/scheduler/schedulercli"
+PACKAGE github.com/faustbrian/go-scheduler/schedulercli
+package schedulercli // import "github.com/faustbrian/go-scheduler/schedulercli"
 
 Package schedulercli provides bounded scheduler inspection and recovery
 commands.
@@ -1007,8 +1007,8 @@ func Run(
 ) int
     Run executes one bounded scheduler control command and returns an exit code.
 
-PACKAGE github.com/faustbrian/golib/pkg/scheduler/schedulerhttp
-package schedulerhttp // import "github.com/faustbrian/golib/pkg/scheduler/schedulerhttp"
+PACKAGE github.com/faustbrian/go-scheduler/schedulerhttp
+package schedulerhttp // import "github.com/faustbrian/go-scheduler/schedulerhttp"
 
 Package schedulerhttp provides bounded scheduler inspection and recovery
 endpoints.
@@ -1054,8 +1054,8 @@ type Schedule struct {
 }
     Schedule is the bounded public inspection view of a schedule.
 
-PACKAGE github.com/faustbrian/golib/pkg/scheduler/schedulerservice
-package schedulerservice // import "github.com/faustbrian/golib/pkg/scheduler/schedulerservice"
+PACKAGE github.com/faustbrian/go-scheduler/schedulerservice
+package schedulerservice // import "github.com/faustbrian/go-scheduler/schedulerservice"
 
 Package schedulerservice composes a scheduler.Runner with the service lifecycle
 and correlation schedule semantics.
@@ -1142,8 +1142,8 @@ func (err *OptionsError) Error() string
 func (err *OptionsError) Unwrap() error
     Unwrap exposes the stable option classification.
 
-PACKAGE github.com/faustbrian/golib/pkg/scheduler/schedulertest
-package schedulertest // import "github.com/faustbrian/golib/pkg/scheduler/schedulertest"
+PACKAGE github.com/faustbrian/go-scheduler/schedulertest
+package schedulertest // import "github.com/faustbrian/go-scheduler/schedulertest"
 
 Package schedulertest provides deterministic runner test utilities.
 
@@ -1169,8 +1169,8 @@ func (clock *FakeClock) Now() time.Time
 func (clock *FakeClock) WaitForTimers(ctx context.Context, count int) bool
     WaitForTimers waits until at least count timers are registered.
 
-PACKAGE github.com/faustbrian/golib/pkg/scheduler/telemetry
-package telemetry // import "github.com/faustbrian/golib/pkg/scheduler/telemetry"
+PACKAGE github.com/faustbrian/go-scheduler/telemetry
+package telemetry // import "github.com/faustbrian/go-scheduler/telemetry"
 
 Package telemetry records scheduler lifecycle logs, metrics, and traces.
 
@@ -1203,8 +1203,8 @@ func NewRuntime(runtime *gotelemetry.Runtime, logger *slog.Logger) (*Observer, e
 func (observer *Observer) Observe(event scheduler.Event)
     Observe records one scheduler lifecycle event.
 
-PACKAGE github.com/faustbrian/golib/pkg/scheduler/valkey
-package valkey // import "github.com/faustbrian/golib/pkg/scheduler/valkey"
+PACKAGE github.com/faustbrian/go-scheduler/valkey
+package valkey // import "github.com/faustbrian/go-scheduler/valkey"
 
 Package valkey provides atomic fenced leases backed by Valkey 9 or newer.
 

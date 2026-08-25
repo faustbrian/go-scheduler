@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
-	schedulertelemetry "github.com/faustbrian/golib/pkg/scheduler/telemetry"
-	"github.com/faustbrian/golib/pkg/telemetry/testtelemetry"
+	scheduler "github.com/faustbrian/go-scheduler"
+	schedulertelemetry "github.com/faustbrian/go-scheduler/telemetry"
+	"github.com/faustbrian/go-telemetry/testtelemetry"
 )
 
 func TestObserverRecordsStructuredLifecycle(t *testing.T) {

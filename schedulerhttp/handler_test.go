@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
-	"github.com/faustbrian/golib/pkg/scheduler/memory"
-	"github.com/faustbrian/golib/pkg/scheduler/schedulerhttp"
+	scheduler "github.com/faustbrian/go-scheduler"
+	"github.com/faustbrian/go-scheduler/memory"
+	"github.com/faustbrian/go-scheduler/schedulerhttp"
 )
 
 func TestHandlerListsSchedulesAndCalculatesRuns(t *testing.T) {

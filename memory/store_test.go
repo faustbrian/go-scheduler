@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/golib/pkg/scheduler/lease/conformance"
-	"github.com/faustbrian/golib/pkg/scheduler/memory"
+	"github.com/faustbrian/go-scheduler/lease/conformance"
+	"github.com/faustbrian/go-scheduler/memory"
 )
 
 func TestConformance(t *testing.T) {

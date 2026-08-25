@@ -21,11 +21,11 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/faustbrian/golib/pkg/correlation"
-	schedulecorrelation "github.com/faustbrian/golib/pkg/correlation/schedule"
-	"github.com/faustbrian/golib/pkg/scheduler"
-	"github.com/faustbrian/golib/pkg/scheduler/lease"
-	"github.com/faustbrian/golib/pkg/service"
+	"github.com/faustbrian/go-correlation"
+	schedulecorrelation "github.com/faustbrian/go-correlation/schedule"
+	"github.com/faustbrian/go-scheduler"
+	"github.com/faustbrian/go-scheduler/lease"
+	"github.com/faustbrian/go-service"
 )
 
 // ErrInvalidOptions identifies invalid adapter construction.

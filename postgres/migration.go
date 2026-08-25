@@ -4,7 +4,7 @@ package postgres
 import (
 	"fmt"
 
-	"github.com/faustbrian/golib/pkg/scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease"
 	"github.com/jackc/pgx/v5"
 )
 

@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"time"
 
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
-	"github.com/faustbrian/golib/pkg/scheduler/lease"
+	scheduler "github.com/faustbrian/go-scheduler"
+	"github.com/faustbrian/go-scheduler/lease"
 )
 
 // Run executes one bounded scheduler control command and returns an exit code.

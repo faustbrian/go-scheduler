@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
+	scheduler "github.com/faustbrian/go-scheduler"
 )
 
 func TestCompileRegistryRejectsInvalidSchedules(t *testing.T) {

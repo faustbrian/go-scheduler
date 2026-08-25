@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	goidempotency "github.com/faustbrian/golib/pkg/idempotency"
-	"github.com/faustbrian/golib/pkg/idempotency/memory"
-	scheduler "github.com/faustbrian/golib/pkg/scheduler"
-	scheduleridempotency "github.com/faustbrian/golib/pkg/scheduler/idempotency"
+	goidempotency "github.com/faustbrian/go-idempotency"
+	"github.com/faustbrian/go-idempotency/memory"
+	scheduler "github.com/faustbrian/go-scheduler"
+	scheduleridempotency "github.com/faustbrian/go-scheduler/idempotency"
 )
 
 type staticClock struct{ now time.Time }
