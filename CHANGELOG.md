@@ -5,6 +5,8 @@ and releases use Semantic Versioning.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-08-25
+
 ### Changed
 
 - Refresh the reviewed zero-mutant identity for the extracted lease package
@@ -29,8 +31,6 @@ and releases use Semantic Versioning.
 
 - Correct stale package, standalone, and authoritative-source links in public
   documentation.
-
-## [1.0.0] - 2026-08-25
 
 ### Documentation
 
