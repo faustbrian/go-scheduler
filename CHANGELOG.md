@@ -7,6 +7,9 @@ and releases use Semantic Versioning.
 
 ### Changed
 
+- Refresh the reviewed zero-mutant identity for the extracted lease package
+  without weakening the exact mutation contract.
+
 - Exclude intentional nested modules from root local-proxy archives so local,
   bootstrap, CI, and public module checksums describe the same source
   boundary.

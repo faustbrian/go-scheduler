@@ -7,7 +7,7 @@
       "module_directory": ".",
       "package_directory": "lease",
       "reason": "The package is contracts and data declarations plus a direct negated time comparison; the complete enabled Gremlins operator set discovers no viable transformations, so expiry boundary tests remain mandatory.",
-      "source_digest": "afc590a36376f1d4f37e3ab07f3f831554f0dbd424bce76be63a973554648bd9"
+      "source_digest": "a59567597a852c5381c19a4648a4441fbc49b04d63c12e83ce071a1b83d621ef"
     }
   ]
 }
