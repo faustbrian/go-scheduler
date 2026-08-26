@@ -72,4 +72,4 @@ retry, stale ownership, crash before commit, crash after commit, and rollout
 coexistence. New adapters must pass the shared conformance suite plus live
 outage, latency, reconnect, clock-authority, and retained-fence cases. Any
 change to identity, cron calculation, lease scripts, migration SQL, or shutdown
-requires an explicit matrix update in the hardening report.
+requires an explicit update to the resilience matrix.

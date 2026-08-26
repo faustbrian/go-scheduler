@@ -17,4 +17,4 @@ coordinate disclosure and a release when a vulnerability is confirmed.
 
 Operational hardening guidance and the distributed failure model are in
 [`docs/security.md`](docs/security.md) and
-[`docs/hardening.md`](docs/hardening.md).
+[`docs/resilience.md`](docs/resilience.md).
