@@ -5,6 +5,12 @@ and releases use Semantic Versioning.
 
 ## [Unreleased]
 
+### Changed
+
+- Replace repository-local verification scripts with the released
+  `go-library-tools` v1.0.5 contract while preserving scheduler behavior,
+  public APIs, fixtures, API baselines, benchmarks, and mutation evidence.
+
 ### Documentation
 
 - Replace archived monorepo links and completed execution artifacts with a
