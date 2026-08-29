@@ -1,4 +1,4 @@
-# Hardening evidence and resource budgets
+# Resilience and resource budgets
 
 This report records the scheduler's bounded inputs, distributed failure model,
 test evidence, and residual risks. It is not an exactly-once claim. A release

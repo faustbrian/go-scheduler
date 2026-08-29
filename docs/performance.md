@@ -12,6 +12,6 @@ CPU, server version, network latency, schedule count, and contention.
 Keep scheduler work short. Long business work belongs in durable queue workers
 so scheduler replica count and lease latency remain independent of job runtime.
 The enforced scale and payload ceilings are recorded in the
-[resource budget matrix](hardening.md#resource-budgets). Reproducible local
+[resource budget matrix](resilience.md#resource-budgets). Reproducible local
 measurements, review thresholds, and the required environment record are in
 the [benchmark baseline](benchmark-baseline.md).

@@ -15,7 +15,7 @@
 - [Compatibility](compatibility.md)
 - [Performance](performance.md)
 - [Benchmark baseline](benchmark-baseline.md)
-- [Hardening evidence and resource budgets](hardening.md)
+- [resilience and resource budgets](resilience.md)
 - [Threat model](threat-model.md)
 - [FAQ](faq.md)
 

@@ -10,7 +10,7 @@
 - Fence ownership-sensitive writes and make every durable job idempotent.
 
 Definition and runtime limits are listed in the
-[hardening budget matrix](hardening.md#resource-budgets). Applications must
+[resource budget matrix](resilience.md#resource-budgets). Applications must
 treat conditions, hooks, observers, and in-process executors as trusted code.
 The runner bounds their wait and concurrency, but Go cannot forcibly terminate
 an arbitrary goroutine. See the [threat model](threat-model.md).

@@ -31,5 +31,5 @@ long work therefore belongs in queue workers.
 Never split a rollout across lease backends or namespaces. Changing a schedule
 name, task, or parameters changes its coordination identity. Timing changes can
 produce old-only and new-only boundaries. Review the complete
-[rolling deployment matrix](hardening.md#rolling-deployment-matrix) before
+[rolling deployment matrix](resilience.md#rolling-deployment-matrix) before
 deploying those changes.

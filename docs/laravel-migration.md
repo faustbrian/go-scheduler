@@ -56,7 +56,7 @@ identity, so matching physical occurrences remain deduplicated during rollout.
 Changing the name, task, or parameters creates a new coordination identity.
 Changing cron, time zone, or jitter can create distinct old and new physical
 boundaries even though matching instants still deduplicate. Use the
-[rolling deployment matrix](hardening.md#rolling-deployment-matrix) to choose a
+[rolling deployment matrix](resilience.md#rolling-deployment-matrix) to choose a
 drain, feature gate, or staged activation.
 
 ## Execution and overlap

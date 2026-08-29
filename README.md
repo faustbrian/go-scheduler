@@ -131,35 +131,16 @@ data, including next runs, for any caller-owned CLI, HTTP, or admin surface.
 
 ## Packages
 
-- root: definitions, immutable registry, occurrences, runner, hooks, and events
-- `cron`: parser integration and explicit IANA time-zone compilation
-- `lease`, `memory`, `postgres`, `valkey`: fenced ownership contracts and stores
-- `queue`: `queue` occurrence envelopes
-- `idempotency`: optional `idempotency` dispatch guard
-- `schedulerhttp`, `schedulercli`: inspection and fenced recovery controls
-- `schedulerservice`: `service` lifecycle, drain ordering, and scheduled-work
-  correlation composition
-- `history`: bounded operational event history
-- `telemetry`: `log` compatible structured logging and `telemetry`
-- `schedulertest`: deterministic fake clock
+The root package owns schedules and execution. Optional packages provide cron,
+lease stores, queue and idempotency dispatch, HTTP and CLI controls, service
+composition, history, telemetry, and deterministic test clocks.
 
 ## Documentation
 
-Start with the [documentation index](docs/README.md), [API reference](docs/api.md),
-[Laravel migration guide](docs/laravel-migration.md), and
-[Kubernetes architecture](docs/kubernetes.md). Release history is in
-[CHANGELOG.md](CHANGELOG.md). Compilable integrations are in
-[examples](examples/README.md).
-
-Security vulnerabilities should be reported through the private process in
-[SECURITY.md](SECURITY.md). The project is available under the [MIT License](LICENSE).
+Use the [documentation index](docs/README.md) for the API, migration,
+Kubernetes, operations, security, compatibility, and troubleshooting.
 
 ## Development
 
 Run `make check`. PostgreSQL and Valkey conformance require the environment
 variables described in [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Ecosystem
-
-Use the [Golib documentation portal](https://github.com/faustbrian/golib/blob/main/docs/index.md)
-to choose companion packages, supported stacks, recipes, and operations guidance.
