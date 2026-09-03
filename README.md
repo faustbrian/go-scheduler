@@ -140,6 +140,10 @@ composition, history, telemetry, and deterministic test clocks.
 Use the [documentation index](docs/README.md) for the API, migration,
 Kubernetes, operations, security, compatibility, and troubleshooting.
 
+For ecosystem-wide selection and ownership guidance, see the versioned
+[Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/README.md)
+and its [Persistence and durability family](https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/design-language.md#package-families-and-selection).
+
 ## Development
 
 Run `make check`. PostgreSQL and Valkey conformance require the environment

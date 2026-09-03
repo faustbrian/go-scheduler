@@ -7,11 +7,24 @@ and releases use Semantic Versioning.
 
 ### Changed
 
+- Adopt the checksum-verified `go-library-tools` v1.4.0 CLI and immutable
+  W14-enforcement workflow as the final authoritative tooling identity.
+- Resolve owned v1.0.0 dependencies from their public proxy and SumDB
+  identities instead of bootstrap-only archives.
+
+- Adopt the `go-library-tools` v1.3.0 schema-v2 cohesion contract and local
+  `make cohesion` gate without changing scheduler API or runtime behavior.
+- Pin reusable CI to the immutable v1.3.0 workflow and enforce cohesion
+  metadata in the required repository contract.
+
 - Replace repository-local verification scripts with the released
-  `go-library-tools` v1.0.5 contract while preserving scheduler behavior,
+  `go-library-tools` v1.0.14 contract while preserving scheduler behavior,
   public APIs, fixtures, API baselines, benchmarks, and mutation evidence.
 
 ### Documentation
+
+- Publish the scheduler family, package selection, ownership, lifecycle,
+  supported environments, and delivery status with versioned ecosystem links.
 
 - Replace archived monorepo links and completed execution artifacts with a
   standalone, human-oriented documentation structure.
