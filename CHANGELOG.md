@@ -8,7 +8,7 @@ and releases use Semantic Versioning.
 ### Changed
 
 - Replace repository-local verification scripts with the released
-  `go-library-tools` v1.0.13 contract while preserving scheduler behavior,
+  `go-library-tools` v1.0.14 contract while preserving scheduler behavior,
   public APIs, fixtures, API baselines, benchmarks, and mutation evidence.
 
 ### Documentation
