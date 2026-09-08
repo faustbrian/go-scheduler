@@ -9,6 +9,7 @@
 - [Missed runs, time zones, and DST](time-and-missed-runs.md)
 - [Queue dispatch and idempotency](dispatch-and-idempotency.md)
 - [Service lifecycle integration](service-integration.md)
+- [Composition recipes](composition-recipes.md)
 - [Operations and recovery](operations.md)
 - [Security](security.md)
 - [Troubleshooting](troubleshooting.md)
