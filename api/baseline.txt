@@ -672,6 +672,224 @@ type TimeWindow struct {
     TimeWindow is an inclusive recurring local-time constraint. Start and End
     are offsets since local midnight; Excluded inverts the allowed window.
 
+package schedulercli // import "github.com/faustbrian/go-scheduler/adapters/cli"
+
+Package schedulercli is the target-oriented path for scheduler command-line
+inspection and recovery.
+
+FUNCTIONS
+
+func Run(ctx context.Context, args []string, stdout, stderr io.Writer,
+	registry *scheduler.Registry, leases schedulerlease.Store,
+) int
+    Run executes one bounded scheduler control command and returns an exit code.
+
+package schedulerhttp // import "github.com/faustbrian/go-scheduler/adapters/http"
+
+Package schedulerhttp is the target-oriented path for scheduler HTTP inspection
+and recovery.
+
+VARIABLES
+
+var ErrInvalidDependencies = legacy.ErrInvalidDependencies
+    ErrInvalidDependencies reports a missing registry or lease store.
+
+
+TYPES
+
+type Handler = legacy.Handler
+    Handler exposes bounded schedule inspection and recovery endpoints.
+
+func New(registry *scheduler.Registry, leases schedulerlease.Store) (*Handler, error)
+    New constructs an administrative handler without registering global routes.
+
+type Schedule = legacy.Schedule
+    Schedule is the bounded public inspection view of a schedule.
+
+package scheduleridempotency // import "github.com/faustbrian/go-scheduler/adapters/idempotency"
+
+Package scheduleridempotency is the target-oriented path for scheduler
+idempotency. Its public types and behavior retain the released package
+identities.
+
+VARIABLES
+
+var (
+	// ErrInvalidConfiguration reports missing or unsafe wrapper dependencies.
+	ErrInvalidConfiguration = legacy.ErrInvalidConfiguration
+	// ErrOccurrenceConflict reports an occurrence owned by incompatible work.
+	ErrOccurrenceConflict = legacy.ErrOccurrenceConflict
+)
+
+TYPES
+
+type Executor = legacy.Executor
+    Executor deduplicates schedule occurrences before invoking another executor.
+
+func New(store goidempotency.Store, inner scheduler.Executor, options Options) (*Executor, error)
+    New constructs an occurrence-deduplicating executor.
+
+type Options = legacy.Options
+    Options configures the tenant namespace and ownership lease.
+
+package schedulerlease // import "github.com/faustbrian/go-scheduler/adapters/lease"
+
+Package schedulerlease is the target-oriented path for scheduler lease
+contracts. Its public types and behavior retain the released package identities.
+
+VARIABLES
+
+var (
+	// ErrHeld reports a lease currently owned by another execution.
+	ErrHeld = legacy.ErrHeld
+	// ErrNotFound reports an unknown or inactive lease.
+	ErrNotFound = legacy.ErrNotFound
+	// ErrStaleOwner reports an owner or fencing token that is no longer current.
+	ErrStaleOwner = legacy.ErrStaleOwner
+	// ErrInvalid reports malformed lease input.
+	ErrInvalid = legacy.ErrInvalid
+)
+
+TYPES
+
+type Capabilities = legacy.Capabilities
+    Capabilities describes the safety properties implemented by a store.
+
+type Lease = legacy.Lease
+    Lease records current ownership and its monotonic fencing token.
+
+type ReplacementStore = legacy.ReplacementStore
+    ReplacementStore additionally supports atomic fenced ownership transfer.
+
+type Store = legacy.Store
+    Store provides fenced lease acquisition, renewal, release, and recovery.
+
+package schedulerotel // import "github.com/faustbrian/go-scheduler/adapters/otel"
+
+Package schedulerotel records scheduler lifecycle metrics and traces with
+OpenTelemetry.
+
+VARIABLES
+
+var ErrInvalidConfiguration = errors.New("scheduler otel: providers are required")
+    ErrInvalidConfiguration reports missing OpenTelemetry providers.
+
+
+TYPES
+
+type Config struct {
+	TracerProvider trace.TracerProvider
+	MeterProvider  metric.MeterProvider
+}
+    Config supplies application-owned OpenTelemetry providers.
+
+type Observer struct {
+	// Has unexported fields.
+}
+    Observer records lifecycle metrics and execution spans.
+
+func New(config Config) (*Observer, error)
+    New constructs a lifecycle telemetry observer.
+
+func NewRuntime(runtime *gotelemetry.Runtime) (*Observer, error)
+    NewRuntime constructs an observer from an initialized telemetry runtime.
+
+func (observer *Observer) Observe(event scheduler.Event)
+    Observe records one scheduler lifecycle event.
+
+package schedulerqueue // import "github.com/faustbrian/go-scheduler/adapters/queue"
+
+Package schedulerqueue is the target-oriented path for scheduler queue dispatch.
+Its public types and behavior retain the released package identities.
+
+VARIABLES
+
+var ErrInvalidQueue = legacy.ErrInvalidQueue
+    ErrInvalidQueue reports a missing queue backend.
+
+
+TYPES
+
+type Dispatcher = legacy.Dispatcher
+    Dispatcher submits each schedule occurrence to a caller-owned durable queue.
+
+func New(queue Enqueuer) (*Dispatcher, error)
+    New constructs a queue-backed scheduler executor.
+
+type Enqueuer = legacy.Enqueuer
+    Enqueuer is the minimal durable queue submission contract.
+
+type Envelope = legacy.Envelope
+    Envelope is the version-independent occurrence payload sent to workers.
+
+package schedulerservice // import "github.com/faustbrian/go-scheduler/adapters/service"
+
+Package schedulerservice is the target-oriented path for scheduler service
+lifecycle composition. Its public types retain the released identities.
+
+CONSTANTS
+
+const (
+	// CorrelationIndependent starts an independent correlation workflow for every occurrence.
+	CorrelationIndependent = legacy.CorrelationIndependent
+	// CorrelationTrustedMetadata continues explicitly trusted schedule metadata.
+	CorrelationTrustedMetadata = legacy.CorrelationTrustedMetadata
+)
+
+VARIABLES
+
+var ErrInvalidOptions = legacy.ErrInvalidOptions
+    ErrInvalidOptions identifies invalid adapter construction.
+
+
+TYPES
+
+type Adapter = legacy.Adapter
+    Adapter exposes the constructed runner and service components.
+
+func New(options Options) (*Adapter, error)
+    New validates options and constructs scheduler lifecycle components.
+
+type CorrelationMode = legacy.CorrelationMode
+    CorrelationMode selects the schedule correlation boundary used for each
+    occurrence.
+
+type Options = legacy.Options
+    Options configures scheduler lifecycle composition and ownership transfer.
+
+type OptionsError = legacy.OptionsError
+    OptionsError identifies the first rejected option in deterministic
+    validation order.
+
+package schedulerslog // import "github.com/faustbrian/go-scheduler/adapters/slog"
+
+Package schedulerslog records scheduler lifecycle events with log/slog.
+
+VARIABLES
+
+var ErrInvalidConfiguration = errors.New("scheduler slog: logger is required")
+    ErrInvalidConfiguration reports a missing logger.
+
+
+TYPES
+
+type Config struct {
+	Logger *slog.Logger
+}
+    Config supplies the application-owned logger.
+
+type Observer struct {
+	// Has unexported fields.
+}
+    Observer records bounded scheduler lifecycle fields. It starts no goroutines
+    and retains neither event contexts nor event values.
+
+func New(config Config) (*Observer, error)
+    New constructs a structured lifecycle observer.
+
+func (observer *Observer) Observe(event scheduler.Event)
+    Observe records one scheduler lifecycle event.
+
 package cron // import "github.com/faustbrian/go-scheduler/cron"
 
 Package cron compiles documented five- or six-field cron expressions in an
@@ -736,6 +954,8 @@ package idempotency // import "github.com/faustbrian/go-scheduler/idempotency"
 
 Package idempotency integrates occurrence ownership with idempotency.
 
+Deprecated: use github.com/faustbrian/go-scheduler/adapters/idempotency.
+
 VARIABLES
 
 var (
@@ -768,6 +988,8 @@ type Options struct {
 package lease // import "github.com/faustbrian/go-scheduler/lease"
 
 Package lease defines distributed ownership and fencing contracts.
+
+Deprecated: use github.com/faustbrian/go-scheduler/adapters/lease.
 
 VARIABLES
 
@@ -941,6 +1163,8 @@ package queue // import "github.com/faustbrian/go-scheduler/queue"
 
 Package queue dispatches schedule occurrences through queue.
 
+Deprecated: use github.com/faustbrian/go-scheduler/adapters/queue.
+
 VARIABLES
 
 var ErrInvalidQueue = errors.New("scheduler queue: queue is required")
@@ -986,6 +1210,8 @@ package schedulercli // import "github.com/faustbrian/go-scheduler/schedulercli"
 Package schedulercli provides bounded scheduler inspection and recovery
 commands.
 
+Deprecated: use github.com/faustbrian/go-scheduler/adapters/cli.
+
 FUNCTIONS
 
 func Run(
@@ -1002,6 +1228,8 @@ package schedulerhttp // import "github.com/faustbrian/go-scheduler/schedulerhtt
 
 Package schedulerhttp provides bounded scheduler inspection and recovery
 endpoints.
+
+Deprecated: use github.com/faustbrian/go-scheduler/adapters/http.
 
 VARIABLES
 
@@ -1060,6 +1288,8 @@ Every occurrence starts an independent correlation workflow by default.
 CorrelationTrustedMetadata must be selected explicitly to continue trusted
 correlation metadata embedded in an application-owned schedule. Retry, schedule,
 lease, readiness, and business-command policy remain caller owned.
+
+Deprecated: use github.com/faustbrian/go-scheduler/adapters/service.
 
 VARIABLES
 
@@ -1159,7 +1389,11 @@ func (clock *FakeClock) WaitForTimers(ctx context.Context, count int) bool
 
 package telemetry // import "github.com/faustbrian/go-scheduler/telemetry"
 
-Package telemetry records scheduler lifecycle logs, metrics, and traces.
+Package telemetry is the compatibility path for the split
+github.com/faustbrian/go-scheduler/adapters/slog and
+github.com/faustbrian/go-scheduler/adapters/otel integrations.
+
+Deprecated: compose the target-specific slog and OpenTelemetry adapters.
 
 VARIABLES
 
@@ -1179,10 +1413,10 @@ type Config struct {
 type Observer struct {
 	// Has unexported fields.
 }
-    Observer records lifecycle logs, metrics, and execution spans.
+    Observer preserves the released combined logging and telemetry contract.
 
 func New(config Config) (*Observer, error)
-    New constructs a lifecycle telemetry observer.
+    New constructs the released combined lifecycle observer.
 
 func NewRuntime(runtime *gotelemetry.Runtime, logger *slog.Logger) (*Observer, error)
     NewRuntime constructs an observer from an initialized telemetry runtime.

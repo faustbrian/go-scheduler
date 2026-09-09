@@ -17,7 +17,7 @@ import (
 	"time"
 
 	scheduler "github.com/faustbrian/go-scheduler"
-	"github.com/faustbrian/go-scheduler/lease"
+	schedulerlease "github.com/faustbrian/go-scheduler/adapters/lease"
 	schedulerpostgres "github.com/faustbrian/go-scheduler/postgres"
 	schedulervalkey "github.com/faustbrian/go-scheduler/valkey"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -51,7 +51,7 @@ func run(ctx context.Context) error {
 	return runWithStore(ctx, store, closeStore, os.Stdout)
 }
 
-func runWithStore(ctx context.Context, store lease.Store, closeStore func(), output io.Writer) error {
+func runWithStore(ctx context.Context, store schedulerlease.Store, closeStore func(), output io.Writer) error {
 	defer closeStore()
 	owner, err := runSingleton(ctx, store)
 	if err != nil {
@@ -61,7 +61,7 @@ func runWithStore(ctx context.Context, store lease.Store, closeStore func(), out
 	return err
 }
 
-func runSingleton(ctx context.Context, store lease.Store) (owner string, resultErr error) {
+func runSingleton(ctx context.Context, store schedulerlease.Store) (owner string, resultErr error) {
 	schedule, err := scheduler.NewSchedule(
 		"daily-ledger-close",
 		"ledger.close",
@@ -172,7 +172,7 @@ func drainRunners(runners []*scheduler.Runner) error {
 	return errors.Join(errs...)
 }
 
-func openStore(ctx context.Context) (lease.Store, func(), error) {
+func openStore(ctx context.Context) (schedulerlease.Store, func(), error) {
 	operationCtx, cancelOperation := context.WithTimeout(ctx, backendOperationTimeout)
 	defer cancelOperation()
 

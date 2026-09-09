@@ -14,7 +14,7 @@
 Run the released process-local example without cloning the repository:
 
 ```sh
-go run github.com/faustbrian/go-scheduler/examples/basic@v1.0.0
+go run github.com/faustbrian/go-scheduler/examples/basic@v1.1.0
 ```
 
 From a source checkout, run `go run ./examples/basic`. The process waits for
@@ -36,8 +36,8 @@ Each successful run prints one winning owner after two contenders dispatch one
 physical occurrence and both runners drain. The caller owns backend creation,
 credentials, migrations, availability, and final pool or client closure.
 
-For production durable work, pass application-owned `queue.Enqueuer` and
-`lease.Store` implementations to `queueexample.NewRunner`; the package is a
+For production durable work, pass application-owned `schedulerqueue.Enqueuer`
+and `schedulerlease.Store` implementations to `queueexample.NewRunner`; the package is a
 construction example rather than a command. Continue with the
 [package map](../README.md#package-and-adapter-selection),
 [service lifecycle](../docs/service-integration.md), and

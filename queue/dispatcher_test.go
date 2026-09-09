@@ -1,5 +1,7 @@
 package queue_test
 
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+
 import (
 	"context"
 	"encoding/json"
@@ -10,7 +12,7 @@ import (
 	queuecore "github.com/faustbrian/go-queue/core"
 	queuejob "github.com/faustbrian/go-queue/job"
 	scheduler "github.com/faustbrian/go-scheduler"
-	schedulerqueue "github.com/faustbrian/go-scheduler/queue"
+	schedulerqueue "github.com/faustbrian/go-scheduler/queue" //nolint:staticcheck // Exercises compatibility behavior.
 	"go.opentelemetry.io/otel/trace"
 )
 

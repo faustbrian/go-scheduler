@@ -1,4 +1,6 @@
 // Package idempotency integrates occurrence ownership with idempotency.
+//
+// Deprecated: use github.com/faustbrian/go-scheduler/adapters/idempotency.
 package idempotency
 
 import (

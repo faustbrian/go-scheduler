@@ -1,5 +1,9 @@
 // Package schedulerhttp provides bounded scheduler inspection and recovery endpoints.
+//
+// Deprecated: use github.com/faustbrian/go-scheduler/adapters/http.
 package schedulerhttp
+
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
 
 import (
 	"encoding/json"
@@ -8,7 +12,7 @@ import (
 	"time"
 
 	scheduler "github.com/faustbrian/go-scheduler"
-	"github.com/faustbrian/go-scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // The released implementation retains the domain port.
 )
 
 const maxRequestBytes = 4 << 10

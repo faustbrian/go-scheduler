@@ -1,4 +1,6 @@
 // Package queue dispatches schedule occurrences through queue.
+//
+// Deprecated: use github.com/faustbrian/go-scheduler/adapters/queue.
 package queue
 
 import (

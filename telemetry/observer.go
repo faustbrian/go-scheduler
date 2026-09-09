@@ -1,4 +1,8 @@
-// Package telemetry records scheduler lifecycle logs, metrics, and traces.
+// Package telemetry is the compatibility path for the split
+// [github.com/faustbrian/go-scheduler/adapters/slog] and
+// [github.com/faustbrian/go-scheduler/adapters/otel] integrations.
+//
+// Deprecated: compose the target-specific slog and OpenTelemetry adapters.
 package telemetry
 
 import (
@@ -33,7 +37,7 @@ type activeSpan struct {
 	started time.Time
 }
 
-// Observer records lifecycle logs, metrics, and execution spans.
+// Observer preserves the released combined logging and telemetry contract.
 type Observer struct {
 	logger   *slog.Logger
 	tracer   trace.Tracer
@@ -43,7 +47,7 @@ type Observer struct {
 	active   map[string]activeSpan
 }
 
-// New constructs a lifecycle telemetry observer.
+// New constructs the released combined lifecycle observer.
 func New(config Config) (*Observer, error) {
 	if config.Logger == nil || config.TracerProvider == nil || config.MeterProvider == nil {
 		return nil, ErrInvalidConfiguration

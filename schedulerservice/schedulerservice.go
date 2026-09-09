@@ -12,7 +12,11 @@
 // CorrelationTrustedMetadata must be selected explicitly to continue trusted
 // correlation metadata embedded in an application-owned schedule. Retry,
 // schedule, lease, readiness, and business-command policy remain caller owned.
+//
+// Deprecated: use github.com/faustbrian/go-scheduler/adapters/service.
 package schedulerservice
+
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
 
 import (
 	"context"
@@ -22,9 +26,9 @@ import (
 	"strings"
 
 	"github.com/faustbrian/go-correlation"
-	schedulecorrelation "github.com/faustbrian/go-correlation/schedule"
+	schedulecorrelation "github.com/faustbrian/go-correlation/adapters/schedule"
 	"github.com/faustbrian/go-scheduler"
-	"github.com/faustbrian/go-scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // The released implementation retains the domain port.
 	"github.com/faustbrian/go-service"
 )
 
@@ -181,9 +185,9 @@ func (executor correlatedExecutor) Execute(
 		err    error
 	)
 	if executor.mode == CorrelationTrustedMetadata {
-		values, err = executor.propagation.Run(scheduled.Metadata, true)
+		values, err = executor.propagation.Receive(scheduled.Metadata, true)
 	} else {
-		values, err = executor.propagation.Start()
+		values, err = executor.propagation.Create()
 	}
 	if err != nil {
 		return err

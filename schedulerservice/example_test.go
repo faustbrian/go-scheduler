@@ -1,5 +1,7 @@
 package schedulerservice_test
 
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+
 import (
 	"context"
 	"fmt"
@@ -7,7 +9,7 @@ import (
 	"github.com/faustbrian/go-correlation"
 	"github.com/faustbrian/go-scheduler"
 	"github.com/faustbrian/go-scheduler/memory"
-	"github.com/faustbrian/go-scheduler/schedulerservice"
+	"github.com/faustbrian/go-scheduler/schedulerservice" //nolint:staticcheck // Exercises the retained compatibility package.
 )
 
 func ExampleNew() {

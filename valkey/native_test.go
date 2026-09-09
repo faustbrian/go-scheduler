@@ -1,11 +1,13 @@
 package valkey
 
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+
 import (
 	"context"
 	"errors"
 	"testing"
 
-	"github.com/faustbrian/go-scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Tests the retained domain port.
 	valkeymock "github.com/valkey-io/valkey-go/mock"
 	"go.uber.org/mock/gomock"
 )

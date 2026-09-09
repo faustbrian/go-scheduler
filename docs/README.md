@@ -37,7 +37,7 @@ identifies each optional boundary and its owner.
 - [Support](../SUPPORT.md)
 - [Security reporting](../SECURITY.md)
 - [License](../LICENSE)
-- [Versioned Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/README.md)
+- [Versioned Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.6.2/docs/ecosystem/README.md)
 
 The scheduler coordinates decisions. It is not a workflow engine, queue,
 worker runtime, Kubernetes controller, or exactly-once system.

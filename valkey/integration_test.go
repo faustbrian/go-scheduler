@@ -2,6 +2,8 @@
 
 package valkey_test
 
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+
 import (
 	"context"
 	"crypto/sha256"
@@ -11,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Exercises the retained domain port.
 	"github.com/faustbrian/go-scheduler/lease/conformance"
 	schedulervalkey "github.com/faustbrian/go-scheduler/valkey"
 	valkeygo "github.com/valkey-io/valkey-go"

@@ -11,7 +11,8 @@ but crashes around external effects leave at-least-once behavior.
 
 **Can I run functions directly?** Yes through `Executor`. `RunTimeout` bounds
 the tick wait, but code that ignores cancellation stays tracked and consumes a
-fixed execution slot until it returns. Prefer `queue.Dispatcher`.
+fixed execution slot until it returns. Prefer `schedulerqueue.Dispatcher` from
+`adapters/queue`.
 
 **Can I schedule shell commands?** Not through the core or control surfaces.
 
@@ -23,7 +24,8 @@ helpers keep grouping explicit, typed, and immutable without introducing a
 mutable configuration DSL.
 
 **Why are queue name and connection absent from a schedule?** The schedule owns
-timing. `queue.Dispatcher` owns durable delivery, and an application adapter may
+timing. `schedulerqueue.Dispatcher` from `adapters/queue` owns durable delivery,
+and an application adapter may
 route by task identity if it needs multiple queues or backends.
 
 **How do applications pause or interrupt scheduling?** Supply a shared

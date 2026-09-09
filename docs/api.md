@@ -64,7 +64,8 @@ the definition, and the runner selects its current environment with
 
 ## Runner
 
-`NewRunner` requires a registry, `lease.Store`, `Executor`, and owner name.
+`NewRunner` requires a registry, `schedulerlease.Store` from `adapters/lease`,
+`Executor`, and owner name.
 `Run` sleeps until the exact next occurrence through an injectable `Clock`.
 `RunFrom` first applies each schedule's bounded missed-run policy strictly
 after a caller-supplied non-zero cursor, then continues the same schedule loop
@@ -86,7 +87,8 @@ emits `EventSkipped` with `ErrPaused`. Pause state has no expiry.
 `PauseState` is a concurrency-safe process-local implementation; replicas must
 instead share an application-owned persistent implementation.
 
-`Executor` is the only work boundary. Use `queue.Dispatcher` for durable work.
+`Executor` is the only work boundary. Use `schedulerqueue.Dispatcher` from
+`adapters/queue` for durable work.
 `RunTimeout` bounds how long a tick waits even when an in-process executor
 ignores cancellation. Such an executor remains tracked, retains its overlap
 lease, and occupies one of 128 execution slots until it returns. Configure the
@@ -103,13 +105,14 @@ best-effort once callback capacity is exhausted.
 
 ## Service lifecycle
 
-`schedulerservice.New` constructs a concrete correlation-aware runner from a
+`schedulerservice.New` from `adapters/service` constructs a concrete
+correlation-aware runner from a
 caller-owned registry, lease store, executor, and runner options. `Plan`
 returns one long-running task plus a final drain component. Under `service`,
 task cancellation stops new scheduling, `Runner.Drain` joins retained
 executions, and supplied facility components close afterward.
 
-Every occurrence starts a new workflow through `correlation/schedule` by
+Every occurrence starts a new workflow through `correlation/adapters/schedule` by
 default. `CorrelationTrustedMetadata` explicitly continues trusted correlation
 fields embedded in application-owned schedule metadata. See
 [service lifecycle integration](service-integration.md) for ownership,
@@ -117,7 +120,8 @@ readiness, failure, and repeated-shutdown semantics.
 
 ## Ownership
 
-`lease.Store` defines `Acquire`, `Heartbeat`, `Release`, `Inspect`, `Recover`,
+`schedulerlease.Store` from `adapters/lease` defines `Acquire`, `Heartbeat`,
+`Release`, `Inspect`, `Recover`,
 and `Capabilities`. Every successful takeover receives a larger fencing token.
 Completion-sensitive downstream writes must reject tokens lower than the
 largest token already observed.
@@ -146,7 +150,8 @@ identifies schedules configured with `RunInBackground`; the core intentionally
 does not capture task output or add a separate background-finished event.
 Per-schedule hooks and global observers are panic-contained and bounded by the
 runner callback deadline and capacity.
-`history.Buffer` is a bounded observer. `telemetry.Observer` emits structured
+`history.Buffer` is a bounded observer. `schedulerslog.Observer` and
+`schedulerotel.Observer` from the target-specific adapters emit structured
 logs, metrics, and spans.
 
 ## Control surfaces
@@ -165,10 +170,11 @@ control surfaces. Neither surface executes arbitrary commands.
 Schedule grouping remains ordinary Go construction: applications should share
 functions that append fully constructed schedules or common option slices.
 There is no mutable first-class group object. Durable scheduled jobs use
-`queue.Dispatcher` and its explicit envelope; queue names and connections stay
+`schedulerqueue.Dispatcher` from `adapters/queue` and its explicit envelope;
+queue names and connections stay
 in the application adapter instead of the schedule definition. Runner
 interruption is context cancellation followed by `Drain`, so applications can
 trigger it from deployment or administrative control without a scheduler-owned
 command. Built-in lease stores remain memory, PostgreSQL, and Valkey; other
-cache systems can implement `lease.Store` when an application actually needs
+cache systems can implement `schedulerlease.Store` when an application actually needs
 them.

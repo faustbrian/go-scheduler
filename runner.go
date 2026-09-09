@@ -1,5 +1,7 @@
 package scheduler
 
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+
 import (
 	"context"
 	"errors"
@@ -9,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // The root retains the released domain port.
 )
 
 var (

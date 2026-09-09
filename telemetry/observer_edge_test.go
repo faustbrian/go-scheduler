@@ -1,5 +1,7 @@
 package telemetry_test
 
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+
 import (
 	"bytes"
 	"context"
@@ -9,7 +11,7 @@ import (
 	"time"
 
 	scheduler "github.com/faustbrian/go-scheduler"
-	schedulertelemetry "github.com/faustbrian/go-scheduler/telemetry"
+	schedulertelemetry "github.com/faustbrian/go-scheduler/telemetry" //nolint:staticcheck // Exercises compatibility behavior.
 	gotelemetry "github.com/faustbrian/go-telemetry"
 	"github.com/faustbrian/go-telemetry/testtelemetry"
 	"go.opentelemetry.io/otel/codes"

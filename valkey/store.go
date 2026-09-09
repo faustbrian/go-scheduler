@@ -1,5 +1,7 @@
 package valkey
 
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+
 import (
 	"context"
 	"crypto/sha256"
@@ -10,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Backend implements the retained domain port.
 )
 
 // MaxPrefixBytes bounds the configured Valkey key prefix.

@@ -1,5 +1,7 @@
 package schedulerservice_test
 
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+
 import (
 	"context"
 	"errors"
@@ -7,11 +9,11 @@ import (
 	"time"
 
 	"github.com/faustbrian/go-correlation"
-	queuecorrelation "github.com/faustbrian/go-correlation/queue"
-	schedulecorrelation "github.com/faustbrian/go-correlation/schedule"
+	queuecorrelation "github.com/faustbrian/go-correlation/adapters/queue"
+	schedulecorrelation "github.com/faustbrian/go-correlation/adapters/schedule"
 	"github.com/faustbrian/go-scheduler"
 	"github.com/faustbrian/go-scheduler/memory"
-	"github.com/faustbrian/go-scheduler/schedulerservice"
+	"github.com/faustbrian/go-scheduler/schedulerservice" //nolint:staticcheck // Exercises the retained compatibility package.
 	"github.com/faustbrian/go-scheduler/schedulertest"
 	"github.com/faustbrian/go-service"
 )
@@ -135,7 +137,7 @@ func TestTrustedMetadataContinuesAnExplicitCorrelationWorkflow(t *testing.T) {
 	if err != nil {
 		t.Fatalf("schedulecorrelation.New() error = %v", err)
 	}
-	parent, err := propagation.Start()
+	parent, err := propagation.Create()
 	if err != nil {
 		t.Fatalf("Start() error = %v", err)
 	}
