@@ -23,6 +23,9 @@ and releases use Semantic Versioning.
 
 ### Documentation
 
+- Add installation, Scheduler-versus-Sequencer selection, complete package and
+  adapter guidance, and explicit service and example adoption paths.
+
 - Add an executable PostgreSQL or Valkey singleton recipe that demonstrates
   two-replica fencing, cancellation, closed admission, and bounded draining.
 
