@@ -23,7 +23,26 @@ duplicate dispatch, and jobs must remain idempotent.
 - PostgreSQL or Valkey 9 for multi-replica deployments
 - `queue` with a durable backend for long-running business work
 
+## Installation
+
+```sh
+go get github.com/faustbrian/go-scheduler@v1.0.0
+```
+
+All packages in this repository share that module version. PostgreSQL, Valkey,
+queue, service-lifecycle, HTTP, CLI, and telemetry integrations remain explicit
+imports; installing the module does not start workers or register globals.
+
 ## Five-minute quickstart
+
+Run the complete process-local example and stop it with `Ctrl-C` after an
+occurrence:
+
+```sh
+go run github.com/faustbrian/go-scheduler/examples/basic@v1.0.0
+```
+
+The production-shaped construction path for a multi-replica service is:
 
 ```go
 schedule, err := scheduler.NewSchedule(
@@ -129,11 +148,55 @@ Cancel the context passed to `Run`, then call `Drain`, to implement an external
 deployment interrupt. `Registry.Overview(after)` provides deterministic list
 data, including next runs, for any caller-owned CLI, HTTP, or admin surface.
 
-## Packages
+## Scheduler or sequencer
 
-The root package owns schedules and execution. Optional packages provide cron,
-lease stores, queue and idempotency dispatch, HTTP and CLI controls, service
-composition, history, telemetry, and deterministic test clocks.
+Choose `scheduler` for recurring wall-clock admission: cron calculation,
+missed-run selection, multi-replica occurrence leases, overlap policy, and
+dispatch at a due instant. Choose
+[`sequencer`](https://github.com/faustbrian/go-sequencer) for durable,
+dependency-ordered one-time or explicitly repeatable operations with attempt
+history and reconciliation.
+
+Do not use `scheduler` to order migrations or deployment operations, and do not
+use `sequencer` merely to calculate recurring cron boundaries. When an
+application needs both, keep time admission in `scheduler` and hand an explicit
+operation request to `sequencer`; this module does not create that dependency
+or a shared runtime. Use Kubernetes CronJobs instead for isolated
+infrastructure commands. Use `workflow` when durable workflow history, timers,
+activities, and compensation are the actual requirement; see
+[`go-workflow`](https://github.com/faustbrian/go-workflow).
+
+## Package and adapter selection
+
+The root `scheduler` package owns definitions, immutable compilation, due
+selection, execution, and runner lifecycle. Select optional packages by the
+boundary they adapt:
+
+| Need | Package | Ownership boundary |
+|---|---|---|
+| cron parsing only | `cron` | compiles bounded expressions; starts no runner |
+| lease contract | `lease` | defines fenced ownership without selecting storage |
+| local deterministic coordination | `memory` | process-local state; not restart durable |
+| shared PostgreSQL coordination | `postgres` | caller applies migrations and owns the pool |
+| shared Valkey coordination | `valkey` | caller owns a Valkey 9 client and namespace |
+| durable job dispatch | `queue` | adapts a caller-owned `go-queue` backend |
+| dispatch idempotency | `idempotency` | adapts a caller-owned idempotency store |
+| service lifecycle | `schedulerservice` | adds runner and drain order to a `go-service` plan |
+| HTTP administration | `schedulerhttp` | exposes inspection and recovery behind caller authentication |
+| CLI administration | `schedulercli` | writes bounded output through caller-owned streams |
+| observations | `history`, `telemetry` | retains bounded events or emits through caller facilities |
+| deterministic tests | `schedulertest`, `lease/conformance` | provides fake time or validates a store implementation |
+
+For a direct process, combine the root package, one lease store, and an
+application `Executor`. For durable work, use `queue.Dispatcher` as that
+executor. For an application already using `go-service`, construct
+`schedulerservice.Options` and include caller-owned lease and queue facilities;
+`go-service` cancels and joins the runner task, the adapter drains it, and
+facilities then stop in reverse order. Add `schedulerhttp` or `schedulercli`
+only to an authenticated application control surface. See the
+[service lifecycle](docs/service-integration.md), [lease](docs/leases.md),
+[dispatch](docs/dispatch-and-idempotency.md), and [composition recipe](docs/composition-recipes.md)
+contracts before selecting those paths.
 
 ## Documentation
 
@@ -148,3 +211,12 @@ and its [Persistence and durability family](https://github.com/faustbrian/go-lib
 
 Run `make check`. PostgreSQL and Valkey conformance require the environment
 variables described in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Project resources
+
+- [API reference](docs/api.md)
+- [Examples](examples/README.md)
+- [FAQ](docs/faq.md) and [troubleshooting](docs/troubleshooting.md)
+- [Compatibility](COMPATIBILITY.md), [deprecation policy](DEPRECATION.md), and
+  [changelog](CHANGELOG.md)
+- [Support](SUPPORT.md), [security policy](SECURITY.md), and [license](LICENSE)
