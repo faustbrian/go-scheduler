@@ -46,6 +46,18 @@
         },
         {
           "module_directory": ".",
+          "directory": "examples/distributed-singleton",
+          "name": "main",
+          "import_path": "github.com/faustbrian/go-scheduler/examples/distributed-singleton",
+          "kind": "example",
+          "production": false,
+          "executable": true,
+          "coverage_required": false,
+          "build_required": true,
+          "build_tags": []
+        },
+        {
+          "module_directory": ".",
           "directory": "examples/queue",
           "name": "queueexample",
           "import_path": "github.com/faustbrian/go-scheduler/examples/queue",

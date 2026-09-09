@@ -23,6 +23,9 @@ and releases use Semantic Versioning.
 
 ### Documentation
 
+- Add an executable PostgreSQL or Valkey singleton recipe that demonstrates
+  two-replica fencing, cancellation, closed admission, and bounded draining.
+
 - Publish the scheduler family, package selection, ownership, lifecycle,
   supported environments, and delivery status with versioned ecosystem links.
 
