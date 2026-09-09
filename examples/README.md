@@ -2,6 +2,9 @@
 
 - [`basic`](basic/main.go) is a runnable single-process example using the
   memory lease backend and a short cooperative executor.
+- [`distributed-singleton`](distributed-singleton/main.go) runs two contenders
+  against one PostgreSQL or Valkey lease backend, observes one dispatch, then
+  cancels and drains both runners.
 - [`queue`](queue/example.go) wires an application-provided durable `queue`
   backend and distributed lease store into a production-shaped runner.
 
