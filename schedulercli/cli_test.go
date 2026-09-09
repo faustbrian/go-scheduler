@@ -1,5 +1,7 @@
 package schedulercli_test
 
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+
 import (
 	"bytes"
 	"context"
@@ -9,9 +11,9 @@ import (
 	"time"
 
 	scheduler "github.com/faustbrian/go-scheduler"
-	"github.com/faustbrian/go-scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Exercises the retained compatibility/domain contract.
 	"github.com/faustbrian/go-scheduler/memory"
-	"github.com/faustbrian/go-scheduler/schedulercli"
+	"github.com/faustbrian/go-scheduler/schedulercli" //nolint:staticcheck // Exercises the retained compatibility package.
 )
 
 func TestCLIInspectionCommands(t *testing.T) {

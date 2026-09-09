@@ -35,7 +35,7 @@ rolling cutover.
 | `runInBackground` | `RunInBackground()` | later due tasks start without waiting; execution remains managed and is joined by `Drain` |
 | `schedule:pause`, `schedule:continue` | application trigger using `PauseController` | the application decides whether the trigger is a command, authenticated endpoint, or backpressure controller |
 | `evenWhenPaused` | `EvenWhenPaused()` | bypasses pause lookup for the selected operational schedule |
-| queued job or command | `queue.Dispatcher` envelope task and parameters | workers own business execution, routing, and retry policy; queue name and connection do not belong to schedule timing |
+| queued job or command | `schedulerqueue.Dispatcher` envelope task and parameters | workers own business execution, routing, and retry policy; queue name and connection do not belong to schedule timing |
 | `before`, success, failure, `after` | `WithHooks` | `After` only follows a started executor; all hooks are panic-contained and deadline-bounded |
 | `pingBefore`, `pingAfter` | application hook or telemetry | core does not make network callbacks |
 | output append, email, or storage | worker-owned output policy | core captures no command output |
@@ -43,7 +43,7 @@ rolling cutover.
 | `schedule:test` | CLI `test` | calculates boundaries; control surfaces execute no shell command |
 | `schedule:interrupt` | cancel `Run` context, then `Drain` | caller owns the external trigger and shutdown deadline |
 | schedule groups | Go construction helpers | group defaults are application code, not mutable runtime state; no first-class group API |
-| `useCache` / custom cache store | `lease.Store` passed to `NewRunner` | explicit dependency injection; every replica must share one PostgreSQL or Valkey backend and namespace |
+| `useCache` / custom cache store | `schedulerlease.Store` passed to `NewRunner` | explicit dependency injection; every replica must share one PostgreSQL or Valkey backend and namespace |
 
 ## Identity and rollout
 
@@ -62,14 +62,15 @@ drain, feature gate, or staged activation.
 ## Execution and overlap
 
 Laravel commands often perform work in the scheduler process. Prefer a
-`queue.Dispatcher` backed by durable `queue` storage. A successful dispatch
+`schedulerqueue.Dispatcher` from `adapters/queue` backed by durable `go-queue`
+storage. A successful dispatch
 does not mean the job completed, and a lease does not remove the need for job
 idempotency. Copy the occurrence key and fencing token into every durable
 envelope and downstream protected write.
 
 Do not copy Laravel's per-event queue name and connection fields into the
 schedule definition. A Go executor or queue adapter can route by task identity
-when an application has that requirement; until then, `queue.Dispatcher`
+when an application has that requirement; until then, `schedulerqueue.Dispatcher`
 keeps timing separate from durable delivery configuration.
 
 Pause control follows the same ownership rule. The runner depends only on

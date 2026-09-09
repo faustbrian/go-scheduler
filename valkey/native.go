@@ -1,6 +1,8 @@
 // Package valkey provides atomic fenced leases backed by Valkey 9 or newer.
 package valkey
 
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+
 import (
 	"context"
 	"errors"
@@ -8,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/faustbrian/go-scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Backend implements the retained domain port.
 	valkeygo "github.com/valkey-io/valkey-go"
 )
 

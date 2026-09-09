@@ -1,5 +1,7 @@
 package schedulerhttp_test
 
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+
 import (
 	"context"
 	"encoding/json"
@@ -11,7 +13,7 @@ import (
 
 	scheduler "github.com/faustbrian/go-scheduler"
 	"github.com/faustbrian/go-scheduler/memory"
-	"github.com/faustbrian/go-scheduler/schedulerhttp"
+	"github.com/faustbrian/go-scheduler/schedulerhttp" //nolint:staticcheck // Exercises the retained compatibility package.
 )
 
 func TestHandlerListsSchedulesAndCalculatesRuns(t *testing.T) {

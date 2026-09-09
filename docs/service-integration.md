@@ -1,14 +1,15 @@
 # Service lifecycle integration
 
-Package `schedulerservice` connects an explicit scheduler runner to the
+Package `adapters/service` connects an explicit scheduler runner to the
 `service` lifecycle. It does not define schedules, select a lease backend,
 choose retry policy, or own business commands.
 
 ## Construction and ownership
 
-The caller supplies a compiled `scheduler.Registry`, a concrete `lease.Store`,
-an `scheduler.Executor`, correlation factory, runner options, and any facility
-components. `New` constructs and exposes the concrete `*scheduler.Runner`.
+The caller supplies a compiled `scheduler.Registry`, a concrete
+`schedulerlease.Store` from `adapters/lease`, a `scheduler.Executor`,
+correlation factory, runner options, and any facility components. `New`
+constructs and exposes the concrete `*scheduler.Runner`.
 
 Facility ownership is unchanged by the adapter. A facility closes only when
 its supplied `service.Component` transfers that responsibility. Shared pools,
@@ -62,7 +63,8 @@ scheduler, queue, lease, or application layer that owns them.
 
 ## Correlation
 
-Each scheduled occurrence uses the existing `correlation/schedule` adapter.
+Each scheduled occurrence uses the canonical `correlation/adapters/schedule`
+adapter.
 The default `CorrelationIndependent` mode creates a new correlation ID and
 request ID for every occurrence.
 

@@ -5,10 +5,28 @@ and releases use Semantic Versioning.
 
 ## [Unreleased]
 
+### Added
+
+- Add canonical target-oriented scheduler adapters for CLI, HTTP,
+  idempotency, lease, OpenTelemetry, queue, service lifecycle, and `log/slog`.
+
+### Deprecated
+
+- Deprecate the released top-level integration packages in favor of their
+  `adapters/*` successors while preserving their public type, error, and
+  behavior contracts. New consumers may replace the combined `telemetry`
+  package with independently selectable `slog` and OpenTelemetry adapters.
+
 ### Changed
 
-- Adopt the checksum-verified `go-library-tools` v1.4.0 CLI and immutable
-  W14-enforcement workflow as the final authoritative tooling identity.
+- Adopt the public Correlation v1.1.0, Idempotency v1.1.0, and Telemetry v1.2.0
+  successor contracts used by the canonical adapters.
+- Select verification by proportional assurance tier so documentation and
+  metadata changes do not trigger unrelated mutation, release, security, or
+  evidence-artifact gates on pull requests.
+
+- Adopt the checksum-verified `go-library-tools` v1.6.2 CLI and immutable
+  shared workflow so executable gates match proportional assurance policy.
 - Resolve owned v1.0.0 dependencies from their public proxy and SumDB
   identities instead of bootstrap-only archives.
 

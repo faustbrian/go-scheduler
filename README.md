@@ -26,7 +26,7 @@ duplicate dispatch, and jobs must remain idempotent.
 ## Installation
 
 ```sh
-go get github.com/faustbrian/go-scheduler@v1.0.0
+go get github.com/faustbrian/go-scheduler@v1.1.0
 ```
 
 All packages in this repository share that module version. PostgreSQL, Valkey,
@@ -39,7 +39,7 @@ Run the complete process-local example and stop it with `Ctrl-C` after an
 occurrence:
 
 ```sh
-go run github.com/faustbrian/go-scheduler/examples/basic@v1.0.0
+go run github.com/faustbrian/go-scheduler/examples/basic@v1.1.0
 ```
 
 The production-shaped construction path for a multi-replica service is:
@@ -114,7 +114,7 @@ schedule, err := scheduler.NewSchedule(
 ```
 
 `WithoutOverlapping()` defaults to 1,440 minutes, while `OnOneServer()` uses an
-independent one-hour occurrence lease. The `lease.Store` supplied to
+independent one-hour occurrence lease. The `schedulerlease.Store` supplied to
 `NewRunner` is the explicit equivalent of Laravel's `useCache`; all replicas
 must receive the same PostgreSQL or Valkey store. Use CLI `clear-cache` only
 after isolating any old executor that may still be performing side effects.
@@ -175,28 +175,34 @@ boundary they adapt:
 | Need | Package | Ownership boundary |
 |---|---|---|
 | cron parsing only | `cron` | compiles bounded expressions; starts no runner |
-| lease contract | `lease` | defines fenced ownership without selecting storage |
+| lease contract | `adapters/lease` | defines fenced ownership without selecting storage |
 | local deterministic coordination | `memory` | process-local state; not restart durable |
 | shared PostgreSQL coordination | `postgres` | caller applies migrations and owns the pool |
 | shared Valkey coordination | `valkey` | caller owns a Valkey 9 client and namespace |
-| durable job dispatch | `queue` | adapts a caller-owned `go-queue` backend |
-| dispatch idempotency | `idempotency` | adapts a caller-owned idempotency store |
-| service lifecycle | `schedulerservice` | adds runner and drain order to a `go-service` plan |
-| HTTP administration | `schedulerhttp` | exposes inspection and recovery behind caller authentication |
-| CLI administration | `schedulercli` | writes bounded output through caller-owned streams |
-| observations | `history`, `telemetry` | retains bounded events or emits through caller facilities |
+| durable job dispatch | `adapters/queue` | adapts a caller-owned `go-queue` backend |
+| dispatch idempotency | `adapters/idempotency` | adapts a caller-owned idempotency store |
+| service lifecycle | `adapters/service` | adds runner and drain order to a `go-service` plan |
+| HTTP administration | `adapters/http` | exposes inspection and recovery behind caller authentication |
+| CLI administration | `adapters/cli` | writes bounded output through caller-owned streams |
+| observations | `history`, `adapters/slog`, `adapters/otel` | retains bounded events or emits through caller facilities |
 | deterministic tests | `schedulertest`, `lease/conformance` | provides fake time or validates a store implementation |
 
 For a direct process, combine the root package, one lease store, and an
-application `Executor`. For durable work, use `queue.Dispatcher` as that
+application `Executor`. For durable work, use `schedulerqueue.Dispatcher` as that
 executor. For an application already using `go-service`, construct
-`schedulerservice.Options` and include caller-owned lease and queue facilities;
+`schedulerservice.Options` from `adapters/service` and include caller-owned lease
+and queue facilities;
 `go-service` cancels and joins the runner task, the adapter drains it, and
-facilities then stop in reverse order. Add `schedulerhttp` or `schedulercli`
+facilities then stop in reverse order. Add `adapters/http` or `adapters/cli`
 only to an authenticated application control surface. See the
 [service lifecycle](docs/service-integration.md), [lease](docs/leases.md),
 [dispatch](docs/dispatch-and-idempotency.md), and [composition recipe](docs/composition-recipes.md)
 contracts before selecting those paths.
+
+The released `lease`, `queue`, `idempotency`, `schedulerservice`,
+`schedulerhttp`, `schedulercli`, and `telemetry` paths remain supported
+compatibility paths. New integrations should use the target-oriented `adapters/*` paths;
+the split `slog` and `otel` observers can be selected independently.
 
 ## Documentation
 
@@ -204,8 +210,8 @@ Use the [documentation index](docs/README.md) for the API, migration,
 Kubernetes, operations, security, compatibility, and troubleshooting.
 
 For ecosystem-wide selection and ownership guidance, see the versioned
-[Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/README.md)
-and its [Persistence and durability family](https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/design-language.md#package-families-and-selection).
+[Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.6.2/docs/ecosystem/README.md)
+and its [Persistence and durability family](https://github.com/faustbrian/go-library-tools/blob/v1.6.2/docs/ecosystem/design-language.md#package-families-and-selection).
 
 ## Development
 

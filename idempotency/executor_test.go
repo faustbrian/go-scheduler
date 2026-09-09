@@ -1,5 +1,7 @@
 package idempotency_test
 
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+
 import (
 	"context"
 	"errors"
@@ -11,7 +13,7 @@ import (
 	goidempotency "github.com/faustbrian/go-idempotency"
 	"github.com/faustbrian/go-idempotency/memory"
 	scheduler "github.com/faustbrian/go-scheduler"
-	scheduleridempotency "github.com/faustbrian/go-scheduler/idempotency"
+	scheduleridempotency "github.com/faustbrian/go-scheduler/idempotency" //nolint:staticcheck // Exercises compatibility behavior.
 )
 
 type staticClock struct{ now time.Time }

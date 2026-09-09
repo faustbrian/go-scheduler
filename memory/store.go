@@ -1,13 +1,15 @@
 // Package memory provides a deterministic process-local lease store.
 package memory
 
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+
 import (
 	"context"
 	"fmt"
 	"sync"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Backend implements the retained domain port.
 )
 
 // Store keeps fenced leases in memory for tests and single-process tools.

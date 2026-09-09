@@ -1,6 +1,8 @@
 // Package scheduler defines code-based schedules and distributed execution.
 package scheduler
 
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+
 import (
 	"context"
 	"crypto/sha256"
@@ -11,7 +13,7 @@ import (
 	"time"
 
 	schedulercron "github.com/faustbrian/go-scheduler/cron"
-	"github.com/faustbrian/go-scheduler/lease"
+	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // The root retains the released domain port.
 )
 
 var (

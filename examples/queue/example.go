@@ -7,15 +7,15 @@ import (
 	"time"
 
 	scheduler "github.com/faustbrian/go-scheduler"
-	"github.com/faustbrian/go-scheduler/lease"
-	schedulerqueue "github.com/faustbrian/go-scheduler/queue"
+	schedulerlease "github.com/faustbrian/go-scheduler/adapters/lease"
+	schedulerqueue "github.com/faustbrian/go-scheduler/adapters/queue"
 )
 
 // NewRunner builds a production-shaped runner around application-owned durable
 // queue and distributed lease backends.
 func NewRunner(
 	backend schedulerqueue.Enqueuer,
-	leases lease.Store,
+	leases schedulerlease.Store,
 	owner string,
 ) (*scheduler.Runner, error) {
 	schedule, err := scheduler.NewSchedule(

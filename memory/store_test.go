@@ -1,5 +1,7 @@
 package memory_test
 
+//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+
 import (
 	"testing"
 	"time"
