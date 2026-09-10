@@ -19,7 +19,7 @@ duplicate dispatch, and jobs must remain idempotent.
 
 ## Requirements
 
-- Go 1.26.6 or later
+- Go 1.27.0 or later
 - PostgreSQL or Valkey 9 for multi-replica deployments
 - `queue` with a durable backend for long-running business work
 
