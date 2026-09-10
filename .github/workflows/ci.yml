@@ -19,20 +19,53 @@ permissions:
   security-events: write
 
 jobs:
+  pull-request:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: .go-version
+          cache: false
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          repository: faustbrian/go-library-tools
+          ref: 0eaeb3405839b19ca6958784e7c55b55e3358ee1 # v1.6.2
+          path: .golib-tooling
+          persist-credentials: false
+      - uses: ./.golib-tooling/.github/actions/setup-golib
+      - name: Validate repository contracts
+        run: |
+          golib repository check
+          golib cohesion check
+          golib api check
+          golib docs check --module .
+          go vet ./...
+          go test ./...
+          go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.13.1 run --allow-parallel-runners --timeout=10m ./...
+
   ci:
-    uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@47269f1aa78baa637a8c377b0af24c113b34c1c9 # v1.7.2
+    if: github.event_name != 'pull_request'
+    uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@0eaeb3405839b19ca6958784e7c55b55e3358ee1 # v1.6.2
     with:
-      tooling_sha: 47269f1aa78baa637a8c377b0af24c113b34c1c9
+      tooling_sha: 0eaeb3405839b19ca6958784e7c55b55e3358ee1
       release_dry_run: ${{ inputs.release_dry_run || false }}
 
   required:
     name: Required
     if: always()
-    needs: ci
+    needs: [pull-request, ci]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: Require shared workflow
         env:
+          PR_RESULT: ${{ needs.pull-request.result }}
           CI_RESULT: ${{ needs.ci.result }}
-        run: test "${CI_RESULT}" = success
+        run: |
+          test "${PR_RESULT}:${CI_RESULT}" = "success:skipped" ||
+            test "${PR_RESULT}:${CI_RESULT}" = "skipped:success"
