@@ -7,7 +7,7 @@
 [![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
 [![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-scheduler.svg)](https://pkg.go.dev/github.com/faustbrian/go-scheduler)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-scheduler?sort=semver)](https://github.com/faustbrian/go-scheduler/releases)
-[![Go](https://img.shields.io/badge/go-1.26.6-00ADD8?logo=go)](https://go.dev/)
+[![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 `scheduler` is a code-defined application scheduler for Go services running
@@ -19,7 +19,7 @@ duplicate dispatch, and jobs must remain idempotent.
 
 ## Requirements
 
-- Go 1.26.6 or later
+- Go 1.27.0 or later
 - PostgreSQL or Valkey 9 for multi-replica deployments
 - `queue` with a durable backend for long-running business work
 
