@@ -11,10 +11,10 @@ import (
 	"github.com/faustbrian/go-correlation"
 	queuecorrelation "github.com/faustbrian/go-correlation/adapters/queue"
 	schedulecorrelation "github.com/faustbrian/go-correlation/adapters/schedule"
-	"github.com/faustbrian/go-scheduler"
-	"github.com/faustbrian/go-scheduler/memory"
-	"github.com/faustbrian/go-scheduler/schedulerservice" //nolint:staticcheck // Exercises the retained compatibility package.
-	"github.com/faustbrian/go-scheduler/schedulertest"
+	"github.com/faustbrian/go-scheduler/v2"
+	"github.com/faustbrian/go-scheduler/v2/memory"
+	"github.com/faustbrian/go-scheduler/v2/schedulerservice" //nolint:staticcheck // Exercises the retained compatibility package.
+	"github.com/faustbrian/go-scheduler/v2/schedulertest"
 	"github.com/faustbrian/go-service"
 )
 

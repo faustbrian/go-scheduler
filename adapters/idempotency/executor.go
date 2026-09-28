@@ -6,8 +6,8 @@ package scheduleridempotency
 
 import (
 	goidempotency "github.com/faustbrian/go-idempotency"
-	scheduler "github.com/faustbrian/go-scheduler"
-	legacy "github.com/faustbrian/go-scheduler/idempotency" //nolint:staticcheck // Identity-preserving successor.
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	legacy "github.com/faustbrian/go-scheduler/v2/idempotency" //nolint:staticcheck // Identity-preserving successor.
 )
 
 var (

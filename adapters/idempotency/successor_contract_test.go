@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	scheduleridempotency "github.com/faustbrian/go-scheduler/adapters/idempotency"
+	scheduleridempotency "github.com/faustbrian/go-scheduler/v2/adapters/idempotency"
 )
 
 func TestNewPreservesReleasedValidation(t *testing.T) {

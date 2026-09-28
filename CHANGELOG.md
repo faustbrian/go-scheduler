@@ -19,8 +19,13 @@ and releases use Semantic Versioning.
 
 ### Changed
 
-- Adopt the public Correlation v1.1.0, Idempotency v1.1.0, and Telemetry v1.2.0
-  successor contracts used by the canonical adapters.
+- Move the scheduler module and all package imports to `/v2` so runtime
+  constructors accept `go-telemetry/v2` without changing the v1 API.
+  Applications must update scheduler imports and their telemetry runtime to
+  the respective `/v2` paths. Scheduler metrics and traces retain the existing
+  instrumentation scope to preserve dashboards and queries.
+- Adopt the public Correlation v1.1.0 and Idempotency v1.1.0 successor
+  contracts used by the canonical adapters.
 - Select verification by proportional assurance tier so documentation and
   metadata changes do not trigger unrelated mutation, release, security, or
   evidence-artifact gates on pull requests.

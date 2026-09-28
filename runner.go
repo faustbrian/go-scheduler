@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // The root retains the released domain port.
+	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // The root retains the released domain port.
 )
 
 var (

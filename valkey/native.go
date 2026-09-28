@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Backend implements the retained domain port.
+	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Backend implements the retained domain port.
 	valkeygo "github.com/valkey-io/valkey-go"
 )
 

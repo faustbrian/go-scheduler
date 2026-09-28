@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Tests the retained domain port.
-	"github.com/faustbrian/go-scheduler/memory"
+	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Tests the retained domain port.
+	"github.com/faustbrian/go-scheduler/v2/memory"
 )
 
 func TestStoreRejectsInvalidAcquireArguments(t *testing.T) {

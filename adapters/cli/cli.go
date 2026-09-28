@@ -8,9 +8,9 @@ import (
 	"context"
 	"io"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	schedulerlease "github.com/faustbrian/go-scheduler/adapters/lease"
-	legacy "github.com/faustbrian/go-scheduler/schedulercli" //nolint:staticcheck // Behavior-preserving successor.
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	schedulerlease "github.com/faustbrian/go-scheduler/v2/adapters/lease"
+	legacy "github.com/faustbrian/go-scheduler/v2/schedulercli" //nolint:staticcheck // Behavior-preserving successor.
 )
 
 // Run executes one bounded scheduler control command and returns an exit code.

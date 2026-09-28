@@ -1,4 +1,4 @@
-package scheduler // import "github.com/faustbrian/go-scheduler"
+package scheduler // import "github.com/faustbrian/go-scheduler/v2"
 
 Package scheduler defines code-based schedules and distributed execution.
 
@@ -672,7 +672,7 @@ type TimeWindow struct {
     TimeWindow is an inclusive recurring local-time constraint. Start and End
     are offsets since local midnight; Excluded inverts the allowed window.
 
-package schedulercli // import "github.com/faustbrian/go-scheduler/adapters/cli"
+package schedulercli // import "github.com/faustbrian/go-scheduler/v2/adapters/cli"
 
 Package schedulercli is the target-oriented path for scheduler command-line
 inspection and recovery.
@@ -684,7 +684,7 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer,
 ) int
     Run executes one bounded scheduler control command and returns an exit code.
 
-package schedulerhttp // import "github.com/faustbrian/go-scheduler/adapters/http"
+package schedulerhttp // import "github.com/faustbrian/go-scheduler/v2/adapters/http"
 
 Package schedulerhttp is the target-oriented path for scheduler HTTP inspection
 and recovery.
@@ -706,7 +706,7 @@ func New(registry *scheduler.Registry, leases schedulerlease.Store) (*Handler, e
 type Schedule = legacy.Schedule
     Schedule is the bounded public inspection view of a schedule.
 
-package scheduleridempotency // import "github.com/faustbrian/go-scheduler/adapters/idempotency"
+package scheduleridempotency // import "github.com/faustbrian/go-scheduler/v2/adapters/idempotency"
 
 Package scheduleridempotency is the target-oriented path for scheduler
 idempotency. Its public types and behavior retain the released package
@@ -732,7 +732,7 @@ func New(store goidempotency.Store, inner scheduler.Executor, options Options) (
 type Options = legacy.Options
     Options configures the tenant namespace and ownership lease.
 
-package schedulerlease // import "github.com/faustbrian/go-scheduler/adapters/lease"
+package schedulerlease // import "github.com/faustbrian/go-scheduler/v2/adapters/lease"
 
 Package schedulerlease is the target-oriented path for scheduler lease
 contracts. Its public types and behavior retain the released package identities.
@@ -764,7 +764,7 @@ type ReplacementStore = legacy.ReplacementStore
 type Store = legacy.Store
     Store provides fenced lease acquisition, renewal, release, and recovery.
 
-package schedulerotel // import "github.com/faustbrian/go-scheduler/adapters/otel"
+package schedulerotel // import "github.com/faustbrian/go-scheduler/v2/adapters/otel"
 
 Package schedulerotel records scheduler lifecycle metrics and traces with
 OpenTelemetry.
@@ -797,7 +797,7 @@ func NewRuntime(runtime *gotelemetry.Runtime) (*Observer, error)
 func (observer *Observer) Observe(event scheduler.Event)
     Observe records one scheduler lifecycle event.
 
-package schedulerqueue // import "github.com/faustbrian/go-scheduler/adapters/queue"
+package schedulerqueue // import "github.com/faustbrian/go-scheduler/v2/adapters/queue"
 
 Package schedulerqueue is the target-oriented path for scheduler queue dispatch.
 Its public types and behavior retain the released package identities.
@@ -822,7 +822,7 @@ type Enqueuer = legacy.Enqueuer
 type Envelope = legacy.Envelope
     Envelope is the version-independent occurrence payload sent to workers.
 
-package schedulerservice // import "github.com/faustbrian/go-scheduler/adapters/service"
+package schedulerservice // import "github.com/faustbrian/go-scheduler/v2/adapters/service"
 
 Package schedulerservice is the target-oriented path for scheduler service
 lifecycle composition. Its public types retain the released identities.
@@ -861,7 +861,7 @@ type OptionsError = legacy.OptionsError
     OptionsError identifies the first rejected option in deterministic
     validation order.
 
-package schedulerslog // import "github.com/faustbrian/go-scheduler/adapters/slog"
+package schedulerslog // import "github.com/faustbrian/go-scheduler/v2/adapters/slog"
 
 Package schedulerslog records scheduler lifecycle events with log/slog.
 
@@ -890,7 +890,7 @@ func New(config Config) (*Observer, error)
 func (observer *Observer) Observe(event scheduler.Event)
     Observe records one scheduler lifecycle event.
 
-package cron // import "github.com/faustbrian/go-scheduler/cron"
+package cron // import "github.com/faustbrian/go-scheduler/v2/cron"
 
 Package cron compiles documented five- or six-field cron expressions in an
 explicit IANA time zone without exposing the underlying parser implementation.
@@ -918,7 +918,7 @@ func Compile(expression, timezone string) (Schedule, error)
     robfig/cron/v3. Calendar searches cover a complete 400-year Gregorian cycle
     before reporting no future occurrence.
 
-package history // import "github.com/faustbrian/go-scheduler/history"
+package history // import "github.com/faustbrian/go-scheduler/v2/history"
 
 Package history provides bounded in-memory scheduler event history.
 
@@ -950,11 +950,11 @@ func (buffer *Buffer) Entries() []scheduler.Event
 func (buffer *Buffer) Observe(event scheduler.Event)
     Observe appends an event and evicts the oldest event when full.
 
-package idempotency // import "github.com/faustbrian/go-scheduler/idempotency"
+package idempotency // import "github.com/faustbrian/go-scheduler/v2/idempotency"
 
 Package idempotency integrates occurrence ownership with idempotency.
 
-Deprecated: use github.com/faustbrian/go-scheduler/adapters/idempotency.
+Deprecated: use github.com/faustbrian/go-scheduler/v2/adapters/idempotency.
 
 VARIABLES
 
@@ -985,11 +985,11 @@ type Options struct {
 }
     Options configures the tenant namespace and ownership lease.
 
-package lease // import "github.com/faustbrian/go-scheduler/lease"
+package lease // import "github.com/faustbrian/go-scheduler/v2/lease"
 
 Package lease defines distributed ownership and fencing contracts.
 
-Deprecated: use github.com/faustbrian/go-scheduler/adapters/lease.
+Deprecated: use github.com/faustbrian/go-scheduler/v2/adapters/lease.
 
 VARIABLES
 
@@ -1051,7 +1051,7 @@ type Store interface {
 }
     Store provides fenced lease acquisition, renewal, release, and recovery.
 
-package memory // import "github.com/faustbrian/go-scheduler/memory"
+package memory // import "github.com/faustbrian/go-scheduler/v2/memory"
 
 Package memory provides a deterministic process-local lease store.
 
@@ -1094,7 +1094,7 @@ func (store *Store) Recover(ctx context.Context, key string, fencingToken uint64
 func (store *Store) Release(ctx context.Context, owned lease.Lease) error
     Release removes a lease only when ownership still matches.
 
-package postgres // import "github.com/faustbrian/go-scheduler/postgres"
+package postgres // import "github.com/faustbrian/go-scheduler/v2/postgres"
 
 Package postgres provides persistent server-time fenced leases.
 
@@ -1159,11 +1159,11 @@ func (store *Store) Recover(ctx context.Context, key string, fencingToken uint64
 func (store *Store) Release(ctx context.Context, owned lease.Lease) error
     Release marks a currently owned lease inactive.
 
-package queue // import "github.com/faustbrian/go-scheduler/queue"
+package queue // import "github.com/faustbrian/go-scheduler/v2/queue"
 
 Package queue dispatches schedule occurrences through queue.
 
-Deprecated: use github.com/faustbrian/go-scheduler/adapters/queue.
+Deprecated: use github.com/faustbrian/go-scheduler/v2/adapters/queue.
 
 VARIABLES
 
@@ -1205,12 +1205,12 @@ type Envelope struct {
 }
     Envelope is the version-independent occurrence payload sent to workers.
 
-package schedulercli // import "github.com/faustbrian/go-scheduler/schedulercli"
+package schedulercli // import "github.com/faustbrian/go-scheduler/v2/schedulercli"
 
 Package schedulercli provides bounded scheduler inspection and recovery
 commands.
 
-Deprecated: use github.com/faustbrian/go-scheduler/adapters/cli.
+Deprecated: use github.com/faustbrian/go-scheduler/v2/adapters/cli.
 
 FUNCTIONS
 
@@ -1224,12 +1224,12 @@ func Run(
 ) int
     Run executes one bounded scheduler control command and returns an exit code.
 
-package schedulerhttp // import "github.com/faustbrian/go-scheduler/schedulerhttp"
+package schedulerhttp // import "github.com/faustbrian/go-scheduler/v2/schedulerhttp"
 
 Package schedulerhttp provides bounded scheduler inspection and recovery
 endpoints.
 
-Deprecated: use github.com/faustbrian/go-scheduler/adapters/http.
+Deprecated: use github.com/faustbrian/go-scheduler/v2/adapters/http.
 
 VARIABLES
 
@@ -1272,7 +1272,7 @@ type Schedule struct {
 }
     Schedule is the bounded public inspection view of a schedule.
 
-package schedulerservice // import "github.com/faustbrian/go-scheduler/schedulerservice"
+package schedulerservice // import "github.com/faustbrian/go-scheduler/v2/schedulerservice"
 
 Package schedulerservice composes a scheduler.Runner with the service lifecycle
 and correlation schedule semantics.
@@ -1289,7 +1289,7 @@ CorrelationTrustedMetadata must be selected explicitly to continue trusted
 correlation metadata embedded in an application-owned schedule. Retry, schedule,
 lease, readiness, and business-command policy remain caller owned.
 
-Deprecated: use github.com/faustbrian/go-scheduler/adapters/service.
+Deprecated: use github.com/faustbrian/go-scheduler/v2/adapters/service.
 
 VARIABLES
 
@@ -1361,7 +1361,7 @@ func (err *OptionsError) Error() string
 func (err *OptionsError) Unwrap() error
     Unwrap exposes the stable option classification.
 
-package schedulertest // import "github.com/faustbrian/go-scheduler/schedulertest"
+package schedulertest // import "github.com/faustbrian/go-scheduler/v2/schedulertest"
 
 Package schedulertest provides deterministic runner test utilities.
 
@@ -1387,11 +1387,11 @@ func (clock *FakeClock) Now() time.Time
 func (clock *FakeClock) WaitForTimers(ctx context.Context, count int) bool
     WaitForTimers waits until at least count timers are registered.
 
-package telemetry // import "github.com/faustbrian/go-scheduler/telemetry"
+package telemetry // import "github.com/faustbrian/go-scheduler/v2/telemetry"
 
 Package telemetry is the compatibility path for the split
-github.com/faustbrian/go-scheduler/adapters/slog and
-github.com/faustbrian/go-scheduler/adapters/otel integrations.
+github.com/faustbrian/go-scheduler/v2/adapters/slog and
+github.com/faustbrian/go-scheduler/v2/adapters/otel integrations.
 
 Deprecated: compose the target-specific slog and OpenTelemetry adapters.
 
@@ -1424,7 +1424,7 @@ func NewRuntime(runtime *gotelemetry.Runtime, logger *slog.Logger) (*Observer, e
 func (observer *Observer) Observe(event scheduler.Event)
     Observe records one scheduler lifecycle event.
 
-package valkey // import "github.com/faustbrian/go-scheduler/valkey"
+package valkey // import "github.com/faustbrian/go-scheduler/v2/valkey"
 
 Package valkey provides atomic fenced leases backed by Valkey 9 or newer.
 

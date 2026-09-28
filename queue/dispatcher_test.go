@@ -11,8 +11,8 @@ import (
 
 	queuecore "github.com/faustbrian/go-queue/core"
 	queuejob "github.com/faustbrian/go-queue/job"
-	scheduler "github.com/faustbrian/go-scheduler"
-	schedulerqueue "github.com/faustbrian/go-scheduler/queue" //nolint:staticcheck // Exercises compatibility behavior.
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	schedulerqueue "github.com/faustbrian/go-scheduler/v2/queue" //nolint:staticcheck // Exercises compatibility behavior.
 	"go.opentelemetry.io/otel/trace"
 )
 

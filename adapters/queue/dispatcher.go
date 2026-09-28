@@ -4,7 +4,7 @@ package schedulerqueue
 
 //lint:file-ignore SA1019 This successor imports the deprecated package to preserve released identities.
 
-import legacy "github.com/faustbrian/go-scheduler/queue" //nolint:staticcheck // Identity-preserving successor.
+import legacy "github.com/faustbrian/go-scheduler/v2/queue" //nolint:staticcheck // Identity-preserving successor.
 
 // ErrInvalidQueue reports a missing queue backend.
 var ErrInvalidQueue = legacy.ErrInvalidQueue

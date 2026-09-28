@@ -16,10 +16,10 @@ import (
 	"syscall"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	schedulerlease "github.com/faustbrian/go-scheduler/adapters/lease"
-	schedulerpostgres "github.com/faustbrian/go-scheduler/postgres"
-	schedulervalkey "github.com/faustbrian/go-scheduler/valkey"
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	schedulerlease "github.com/faustbrian/go-scheduler/v2/adapters/lease"
+	schedulerpostgres "github.com/faustbrian/go-scheduler/v2/postgres"
+	schedulervalkey "github.com/faustbrian/go-scheduler/v2/valkey"
 	"github.com/jackc/pgx/v5/pgxpool"
 	valkeygo "github.com/valkey-io/valkey-go"
 )

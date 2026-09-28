@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	schedulertelemetry "github.com/faustbrian/go-scheduler/telemetry" //nolint:staticcheck // Exercises compatibility behavior.
-	"github.com/faustbrian/go-telemetry/testtelemetry"
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	schedulertelemetry "github.com/faustbrian/go-scheduler/v2/telemetry" //nolint:staticcheck // Exercises compatibility behavior.
+	"github.com/faustbrian/go-telemetry/v2/testtelemetry"
 )
 
 func TestObserverRecordsStructuredLifecycle(t *testing.T) {
@@ -50,6 +50,9 @@ func TestObserverRecordsStructuredLifecycle(t *testing.T) {
 	}
 	if len(metrics.ScopeMetrics) == 0 || len(metrics.ScopeMetrics[0].Metrics) < 2 {
 		t.Fatalf("metrics = %+v", metrics)
+	}
+	if got := metrics.ScopeMetrics[0].Scope.Name; got != "github.com/faustbrian/go-scheduler" {
+		t.Fatalf("instrumentation scope = %q", got)
 	}
 }
 

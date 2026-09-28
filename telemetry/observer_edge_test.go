@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	schedulertelemetry "github.com/faustbrian/go-scheduler/telemetry" //nolint:staticcheck // Exercises compatibility behavior.
-	gotelemetry "github.com/faustbrian/go-telemetry"
-	"github.com/faustbrian/go-telemetry/testtelemetry"
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	schedulertelemetry "github.com/faustbrian/go-scheduler/v2/telemetry" //nolint:staticcheck // Exercises compatibility behavior.
+	gotelemetry "github.com/faustbrian/go-telemetry/v2"
+	"github.com/faustbrian/go-telemetry/v2/testtelemetry"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
 	metricnoop "go.opentelemetry.io/otel/metric/noop"

@@ -1,6 +1,6 @@
 // Package lease defines distributed ownership and fencing contracts.
 //
-// Deprecated: use github.com/faustbrian/go-scheduler/adapters/lease.
+// Deprecated: use github.com/faustbrian/go-scheduler/v2/adapters/lease.
 package lease
 
 import (

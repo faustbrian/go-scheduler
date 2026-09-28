@@ -5,9 +5,9 @@ package schedulerhttp
 //lint:file-ignore SA1019 This successor imports the deprecated package to preserve released identities.
 
 import (
-	scheduler "github.com/faustbrian/go-scheduler"
-	schedulerlease "github.com/faustbrian/go-scheduler/adapters/lease"
-	legacy "github.com/faustbrian/go-scheduler/schedulerhttp" //nolint:staticcheck // Identity-preserving successor.
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	schedulerlease "github.com/faustbrian/go-scheduler/v2/adapters/lease"
+	legacy "github.com/faustbrian/go-scheduler/v2/schedulerhttp" //nolint:staticcheck // Identity-preserving successor.
 )
 
 // ErrInvalidDependencies reports a missing registry or lease store.

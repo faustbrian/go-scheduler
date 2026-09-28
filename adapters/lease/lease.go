@@ -4,7 +4,7 @@ package schedulerlease
 
 //lint:file-ignore SA1019 This successor imports the deprecated package to preserve released identities.
 
-import legacy "github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Identity-preserving successor.
+import legacy "github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Identity-preserving successor.
 
 var (
 	// ErrHeld reports a lease currently owned by another execution.

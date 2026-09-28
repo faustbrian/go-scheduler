@@ -6,9 +6,9 @@ package queueexample
 import (
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	schedulerlease "github.com/faustbrian/go-scheduler/adapters/lease"
-	schedulerqueue "github.com/faustbrian/go-scheduler/adapters/queue"
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	schedulerlease "github.com/faustbrian/go-scheduler/v2/adapters/lease"
+	schedulerqueue "github.com/faustbrian/go-scheduler/v2/adapters/queue"
 )
 
 // NewRunner builds a production-shaped runner around application-owned durable

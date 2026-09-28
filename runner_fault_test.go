@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Exercises the retained domain port.
-	"github.com/faustbrian/go-scheduler/memory"
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Exercises the retained domain port.
+	"github.com/faustbrian/go-scheduler/v2/memory"
 )
 
 type scriptedLeases struct {

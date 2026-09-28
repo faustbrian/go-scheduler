@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	schedulercli "github.com/faustbrian/go-scheduler/adapters/cli"
+	schedulercli "github.com/faustbrian/go-scheduler/v2/adapters/cli"
 )
 
 func TestRunPreservesReleasedValidation(t *testing.T) {

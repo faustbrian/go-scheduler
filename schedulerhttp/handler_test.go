@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	"github.com/faustbrian/go-scheduler/memory"
-	"github.com/faustbrian/go-scheduler/schedulerhttp" //nolint:staticcheck // Exercises the retained compatibility package.
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	"github.com/faustbrian/go-scheduler/v2/memory"
+	"github.com/faustbrian/go-scheduler/v2/schedulerhttp" //nolint:staticcheck // Exercises the retained compatibility package.
 )
 
 func TestHandlerListsSchedulesAndCalculatesRuns(t *testing.T) {

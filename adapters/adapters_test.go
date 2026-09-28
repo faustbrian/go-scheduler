@@ -9,19 +9,19 @@ import (
 	"testing"
 	"time"
 
-	schedulercli "github.com/faustbrian/go-scheduler/adapters/cli"
-	schedulerhttp "github.com/faustbrian/go-scheduler/adapters/http"
-	scheduleridempotency "github.com/faustbrian/go-scheduler/adapters/idempotency"
-	schedulerlease "github.com/faustbrian/go-scheduler/adapters/lease"
-	schedulerotel "github.com/faustbrian/go-scheduler/adapters/otel"
-	schedulerqueue "github.com/faustbrian/go-scheduler/adapters/queue"
-	schedulerservice "github.com/faustbrian/go-scheduler/adapters/service"
-	schedulerslog "github.com/faustbrian/go-scheduler/adapters/slog"
-	legacyidempotency "github.com/faustbrian/go-scheduler/idempotency"  //nolint:staticcheck // Compatibility identity assertion.
-	legacylease "github.com/faustbrian/go-scheduler/lease"              //nolint:staticcheck // Compatibility identity assertion.
-	legacyqueue "github.com/faustbrian/go-scheduler/queue"              //nolint:staticcheck // Compatibility identity assertion.
-	legacyhttp "github.com/faustbrian/go-scheduler/schedulerhttp"       //nolint:staticcheck // Compatibility identity assertion.
-	legacyservice "github.com/faustbrian/go-scheduler/schedulerservice" //nolint:staticcheck // Compatibility identity assertion.
+	schedulercli "github.com/faustbrian/go-scheduler/v2/adapters/cli"
+	schedulerhttp "github.com/faustbrian/go-scheduler/v2/adapters/http"
+	scheduleridempotency "github.com/faustbrian/go-scheduler/v2/adapters/idempotency"
+	schedulerlease "github.com/faustbrian/go-scheduler/v2/adapters/lease"
+	schedulerotel "github.com/faustbrian/go-scheduler/v2/adapters/otel"
+	schedulerqueue "github.com/faustbrian/go-scheduler/v2/adapters/queue"
+	schedulerservice "github.com/faustbrian/go-scheduler/v2/adapters/service"
+	schedulerslog "github.com/faustbrian/go-scheduler/v2/adapters/slog"
+	legacyidempotency "github.com/faustbrian/go-scheduler/v2/idempotency"  //nolint:staticcheck // Compatibility identity assertion.
+	legacylease "github.com/faustbrian/go-scheduler/v2/lease"              //nolint:staticcheck // Compatibility identity assertion.
+	legacyqueue "github.com/faustbrian/go-scheduler/v2/queue"              //nolint:staticcheck // Compatibility identity assertion.
+	legacyhttp "github.com/faustbrian/go-scheduler/v2/schedulerhttp"       //nolint:staticcheck // Compatibility identity assertion.
+	legacyservice "github.com/faustbrian/go-scheduler/v2/schedulerservice" //nolint:staticcheck // Compatibility identity assertion.
 )
 
 func TestCanonicalAdaptersExposeTheirConstructionContracts(t *testing.T) {
