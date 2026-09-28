@@ -10,8 +10,8 @@ require (
 	github.com/faustbrian/go-telemetry/v2 v2.0.0
 	github.com/jackc/pgx/v5 v5.10.0
 	github.com/robfig/cron/v3 v3.0.1
-	github.com/valkey-io/valkey-go v1.0.76
-	github.com/valkey-io/valkey-go/mock v1.0.76
+	github.com/valkey-io/valkey-go v1.0.78
+	github.com/valkey-io/valkey-go/mock v1.0.78
 	go.opentelemetry.io/otel v1.45.0
 	go.opentelemetry.io/otel/metric v1.45.0
 	go.opentelemetry.io/otel/trace v1.45.0
