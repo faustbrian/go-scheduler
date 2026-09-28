@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler"
+	scheduler "github.com/faustbrian/go-scheduler/v2"
 )
 
 func FuzzScheduleCompilation(f *testing.F) {

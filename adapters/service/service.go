@@ -4,7 +4,7 @@ package schedulerservice
 
 //lint:file-ignore SA1019 This successor imports the deprecated package to preserve released identities.
 
-import legacy "github.com/faustbrian/go-scheduler/schedulerservice" //nolint:staticcheck // Identity-preserving successor.
+import legacy "github.com/faustbrian/go-scheduler/v2/schedulerservice" //nolint:staticcheck // Identity-preserving successor.
 
 // ErrInvalidOptions identifies invalid adapter construction.
 var ErrInvalidOptions = legacy.ErrInvalidOptions

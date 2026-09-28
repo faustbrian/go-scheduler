@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	"github.com/faustbrian/go-scheduler/history"
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	"github.com/faustbrian/go-scheduler/v2/history"
 )
 
 func TestBufferRetainsOnlyBoundedRecentEvents(t *testing.T) {

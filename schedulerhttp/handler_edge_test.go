@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	"github.com/faustbrian/go-scheduler/lease"         //nolint:staticcheck // Exercises the retained compatibility/domain contract.
-	"github.com/faustbrian/go-scheduler/schedulerhttp" //nolint:staticcheck // Exercises the retained compatibility package.
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	"github.com/faustbrian/go-scheduler/v2/lease"         //nolint:staticcheck // Exercises the retained compatibility/domain contract.
+	"github.com/faustbrian/go-scheduler/v2/schedulerhttp" //nolint:staticcheck // Exercises the retained compatibility package.
 )
 
 type errorStore struct{ recoverErr error }

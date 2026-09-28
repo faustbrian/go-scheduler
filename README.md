@@ -5,7 +5,7 @@
 [![Coverage](https://img.shields.io/badge/coverage-100%25_required-blue)](CONTRIBUTING.md#verification)
 [![Mutation](https://img.shields.io/badge/mutation-100%25_required-blue)](CONTRIBUTING.md#verification)
 [![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
-[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-scheduler.svg)](https://pkg.go.dev/github.com/faustbrian/go-scheduler)
+[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-scheduler/v2.svg)](https://pkg.go.dev/github.com/faustbrian/go-scheduler/v2)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-scheduler?sort=semver)](https://github.com/faustbrian/go-scheduler/releases)
 [![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -14,7 +14,7 @@
 on Kubernetes. Multiple scheduler replicas coordinate through fenced leases,
 while durable business work is dispatched to `queue` workers.
 
-The module follows stable v1 compatibility. It does not claim exactly-once execution: leases reduce
+The module follows stable v2 compatibility. It does not claim exactly-once execution: leases reduce
 duplicate dispatch, and jobs must remain idempotent.
 
 ## Requirements
@@ -26,7 +26,7 @@ duplicate dispatch, and jobs must remain idempotent.
 ## Installation
 
 ```sh
-go get github.com/faustbrian/go-scheduler@v1.1.0
+go get github.com/faustbrian/go-scheduler/v2@v2.0.0
 ```
 
 All packages in this repository share that module version. PostgreSQL, Valkey,
@@ -39,7 +39,7 @@ Run the complete process-local example and stop it with `Ctrl-C` after an
 occurrence:
 
 ```sh
-go run github.com/faustbrian/go-scheduler/examples/basic@v1.1.0
+go run github.com/faustbrian/go-scheduler/v2/examples/basic@v2.0.0
 ```
 
 The production-shaped construction path for a multi-replica service is:

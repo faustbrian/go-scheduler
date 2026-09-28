@@ -1,6 +1,6 @@
 // Package telemetry is the compatibility path for the split
-// [github.com/faustbrian/go-scheduler/adapters/slog] and
-// [github.com/faustbrian/go-scheduler/adapters/otel] integrations.
+// [github.com/faustbrian/go-scheduler/v2/adapters/slog] and
+// [github.com/faustbrian/go-scheduler/v2/adapters/otel] integrations.
 //
 // Deprecated: compose the target-specific slog and OpenTelemetry adapters.
 package telemetry
@@ -12,8 +12,8 @@ import (
 	"sync"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	gotelemetry "github.com/faustbrian/go-telemetry"
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	gotelemetry "github.com/faustbrian/go-telemetry/v2"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"

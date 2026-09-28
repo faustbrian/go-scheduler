@@ -12,8 +12,8 @@ import (
 
 	goidempotency "github.com/faustbrian/go-idempotency"
 	"github.com/faustbrian/go-idempotency/memory"
-	scheduler "github.com/faustbrian/go-scheduler"
-	scheduleridempotency "github.com/faustbrian/go-scheduler/idempotency" //nolint:staticcheck // Exercises compatibility behavior.
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	scheduleridempotency "github.com/faustbrian/go-scheduler/v2/idempotency" //nolint:staticcheck // Exercises compatibility behavior.
 )
 
 type staticClock struct{ now time.Time }

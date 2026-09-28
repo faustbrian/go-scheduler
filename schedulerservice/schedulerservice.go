@@ -13,7 +13,7 @@
 // correlation metadata embedded in an application-owned schedule. Retry,
 // schedule, lease, readiness, and business-command policy remain caller owned.
 //
-// Deprecated: use github.com/faustbrian/go-scheduler/adapters/service.
+// Deprecated: use github.com/faustbrian/go-scheduler/v2/adapters/service.
 package schedulerservice
 
 //lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
@@ -27,8 +27,8 @@ import (
 
 	"github.com/faustbrian/go-correlation"
 	schedulecorrelation "github.com/faustbrian/go-correlation/adapters/schedule"
-	"github.com/faustbrian/go-scheduler"
-	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // The released implementation retains the domain port.
+	"github.com/faustbrian/go-scheduler/v2"
+	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // The released implementation retains the domain port.
 	"github.com/faustbrian/go-service"
 )
 

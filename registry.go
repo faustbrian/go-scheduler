@@ -12,8 +12,8 @@ import (
 	"slices"
 	"time"
 
-	schedulercron "github.com/faustbrian/go-scheduler/cron"
-	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // The root retains the released domain port.
+	schedulercron "github.com/faustbrian/go-scheduler/v2/cron"
+	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // The root retains the released domain port.
 )
 
 var (

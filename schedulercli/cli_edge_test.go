@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Exercises the retained compatibility/domain contract.
-	"github.com/faustbrian/go-scheduler/memory"
-	"github.com/faustbrian/go-scheduler/schedulercli" //nolint:staticcheck // Exercises the retained compatibility package.
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Exercises the retained compatibility/domain contract.
+	"github.com/faustbrian/go-scheduler/v2/memory"
+	"github.com/faustbrian/go-scheduler/v2/schedulercli" //nolint:staticcheck // Exercises the retained compatibility package.
 )
 
 type errorWriter struct{}

@@ -6,8 +6,8 @@ import (
 	"context"
 	"testing"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	schedulerqueue "github.com/faustbrian/go-scheduler/queue" //nolint:staticcheck // Measures compatibility behavior.
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	schedulerqueue "github.com/faustbrian/go-scheduler/v2/queue" //nolint:staticcheck // Measures compatibility behavior.
 )
 
 func BenchmarkDispatchEnvelope(b *testing.B) {

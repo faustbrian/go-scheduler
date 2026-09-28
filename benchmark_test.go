@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	"github.com/faustbrian/go-scheduler/memory"
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	"github.com/faustbrian/go-scheduler/v2/memory"
 )
 
 func BenchmarkCompileSchedules(b *testing.B) {

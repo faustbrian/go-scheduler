@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	schedulerslog "github.com/faustbrian/go-scheduler/adapters/slog"
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	schedulerslog "github.com/faustbrian/go-scheduler/v2/adapters/slog"
 )
 
 func TestObserverValidatesLoggerAndRecordsLifecycleLevels(t *testing.T) {

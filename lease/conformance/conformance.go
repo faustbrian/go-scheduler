@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Conformance targets the retained domain port.
+	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Conformance targets the retained domain port.
 )
 
 // Harness supplies a store and controllable backend time to conformance tests.

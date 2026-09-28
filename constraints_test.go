@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler"
+	scheduler "github.com/faustbrian/go-scheduler/v2"
 )
 
 func TestDayConstraintsFilterScheduleBoundaries(t *testing.T) {

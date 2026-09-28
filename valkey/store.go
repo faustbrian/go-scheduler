@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Backend implements the retained domain port.
+	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Backend implements the retained domain port.
 )
 
 // MaxPrefixBytes bounds the configured Valkey key prefix.

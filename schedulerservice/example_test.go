@@ -7,9 +7,9 @@ import (
 	"fmt"
 
 	"github.com/faustbrian/go-correlation"
-	"github.com/faustbrian/go-scheduler"
-	"github.com/faustbrian/go-scheduler/memory"
-	"github.com/faustbrian/go-scheduler/schedulerservice" //nolint:staticcheck // Exercises the retained compatibility package.
+	"github.com/faustbrian/go-scheduler/v2"
+	"github.com/faustbrian/go-scheduler/v2/memory"
+	"github.com/faustbrian/go-scheduler/v2/schedulerservice" //nolint:staticcheck // Exercises the retained compatibility package.
 )
 
 func ExampleNew() {

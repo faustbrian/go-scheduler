@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	gotelemetry "github.com/faustbrian/go-telemetry"
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	gotelemetry "github.com/faustbrian/go-telemetry/v2"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"

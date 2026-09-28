@@ -13,9 +13,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Exercises the retained domain port.
-	"github.com/faustbrian/go-scheduler/lease/conformance"
-	schedulervalkey "github.com/faustbrian/go-scheduler/valkey"
+	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Exercises the retained domain port.
+	"github.com/faustbrian/go-scheduler/v2/lease/conformance"
+	schedulervalkey "github.com/faustbrian/go-scheduler/v2/valkey"
 	valkeygo "github.com/valkey-io/valkey-go"
 )
 

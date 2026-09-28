@@ -6,7 +6,7 @@ package postgres
 import (
 	"fmt"
 
-	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Backend implements the retained domain port.
+	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Backend implements the retained domain port.
 	"github.com/jackc/pgx/v5"
 )
 

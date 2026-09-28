@@ -1,6 +1,6 @@
 // Package queue dispatches schedule occurrences through queue.
 //
-// Deprecated: use github.com/faustbrian/go-scheduler/adapters/queue.
+// Deprecated: use github.com/faustbrian/go-scheduler/v2/adapters/queue.
 package queue
 
 import (
@@ -13,7 +13,7 @@ import (
 
 	queuecore "github.com/faustbrian/go-queue/core"
 	queuejob "github.com/faustbrian/go-queue/job"
-	scheduler "github.com/faustbrian/go-scheduler"
+	scheduler "github.com/faustbrian/go-scheduler/v2"
 	"go.opentelemetry.io/otel/propagation"
 )
 

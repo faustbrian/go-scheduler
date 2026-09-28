@@ -31,3 +31,9 @@ cycle or change released named-type and reflection identities. New external
 composition may import `adapters/lease`; the two paths expose the same contract.
 No compatibility path may be removed before v2.0.0 and the interval and
 consumer-evidence conditions in [`DEPRECATION.md`](DEPRECATION.md) are met.
+
+The v2 scheduler module requires `go-telemetry/v2` for both exported
+`NewRuntime` constructors. Applications migrating from scheduler v1 must update
+scheduler import paths to `/v2` and pass a telemetry v2 runtime. The existing
+OpenTelemetry instrumentation scope remains unchanged so dashboards and trace
+queries can span the module transition.

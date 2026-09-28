@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/schedulertest"
+	"github.com/faustbrian/go-scheduler/v2/schedulertest"
 )
 
 func TestFakeClockAdvancesOnlyDueTimers(t *testing.T) {

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	schedulerqueue "github.com/faustbrian/go-scheduler/adapters/queue"
+	schedulerqueue "github.com/faustbrian/go-scheduler/v2/adapters/queue"
 )
 
 func TestNewPreservesReleasedValidation(t *testing.T) {

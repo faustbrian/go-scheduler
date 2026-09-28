@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	schedulerlease "github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Exercises the retained domain port.
-	"github.com/faustbrian/go-scheduler/lease/conformance"
-	schedulerpostgres "github.com/faustbrian/go-scheduler/postgres"
+	schedulerlease "github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Exercises the retained domain port.
+	"github.com/faustbrian/go-scheduler/v2/lease/conformance"
+	schedulerpostgres "github.com/faustbrian/go-scheduler/v2/postgres"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 

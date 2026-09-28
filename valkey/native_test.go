@@ -7,7 +7,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // Tests the retained domain port.
+	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Tests the retained domain port.
 	valkeymock "github.com/valkey-io/valkey-go/mock"
 	"go.uber.org/mock/gomock"
 )

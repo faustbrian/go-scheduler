@@ -1,6 +1,6 @@
 // Package schedulercli provides bounded scheduler inspection and recovery commands.
 //
-// Deprecated: use github.com/faustbrian/go-scheduler/adapters/cli.
+// Deprecated: use github.com/faustbrian/go-scheduler/v2/adapters/cli.
 package schedulercli
 
 //lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
@@ -15,8 +15,8 @@ import (
 	"strconv"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler"
-	"github.com/faustbrian/go-scheduler/lease" //nolint:staticcheck // The released implementation retains the domain port.
+	scheduler "github.com/faustbrian/go-scheduler/v2"
+	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // The released implementation retains the domain port.
 )
 
 // Run executes one bounded scheduler control command and returns an exit code.
