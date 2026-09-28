@@ -5,6 +5,20 @@ and releases use Semantic Versioning.
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-09-28
+
+### Changed
+
+- Move the scheduler module and all package imports to `/v2` so runtime
+  constructors accept `go-telemetry/v2`. Applications must update scheduler
+  imports and pass a telemetry v2 runtime; the scheduler's existing metrics
+  and trace instrumentation scope is unchanged. ([daa985321f](https://github.com/faustbrian/go-scheduler/commit/daa985321fb2c0617ceed38477d217b11c76e6ec))
+- Require and test with Go 1.27.0. ([dc7782ae4b](https://github.com/faustbrian/go-scheduler/commit/dc7782ae4bdc880b8dd6ebd1d55178c48db4ac56), [8b699b3b1c](https://github.com/faustbrian/go-scheduler/commit/8b699b3b1ce388daa6f3f8aa869665f12d520ad4))
+- Clarify that goroutine lifecycle changes require targeted leak tests while
+  preserving the existing CI workflow. ([da843f2216](https://github.com/faustbrian/go-scheduler/commit/da843f2216e63d1656342d97ffa81fe412f814db), [31fd66283d](https://github.com/faustbrian/go-scheduler/commit/31fd66283df7c12ceb3e78d406df4f1e3a3ac6ff))
+
+## [1.1.0] - 2026-09-09
+
 ### Added
 
 - Add canonical target-oriented scheduler adapters for CLI, HTTP,
@@ -19,13 +33,8 @@ and releases use Semantic Versioning.
 
 ### Changed
 
-- Move the scheduler module and all package imports to `/v2` so runtime
-  constructors accept `go-telemetry/v2` without changing the v1 API.
-  Applications must update scheduler imports and their telemetry runtime to
-  the respective `/v2` paths. Scheduler metrics and traces retain the existing
-  instrumentation scope to preserve dashboards and queries.
-- Adopt the public Correlation v1.1.0 and Idempotency v1.1.0 successor
-  contracts used by the canonical adapters.
+- Adopt the public Correlation v1.1.0, Idempotency v1.1.0, and Telemetry v1.2.0
+  successor contracts used by the canonical adapters.
 - Select verification by proportional assurance tier so documentation and
   metadata changes do not trigger unrelated mutation, release, security, or
   evidence-artifact gates on pull requests.
@@ -158,5 +167,7 @@ and releases use Semantic Versioning.
 - threat model, rollout and crash matrices, and benchmark release baseline
 - bounded runner observer registration
 
-[Unreleased]: https://github.com/faustbrian/go-scheduler/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/faustbrian/go-scheduler/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/faustbrian/go-scheduler/compare/v1.1.0...v2.0.0
+[1.1.0]: https://github.com/faustbrian/go-scheduler/releases/tag/v1.1.0
 [1.0.0]: https://github.com/faustbrian/go-scheduler/releases/tag/v1.0.0
