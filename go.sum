@@ -19,8 +19,8 @@ github.com/faustbrian/go-identifier v1.0.0 h1:5lXZbS2wK4NelWv4ekRocwOwjkWt1ch/nh
 github.com/faustbrian/go-identifier v1.0.0/go.mod h1:Q2yS7Hk4N4i9Wd3OmPQGh657SHtA1IjvtT4PllphNlY=
 github.com/faustbrian/go-queue v1.0.0 h1:3HEJJI1M0dNeE7hr7mVWiXueQxP6go/gKzZXE8Q2y4c=
 github.com/faustbrian/go-queue v1.0.0/go.mod h1:XQY6QpHS87WeYYt1Xs3lWiak1v099mZlC+TPPU7kB1M=
-github.com/faustbrian/go-service v1.0.0 h1:sxfwxfsHxD2EjsDthb+u29xpp3qMtUSu/LT5lPd8e4Q=
-github.com/faustbrian/go-service v1.0.0/go.mod h1:2klNLQJfgrbRX2N41iLSEPVFwLmyg4nMVQ+kWZZudAc=
+github.com/faustbrian/go-service v1.1.0 h1:6Rh/r0CaAG8Bf1NSYLLhfAf414llIYGCXkI587RaDqQ=
+github.com/faustbrian/go-service v1.1.0/go.mod h1:G+pEp0J0ABeQnWvi7xgp34nLZBliDuN/hY+VvXSYZRc=
 github.com/faustbrian/go-telemetry/v2 v2.0.0 h1:QhqiUbgdJu4Bus/3yYmDXUBsakSlx7AROKG0pyPecLM=
 github.com/faustbrian/go-telemetry/v2 v2.0.0/go.mod h1:LP33MN5e01RYDHBD4SvZSJNphRQ43WpoX3uBtBXdKmM=
 github.com/felixge/httpsnoop v1.0.4 h1:NFTV2Zj1bL4mc9sqWACXbQFVBBg2W3GPvqp8/ESS2Wg=
