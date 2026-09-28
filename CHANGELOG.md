@@ -5,6 +5,11 @@ and releases use Semantic Versioning.
 
 ## [Unreleased]
 
+### Security
+
+- Adopt `go-idempotency` v1.2.0 to bound persisted replay metadata and backend
+  record validation while retaining the scheduler's existing v1 store contract.
+
 ## [2.0.0] - 2026-09-28
 
 ### Changed
