@@ -8,7 +8,7 @@ require (
 	github.com/faustbrian/go-queue v1.0.0
 	github.com/faustbrian/go-service v1.0.0
 	github.com/faustbrian/go-telemetry/v2 v2.0.0
-	github.com/jackc/pgx/v5 v5.10.0
+	github.com/jackc/pgx/v5 v5.11.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/valkey-io/valkey-go v1.0.76
 	github.com/valkey-io/valkey-go/mock v1.0.76
