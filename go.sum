@@ -17,8 +17,8 @@ github.com/faustbrian/go-idempotency v1.2.0 h1:STogOi/FS9HyaHrbfTq5bD5VHvNClGQOT
 github.com/faustbrian/go-idempotency v1.2.0/go.mod h1:2xt/7TgHzdRdfMXIhqHUAFvDOD4XR2B8wQV8etXE/zw=
 github.com/faustbrian/go-identifier/v2 v2.0.0 h1:of6lfuAlyWzW0nDWW3gdzHu65nSZ79LYZwgrIb5E1GM=
 github.com/faustbrian/go-identifier/v2 v2.0.0/go.mod h1:dfno42Fhe7wvGOXKwBNWO4Y0hSHi5a98RbmeB98ASVw=
-github.com/faustbrian/go-queue v1.0.0 h1:3HEJJI1M0dNeE7hr7mVWiXueQxP6go/gKzZXE8Q2y4c=
-github.com/faustbrian/go-queue v1.0.0/go.mod h1:XQY6QpHS87WeYYt1Xs3lWiak1v099mZlC+TPPU7kB1M=
+github.com/faustbrian/go-queue v1.1.2 h1:GKm6mq2tVDgSSLm1W/VC0PoadgIC+g+DOG3gxRdSzJo=
+github.com/faustbrian/go-queue v1.1.2/go.mod h1:R2E+40RM/8AznMOdVnhA++yrCJ0CyLdULZNGgvIn9Ok=
 github.com/faustbrian/go-service v1.1.2 h1:8gKlxhILZzn1gQg5edVzRomlqLLaa07e2nC9dZ2rxIM=
 github.com/faustbrian/go-service v1.1.2/go.mod h1:ivGR4lBgV5wiUS/06bI806R+LUZkoknk53VPn5Tn6pw=
 github.com/faustbrian/go-telemetry/v2 v2.0.0 h1:QhqiUbgdJu4Bus/3yYmDXUBsakSlx7AROKG0pyPecLM=
