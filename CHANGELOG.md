@@ -5,6 +5,8 @@ and releases use Semantic Versioning.
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-09-28
+
 ### Security
 
 - Adopt `go-idempotency` v1.2.0 to bound persisted replay metadata and backend
@@ -172,7 +174,8 @@ and releases use Semantic Versioning.
 - threat model, rollout and crash matrices, and benchmark release baseline
 - bounded runner observer registration
 
-[Unreleased]: https://github.com/faustbrian/go-scheduler/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/faustbrian/go-scheduler/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/faustbrian/go-scheduler/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/faustbrian/go-scheduler/compare/v1.1.0...v2.0.0
 [1.1.0]: https://github.com/faustbrian/go-scheduler/releases/tag/v1.1.0
 [1.0.0]: https://github.com/faustbrian/go-scheduler/releases/tag/v1.0.0
