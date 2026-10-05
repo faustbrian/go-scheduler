@@ -5,7 +5,7 @@ go 1.27.0
 require (
 	github.com/faustbrian/go-correlation v1.1.1
 	github.com/faustbrian/go-idempotency v1.2.0
-	github.com/faustbrian/go-queue v1.0.0
+	github.com/faustbrian/go-queue v1.1.2
 	github.com/faustbrian/go-service v1.1.2
 	github.com/faustbrian/go-telemetry/v2 v2.0.0
 	github.com/jackc/pgx/v5 v5.11.0
