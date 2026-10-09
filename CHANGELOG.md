@@ -5,6 +5,17 @@ and releases use Semantic Versioning.
 
 ## [Unreleased]
 
+### Security
+
+- Update the HTTP/2 dependency to include upstream crash, resource-use and
+  flow-control fixes.
+
+### Changed
+
+- Adopt Telemetry v2.0.1 and OpenTelemetry API and SDK v1.46.0 while
+  preserving scheduler instrumentation and caller-owned runtime lifecycles.
+  Runtime resources now identify the selected SDK version.
+
 ## [2.0.1] - 2026-09-28
 
 ### Security
