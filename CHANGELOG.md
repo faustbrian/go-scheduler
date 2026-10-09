@@ -16,6 +16,9 @@ and releases use Semantic Versioning.
 
 ### Changed
 
+- Adopt OpenTelemetry API v1.47.0 while retaining SDK v1.46.0,
+  scheduler instrumentation and caller-owned provider lifecycles.
+
 - Use compatible, immutable source tooling and the updated lint driver
   for patched Go while retaining every existing verification gate.
 
