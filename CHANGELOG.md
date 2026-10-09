@@ -7,10 +7,17 @@ and releases use Semantic Versioning.
 
 ### Security
 
+- Select Go 1.27.2 for CI and development to include standard-library
+  security fixes, retaining the public Go 1.27.0 minimum. Applications
+  must be rebuilt with a patched toolchain to receive these fixes.
+
 - Update the HTTP/2 dependency to include upstream crash, resource-use and
   flow-control fixes.
 
 ### Changed
+
+- Use compatible, immutable source tooling and the updated lint driver
+  for patched Go while retaining every existing verification gate.
 
 - Adopt Telemetry v2.0.1 and OpenTelemetry API and SDK v1.46.0 while
   preserving scheduler instrumentation and caller-owned runtime lifecycles.
