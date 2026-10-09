@@ -35,13 +35,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: faustbrian/go-library-tools
-          ref: e8c0c51cc517dfede5475858bb417f0e7a21f39d
+          ref: 4376027b019b1a96f0220da30139008b3b9a04a9
           path: .golib-tooling
           persist-credentials: false
       - uses: ./.golib-tooling/.github/actions/setup-golib
         with:
           source_bootstrap: true
-          tooling_sha: e8c0c51cc517dfede5475858bb417f0e7a21f39d
+          tooling_sha: 4376027b019b1a96f0220da30139008b3b9a04a9
       - name: Validate repository contracts
         env:
           GOPROXY: https://proxy.golang.org
@@ -81,9 +81,9 @@ jobs:
 
   ci:
     if: github.event_name != 'pull_request'
-    uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@e8c0c51cc517dfede5475858bb417f0e7a21f39d
+    uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@4376027b019b1a96f0220da30139008b3b9a04a9
     with:
-      tooling_sha: e8c0c51cc517dfede5475858bb417f0e7a21f39d
+      tooling_sha: 4376027b019b1a96f0220da30139008b3b9a04a9
       source_bootstrap: true
       public_dependencies: true
       release_dry_run: ${{ inputs.release_dry_run || false }}
