@@ -3,7 +3,7 @@ module github.com/faustbrian/go-scheduler/v2
 go 1.27.0
 
 require (
-	github.com/faustbrian/go-correlation v1.1.1
+	github.com/faustbrian/go-correlation v1.1.3
 	github.com/faustbrian/go-idempotency v1.2.0
 	github.com/faustbrian/go-queue v1.1.2
 	github.com/faustbrian/go-service v1.1.2
@@ -25,7 +25,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/faustbrian/go-cli v1.0.0 // indirect
 	github.com/faustbrian/go-clock v1.1.0 // indirect
-	github.com/faustbrian/go-identifier/v2 v2.0.0 // indirect
+	github.com/faustbrian/go-identifier/v2 v2.0.1 // indirect
 	github.com/go-logr/logr v1.4.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
