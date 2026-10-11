@@ -19,86 +19,22 @@ permissions:
   security-events: write
 
 jobs:
-  pull-request:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        with:
-          go-version-file: .go-version
-          cache: false
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: faustbrian/go-library-tools
-          ref: 4376027b019b1a96f0220da30139008b3b9a04a9
-          path: .golib-tooling
-          persist-credentials: false
-      - uses: ./.golib-tooling/.github/actions/setup-golib
-        with:
-          source_bootstrap: true
-          tooling_sha: 4376027b019b1a96f0220da30139008b3b9a04a9
-      - name: Validate repository contracts
-        env:
-          GOPROXY: https://proxy.golang.org
-          GOSUMDB: sum.golang.org
-          GOPRIVATE: ''
-          GONOPROXY: ''
-          GONOSUMDB: ''
-        run: |
-          set -euo pipefail
-          task="$(mktemp -d "${RUNNER_TEMP}/scheduler-contracts.XXXXXX")"
-          trap 'chmod -R u+w "${task}"; find "${task}" -depth -delete' EXIT
-          mkdir -p "${task}/build" "${task}/modules" "${task}/tmp"
-          export GOCACHE="${task}/build" GOMODCACHE="${task}/modules" GOTMPDIR="${task}/tmp"
-          export GOFLAGS='-p=1 -modcacherw'
-          golib repository check
-          golib cohesion check
-          golib api check
-          golib docs check --module .
-          go vet ./...
-          go test ./...
-          go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.14.0 run --allow-parallel-runners --timeout=10m ./...
-      - name: Remove source bootstrap workspace
-        if: always()
-        run: |
-          set -euo pipefail
-          target="${GOLIB_SOURCE_INSTALL_ROOT:-}"
-          if [[ -n "${target}" ]]; then
-            case "${target}" in
-              "${RUNNER_TEMP}"/golib-source-install.*) ;;
-              *) echo 'refuse unrelated cleanup target' >&2; exit 1 ;;
-            esac
-            if [[ -d "${target}" ]]; then
-              chmod -R u+w "${target}"
-              find "${target}" -depth -delete
-            fi
-          fi
-
   ci:
-    if: github.event_name != 'pull_request'
-    uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@4376027b019b1a96f0220da30139008b3b9a04a9
+    uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@eff8b2127c361ee2f422123824a1d337cc277ac4 # v2.1.1
     with:
-      tooling_sha: 4376027b019b1a96f0220da30139008b3b9a04a9
-      source_bootstrap: true
+      tooling_sha: eff8b2127c361ee2f422123824a1d337cc277ac4
+      source_bootstrap: false
       public_dependencies: true
       release_dry_run: ${{ inputs.release_dry_run || false }}
 
   required:
     name: Required
     if: always()
-    needs: [pull-request, ci]
+    needs: ci
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: Require shared workflow
         env:
-          PR_RESULT: ${{ needs.pull-request.result }}
           CI_RESULT: ${{ needs.ci.result }}
-        run: |
-          test "${PR_RESULT}:${CI_RESULT}" = "success:skipped" ||
-            test "${PR_RESULT}:${CI_RESULT}" = "skipped:success"
+        run: test "${CI_RESULT}" = success

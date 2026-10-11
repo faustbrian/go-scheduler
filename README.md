@@ -3,7 +3,7 @@
 [![CI](https://github.com/faustbrian/go-scheduler/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/faustbrian/go-scheduler/actions/workflows/ci.yml)
 [![CodeQL](https://img.shields.io/badge/CodeQL-required-blue)](https://github.com/faustbrian/go-scheduler/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/badge/coverage-100%25_required-blue)](CONTRIBUTING.md#verification)
-[![Mutation](https://img.shields.io/badge/mutation-100%25_required-blue)](CONTRIBUTING.md#verification)
+[![Mutation](https://img.shields.io/badge/mutation-full_qualification-blue)](CONTRIBUTING.md#verification)
 [![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
 [![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-scheduler/v2.svg)](https://pkg.go.dev/github.com/faustbrian/go-scheduler/v2)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-scheduler?sort=semver)](https://github.com/faustbrian/go-scheduler/releases)
@@ -215,8 +215,13 @@ and its [Persistence and durability family](https://github.com/faustbrian/go-lib
 
 ## Development
 
-Run `make check`. PostgreSQL and Valkey conformance require the environment
-variables described in [CONTRIBUTING.md](CONTRIBUTING.md).
+`GOWORK=off go test ./...` runs standalone untagged tests and fuzz seeds.
+`make check` and `make ci` use the public verifier's bounded local route with
+selected replica-dispatch and shutdown-order races; their manifest-selected
+PostgreSQL/Valkey services and integration tag still apply. `make check-full`
+retains the full native fuzz, docs, benchmark, backend and release qualification
+contracts. See [CONTRIBUTING.md](CONTRIBUTING.md#verification) for live-service
+variables, focused active fuzzing and optional local mutation.
 
 ## Project resources
 

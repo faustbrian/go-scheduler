@@ -115,8 +115,12 @@ key. Ownership-sensitive downstream writes must reject a lower fencing token.
 Unit suites inject transport errors, malformed replies, missing rows, stale
 owners, and canceled contexts. Tagged live suites add 32-way contention,
 blocked writes, server-clock disagreement, expiry, closed clients, and
-reconnect. CI and release workflows run them under the race detector against
-PostgreSQL 14 through 18 and Valkey 9. Deployment-specific database
+reconnect. Ordinary verifier checks retain tagged tests with configured service
+fixtures and the named replica/lifecycle races described in
+[CONTRIBUTING.md](../CONTRIBUTING.md#verification). Explicit full qualification
+retains the complete race suite against those fixtures; it does not by itself
+prove a matrix across every supported PostgreSQL or Valkey version.
+Deployment-specific database
 replication, promotion, and split-brain behavior remains the responsibility of
 the configured backend service and must be tested in that service's own
 failover drills.
