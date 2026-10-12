@@ -1,4 +1,6 @@
-// Package history provides bounded in-memory scheduler event history.
+// Package history provides mutex-protected, oldest-first event snapshots.
+// Use NewBuffer as an Observer; it owns no durable audit store or worker.
+// The cap counts events, not retained context/error bytes.
 package history
 
 import (
@@ -14,7 +16,9 @@ const MaxCapacity = 1_000_000
 // ErrInvalidCapacity reports a history capacity outside the supported range.
 var ErrInvalidCapacity = errors.New("scheduler history: capacity must be between 1 and 1000000")
 
-// Buffer is a concurrency-safe, bounded, oldest-first event history.
+// Buffer is a mutex-protected, oldest-first event history constructed with
+// NewBuffer. The zero buffer is not usable for Observe. Returned context/error
+// references remain shared; capacity is an event count, not a retained-byte cap.
 type Buffer struct {
 	mu       sync.Mutex
 	entries  []scheduler.Event
@@ -44,7 +48,8 @@ func (buffer *Buffer) Observe(event scheduler.Event) {
 	buffer.entries = append(buffer.entries, event)
 }
 
-// Entries returns a snapshot ordered from oldest to newest.
+// Entries returns an owned slice ordered oldest to newest. Event contexts and
+// error objects are shallow references and remain shared application data.
 func (buffer *Buffer) Entries() []scheduler.Event {
 	buffer.mu.Lock()
 	defer buffer.mu.Unlock()

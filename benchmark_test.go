@@ -12,6 +12,7 @@ import (
 	"github.com/faustbrian/go-scheduler/v2/memory"
 )
 
+// BenchmarkCompileSchedules measures compilation of 1000 prebuilt minute definitions; setup is excluded.
 func BenchmarkCompileSchedules(b *testing.B) {
 	schedules := make([]scheduler.Schedule, 1_000)
 	for index := range schedules {
@@ -25,6 +26,7 @@ func BenchmarkCompileSchedules(b *testing.B) {
 	}
 }
 
+// BenchmarkCompileAtScheduleLimit measures compilation at MaxSchedules with definitions built before timing.
 func BenchmarkCompileAtScheduleLimit(b *testing.B) {
 	schedules := make([]scheduler.Schedule, scheduler.MaxSchedules)
 	for index := range schedules {
@@ -42,6 +44,7 @@ func BenchmarkCompileAtScheduleLimit(b *testing.B) {
 	}
 }
 
+// BenchmarkDueScan measures a one-day minute scan retaining a 100-occurrence tail; setup is excluded.
 func BenchmarkDueScan(b *testing.B) {
 	schedule, _ := scheduler.NewSchedule(
 		"catch-up", "task", scheduler.EveryMinute(),
@@ -58,6 +61,7 @@ func BenchmarkDueScan(b *testing.B) {
 	}
 }
 
+// BenchmarkDueAtOccurrenceScanLimit measures rejection beyond MaxOccurrenceScan; registry construction is excluded.
 func BenchmarkDueAtOccurrenceScanLimit(b *testing.B) {
 	schedule, _ := scheduler.NewSchedule(
 		"scan-limit", "task", scheduler.EveryMinute(),
@@ -74,6 +78,7 @@ func BenchmarkDueAtOccurrenceScanLimit(b *testing.B) {
 	}
 }
 
+// BenchmarkMemoryLeaseContention measures parallel acquire/release of one shared key with 1ns TTL and monotonic supplied instants; real backend IO is excluded.
 func BenchmarkMemoryLeaseContention(b *testing.B) {
 	store := memory.New()
 	base := time.Date(2026, time.January, 1, 0, 0, 0, 0, time.UTC)

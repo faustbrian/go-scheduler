@@ -174,7 +174,7 @@ boundary they adapt:
 
 | Need | Package | Ownership boundary |
 |---|---|---|
-| cron parsing only | `cron` | compiles bounded expressions; starts no runner |
+| cron parsing only | `cron` | compiles explicit expressions; callers bound direct input; starts no runner |
 | lease contract | `adapters/lease` | defines fenced ownership without selecting storage |
 | local deterministic coordination | `memory` | process-local state; not restart durable |
 | shared PostgreSQL coordination | `postgres` | caller applies migrations and owns the pool |
@@ -183,7 +183,7 @@ boundary they adapt:
 | dispatch idempotency | `adapters/idempotency` | adapts a caller-owned idempotency store |
 | service lifecycle | `adapters/service` | adds runner and drain order to a `go-service` plan |
 | HTTP administration | `adapters/http` | exposes inspection and recovery behind caller authentication |
-| CLI administration | `adapters/cli` | writes bounded output through caller-owned streams |
+| CLI administration | `adapters/cli` | writes inspection/control output through caller-owned streams |
 | observations | `history`, `adapters/slog`, `adapters/otel` | retains bounded events or emits through caller facilities |
 | deterministic tests | `schedulertest`, `lease/conformance` | provides fake time or validates a store implementation |
 

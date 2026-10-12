@@ -36,3 +36,11 @@ same logical key; never substitute a new key. PostgreSQL cancellation normally
 aborts the blocked statement atomically. A Valkey command already accepted by
 the server can still commit after the client deadline, but its lease remains
 fenced and discoverable under the original key.
+
+Administrative HTTP/CLI adapters provide no authorization, authentication or
+server/writer deadline. Wrap recovery with application controls. HTTP recovery
+admits one bounded JSON object with unknown fields rejected, but does not demand
+trailing EOF; it is not a canonical whole-body protocol. Metadata and backend
+errors are not universally redacted. Lifecycle history stores shallow context/
+error references, and telemetry can retain spans when Completed is omitted or
+callbacks complete out of order; it is not a guaranteed durable audit stream.

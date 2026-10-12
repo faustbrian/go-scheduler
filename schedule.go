@@ -99,8 +99,8 @@ type Interval struct {
 	expression string
 }
 
-// Cron constructs an interval from a five-field expression, an optional leading
-// seconds field, an L day-of-month value, or a supported descriptor.
+// Cron stores an expression without validation. Compile accepts five fields,
+// optional leading seconds, L day-of-month and pinned robfig/cron descriptors.
 func Cron(expression string) Interval { return Interval{expression: expression} }
 
 // EveryMinute returns the explicit every-minute cron interval.
@@ -121,82 +121,144 @@ func Monthly() Interval { return Cron("0 0 1 * *") }
 // Expression returns the exact cron expression represented by the interval.
 func (i Interval) Expression() string { return i.expression }
 
-// Condition allows trusted application code to permit an occurrence.
+// Condition is a trusted application predicate. Conditions run in order until
+// false/error, but timeout only stops waiting; a timed-out closure may continue.
+// Shared closures and the occurrence maps require application synchronization.
 type Condition func(Context) (bool, error)
 
 // TimeWindow is an inclusive recurring local-time constraint. Start and End
 // are offsets since local midnight; Excluded inverts the allowed window.
 type TimeWindow struct {
-	Start    time.Duration `json:"start"`
-	End      time.Duration `json:"end"`
-	Excluded bool          `json:"excluded"`
+	// Start is the inclusive local offset since midnight.
+	Start time.Duration `json:"start"`
+	// End is inclusive; Start greater than End describes a window crossing midnight.
+	End time.Duration `json:"end"`
+	// Excluded rejects this window instead of requiring it; all configured windows are combined.
+	Excluded bool `json:"excluded"`
 }
 
-// Hook consumes a schedule lifecycle event.
+// Hook consumes a lifecycle event in a managed callback goroutine. It must
+// tolerate concurrent/reordered completion; timeouts cannot terminate it.
+// Callbacks should not synchronously Drain their own runner.
 type Hook func(Event)
 
 // Hooks configures optional callbacks for each lifecycle boundary.
 type Hooks struct {
-	Before    Hook
-	Success   Hook
-	Failure   Hook
-	Skipped   Hook
-	Overlap   Hook
+	// Before runs for EventBefore, before managed execution admission.
+	Before Hook
+	// Success runs for a successful runner execution/dispatch wait.
+	Success Hook
+	// Failure runs for a failed decision or execution wait.
+	Failure Hook
+	// Skipped runs for a policy skip, not an overlap event.
+	Skipped Hook
+	// Overlap runs when an active task lease suppresses the occurrence.
+	Overlap Hook
+	// Completed runs for the terminal decision event, subject to best-effort callback admission.
 	Completed Hook
-	After     Hook
+	// After runs for EventFinished; a timed-out executor can still be active.
+	After Hook
 }
 
-// Context carries immutable schedule and ownership data to an Executor.
+// Context carries copied schedule and ownership data to conditions/execution.
+// Its exported maps are mutable and shared within this occurrence; they must
+// not be changed by a still-running condition while the executor uses them.
 type Context struct {
-	Schedule       Schedule
-	Now            time.Time
-	Due            time.Time
-	Attempt        int
-	Owner          string
-	Fencing        uint64
+	// Schedule is a copied definition; callback closures are shared application state.
+	Schedule Schedule
+	// Now is the tick range endpoint, not necessarily callback or completion wall time.
+	Now time.Time
+	// Due is the scheduled physical boundary.
+	Due time.Time
+	// Attempt is occurrence attempt metadata; the runner starts it at one.
+	Attempt int
+	// Owner is the runner lease-owner identity.
+	Owner string
+	// Fencing is the task token when present, otherwise occurrence token or zero.
+	Fencing uint64
+	// IdempotencyKey identifies rollout-stable physical occurrence ownership.
 	IdempotencyKey string
-	Metadata       map[string]string
+	// Metadata is a copied diagnostic map shared by this occurrence's conditions and executor.
+	Metadata map[string]string
 }
 
-// Schedule is an immutable code-defined task timing and policy definition.
+// Schedule is an exported code-defined timing and policy value. NewSchedule and
+// Compile copy its admitted maps/slices; callers must not mutate a published
+// value concurrently. Callback closures are shared, not frozen or copied.
 type Schedule struct {
-	Name               string
-	Version            string
-	Task               string
-	Expression         string
-	Timezone           string
-	Identity           string
-	CoordinationID     string
-	ParameterIdentity  string
-	Parameters         map[string]any
-	Enabled            bool
-	Environments       []string
-	DaysOfWeek         []time.Weekday
-	TimeWindows        []TimeWindow
-	MaintenancePolicy  MaintenancePolicy
-	Conditions         []Condition
-	StartAt            time.Time
-	EndAt              time.Time
-	Jitter             time.Duration
-	Metadata           map[string]string
-	MissedRunPolicy    MissedRunPolicy
-	MaxCatchUp         int
-	OverlapPolicy      OverlapPolicy
-	OnOneServer        bool
+	// Name is the nonblank application name and registry lookup key.
+	Name string
+	// Version is the revision component; NewSchedule defaults it to "1".
+	Version string
+	// Task is the nonblank application-owned work identity.
+	Task string
+	// Expression is cron input, validated by Compile rather than NewSchedule.
+	Expression string
+	// Timezone is the explicit loader name; NewSchedule defaults to UTC.
+	Timezone string
+	// Identity hashes coordination, version, timing, jitter and recurring constraints.
+	Identity string
+	// CoordinationID hashes name, task and canonical parameters, excluding timing/version.
+	CoordinationID string
+	// ParameterIdentity hashes the JSON representation of admitted task parameters.
+	ParameterIdentity string
+	// Parameters contains JSON-copied values; callers must not mutate a compiled definition.
+	Parameters map[string]any
+	// Enabled controls Due/Overview and runner scheduling; Next still calculates disabled definitions.
+	Enabled bool
+	// Environments is an exact-match allowlist; empty permits every environment.
+	Environments []string
+	// DaysOfWeek filters local weekdays before missed-run selection.
+	DaysOfWeek []time.Weekday
+	// TimeWindows combines inclusive local windows and exclusions before jitter.
+	TimeWindows []TimeWindow
+	// MaintenancePolicy selects behavior when the runner is in maintenance mode.
+	MaintenancePolicy MaintenancePolicy
+	// Conditions contains trusted synchronous predicates; closures are not deep-copied.
+	Conditions []Condition
+	// StartAt is an inclusive occurrence bound; zero leaves the lower bound open.
+	StartAt time.Time
+	// EndAt is an inclusive occurrence bound; zero leaves the upper bound open.
+	EndAt time.Time
+	// Jitter bounds the stable per-revision offset to [0,Jitter); zero disables it.
+	Jitter time.Duration
+	// Metadata is copied diagnostic text, not authenticated or redacted by core.
+	Metadata map[string]string
+	// MissedRunPolicy selects exact-boundary skip, newest-only, or bounded-tail catch-up.
+	MissedRunPolicy MissedRunPolicy
+	// MaxCatchUp caps retained catch-up occurrences, not candidates scanned.
+	MaxCatchUp int
+	// OverlapPolicy selects an overlap decision; alone it does not enable the task lease.
+	OverlapPolicy OverlapPolicy
+	// OnOneServer enables a non-renewed occurrence lease retained until expiry.
+	OnOneServer bool
+	// WithoutOverlapping enables a renewable task lease held until executor cleanup.
 	WithoutOverlapping bool
-	LeaseTTL           time.Duration
-	OneServerTTL       time.Duration
-	OverlapTTL         time.Duration
-	RunTimeout         time.Duration
-	RunInBackground    bool
-	Hooks              Hooks
-	EvenWhenPaused     bool
+	// LeaseTTL is the compatibility fallback when a specific TTL is unset.
+	LeaseTTL time.Duration
+	// OneServerTTL is the occurrence lease TTL; positive values override LeaseTTL.
+	OneServerTTL time.Duration
+	// OverlapTTL is the task lease TTL; positive values override LeaseTTL.
+	OverlapTTL time.Duration
+	// RunTimeout bounds the runner execution wait, not forced goroutine termination.
+	RunTimeout time.Duration
+	// RunInBackground returns from the decision after managed execution starts; Drain still tracks it.
+	RunInBackground bool
+	// Hooks contains best-effort callbacks; timed-out callbacks can finish out of event order.
+	Hooks Hooks
+	// EvenWhenPaused bypasses pause lookup, not environment/maintenance/condition policies.
+	EvenWhenPaused bool
 }
 
-// Option configures a schedule before final validation and identity hashing.
+// Option configures a definition synchronously before resource admission and
+// identity hashing. Custom options are trusted: arbitrary policy/TTL mutation
+// is not comprehensively validated, and panics/blocking are not recovered.
 type Option func(*Schedule) error
 
-// NewSchedule constructs, validates, bounds, and identifies a schedule.
+// NewSchedule applies non-nil options, admits selected resource limits and
+// computes identities. Names/tasks are checked for blankness, not normalized.
+// Cron/location validation occurs at Compile. JSON copying may invoke trusted
+// custom marshalers before the encoded-byte cap is known.
 func NewSchedule(name, task string, interval Interval, options ...Option) (Schedule, error) {
 	if strings.TrimSpace(name) == "" {
 		return Schedule{}, ErrScheduleNameRequired
@@ -378,7 +440,9 @@ func WithJitter(jitter time.Duration) Option {
 	}
 }
 
-// WithParameters copies JSON-compatible task parameters into the schedule.
+// WithParameters copies parameters through JSON when applied, normalizing
+// generic values (including numbers). It does not retain caller map ownership;
+// custom marshalers remain trusted and the byte cap is checked afterward.
 func WithParameters(parameters map[string]any) Option {
 	return func(schedule *Schedule) error {
 		encoded, err := json.Marshal(parameters)
@@ -559,6 +623,9 @@ func hashStrings(values ...string) string {
 	return hex.EncodeToString(digest.Sum(nil))
 }
 
+// JSON round-tripping isolates admitted parameter values, while condition/hook
+// functions necessarily retain their closures. Copy failure on a manually
+// mutated value leaves its original parameter map, so use the validated builder.
 func cloneSchedule(schedule Schedule) Schedule {
 	schedule.Environments = slices.Clone(schedule.Environments)
 	schedule.DaysOfWeek = slices.Clone(schedule.DaysOfWeek)

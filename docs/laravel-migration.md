@@ -25,7 +25,7 @@ rolling cutover.
 | `weekdays`, `weekends`, or named weekdays | matching `With*days` option | filters compiled boundaries before missed-run selection |
 | `days` | `WithDays` | accepts one or more `time.Weekday` values |
 | `between`, `unlessBetween` | `WithBetween`, `WithUnlessBetween` | inclusive local-time windows; overnight windows are supported |
-| `when` | `WithCondition` | bounded to 32 and a runner callback deadline |
+| `when` | `WithCondition` | bounded to 32 and a runner callback wait deadline |
 | `skip` | `WithSkip` | inverts the supplied trusted condition |
 | `environments` | `WithEnvironments` | runner environment is explicit configuration |
 | `evenInMaintenanceMode` | `MaintenanceRun` | runner maintenance mode is supplied by the application |
@@ -36,7 +36,7 @@ rolling cutover.
 | `schedule:pause`, `schedule:continue` | application trigger using `PauseController` | the application decides whether the trigger is a command, authenticated endpoint, or backpressure controller |
 | `evenWhenPaused` | `EvenWhenPaused()` | bypasses pause lookup for the selected operational schedule |
 | queued job or command | `schedulerqueue.Dispatcher` envelope task and parameters | workers own business execution, routing, and retry policy; queue name and connection do not belong to schedule timing |
-| `before`, success, failure, `after` | `WithHooks` | `After` only follows a started executor; all hooks are panic-contained and deadline-bounded |
+| `before`, success, failure, `after` | `WithHooks` | `After` follows the wait for started work, not necessarily executor return; hook waits are bounded |
 | `pingBefore`, `pingAfter` | application hook or telemetry | core does not make network callbacks |
 | output append, email, or storage | worker-owned output policy | core captures no command output |
 | `schedule:list` | `Registry.Overview(after)` | caller supplies the reference instant and chooses the CLI, HTTP, or admin trigger |

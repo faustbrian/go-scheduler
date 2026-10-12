@@ -4,9 +4,10 @@
 // Callers construct schedules, lease stores, executors, and facility
 // components. The adapter constructs and exposes the concrete runner, but it
 // does not close facilities itself. Facilities listed in Options start before
-// scheduling and stop only after service has canceled the runner task and the
-// runner has joined active executions. Facility components therefore transfer
-// exactly the ownership expressed by their own lifecycle contracts.
+// scheduling; the drain component is stopped before their Stop callbacks.
+// Successful drain joins active work, but a drain error does not prevent the
+// service from attempting later facility stops. Facility components retain
+// exactly the ownership and error policy of their own lifecycle contracts.
 //
 // Every occurrence starts an independent correlation workflow by default.
 // CorrelationTrustedMetadata must be selected explicitly to continue trusted
@@ -65,7 +66,7 @@ type Options struct {
 	CorrelationMode CorrelationMode
 	// RunnerOptions are applied while constructing the concrete runner.
 	RunnerOptions []scheduler.RunnerOption
-	// Facilities start before scheduling and stop after the runner drains.
+	// Facilities start before scheduling; Stop follows the drain attempt even on failure.
 	Facilities []service.Component
 }
 
@@ -151,8 +152,10 @@ func New(options Options) (*Adapter, error) {
 // Runner returns the concrete scheduler runner constructed by New.
 func (adapter *Adapter) Runner() *scheduler.Runner { return adapter.runner }
 
-// Plan returns an isolated long-running service plan. Facilities retain their
-// declaration order; the final drain component therefore stops before them.
+// Plan copies task/component containers but shares this adapter's concrete
+// runner and facility callbacks. Facilities retain declaration order; the final
+// drain component stops before them. Repeated Plan calls are not fresh runners;
+// a drained runner remains closed to ticks.
 func (adapter *Adapter) Plan() service.Plan {
 	components := append([]service.Component(nil), adapter.facilities...)
 	components = append(components, service.Component{

@@ -23,8 +23,9 @@ if err := paused.Resume(ctx); err != nil { return err }
 `PauseState` is application-owned: keep the pointer for administrative control
 and do not construct a new instance per tick. It is process-local, so each
 replica needs an application-owned shared `PauseSource`/`PauseController` when
-pause state must be consistent across replicas. The runner owns the lease store,
-execution cancellation, and final `Drain`; callers own the pause state and must
+pause state must be consistent across replicas. The runner borrows the lease
+store and derives execution cancellation; callers cancel scheduling, invoke
+final `Drain`, and own backend closure. Callers own the pause state and must
 not close or release it. `Pause`, `Resume`, and `Paused` honor context
 cancellation and are safe to call repeatedly.
 

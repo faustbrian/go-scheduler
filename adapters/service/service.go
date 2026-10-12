@@ -1,5 +1,6 @@
 // Package schedulerservice is the target-oriented path for scheduler service
 // lifecycle composition. Its public types retain the released identities.
+// Use New/Plan; plans share one runner and retain caller facility ownership contracts.
 package schedulerservice
 
 //lint:file-ignore SA1019 This successor imports the deprecated package to preserve released identities.
@@ -29,4 +30,6 @@ type OptionsError = legacy.OptionsError
 type Adapter = legacy.Adapter
 
 // New validates options and constructs scheduler lifecycle components.
+// It retains caller facility contracts and exposes a single-use draining
+// runner. Plan does not create a fresh runner or independently close facilities.
 func New(options Options) (*Adapter, error) { return legacy.New(options) }

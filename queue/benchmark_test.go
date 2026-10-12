@@ -10,6 +10,9 @@ import (
 	schedulerqueue "github.com/faustbrian/go-scheduler/v2/queue" //nolint:staticcheck // Measures compatibility behavior.
 )
 
+// BenchmarkDispatchEnvelope measures JSON dispatch of one prebuilt parameterized
+// occurrence to a fake queue retaining only the latest message; transport IO
+// and setup are excluded.
 func BenchmarkDispatchEnvelope(b *testing.B) {
 	backend := &fakeQueue{}
 	dispatcher, _ := schedulerqueue.New(backend)

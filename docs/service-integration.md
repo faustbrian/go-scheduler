@@ -42,7 +42,11 @@ Facilities start in declaration order before the scheduler task begins. During
 shutdown, `service` cancels and joins the runner task first. The adapter's
 final lifecycle component then calls `Runner.Drain`, which rejects new ticks
 and joins active decisions, executions, and callbacks. Facility components
-close afterward in reverse declaration order.
+stop afterward in reverse declaration order. A failed Drain does not prevent
+service v1.1.2 from attempting the remaining facility Stop callbacks; a timeout
+is not proof that active work has joined. Facility shutdown must tolerate its
+error/cancellation policy or isolate unfinished effects before releasing shared
+resources.
 
 The service shutdown context bounds `Drain`. If its deadline expires, the
 context error remains observable and the runner remains in draining state. A

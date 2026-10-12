@@ -14,3 +14,11 @@ with `ErrOccurrenceLimit` rather than replaying unbounded downtime.
 Jitter is a stable per-schedule offset in `[0, maximum)`. It is identical on all
 replicas and preserves occurrence ordering. Wall-clock jumps are processed from
 the last runner cursor to the injected clock's current instant.
+
+The cron compiler can return zero for an unsatisfiable future pattern. Registry
+Next/Overview pass that value through jitter addition, so nonzero jitter can
+produce a year-one offset value rather than a future instant. Due assumes timing
+advances and can return ErrOccurrenceLimit for exhausted/nonadvancing patterns
+instead of an empty result. Do not interpret arbitrary calculated boundaries as
+proof of an executable future occurrence. This limitation is not repaired by
+the documentation pass.

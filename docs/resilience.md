@@ -25,15 +25,19 @@ time result, public API drift, coverage regression, or failed backend matrix.
 | operational history | 1 to 1,000,000 events | oldest event is evicted |
 | task execution wait | schedule `RunTimeout` | context is canceled and tick returns |
 | managed executions | 128 by default | `ErrExecutionCapacity` |
-| lease backend operation | 5 seconds by default | backend context error |
-| condition, hook, or observer | 1 second by default | condition fails; lifecycle callback returns |
+| lease backend operation | 5-second context by default | cooperative backend observes cancellation |
+| condition, hook, or observer | 1-second wait by default | condition fails; lifecycle wait returns while callback can continue |
 | managed callbacks | 128 by default | condition fails; lifecycle callback is omitted |
 | drain | caller deadline | returns the context error while work remains tracked |
 | retry count | no core retry loop | durable queue or worker owns a finite policy |
 | task output | no core output capture | worker owns storage and truncation |
 
-Execution, callback, and lease deadlines are configurable runner options. A
-task that ignores cancellation continues in one tracked execution slot, and
+Execution/callback waits and lease context deadlines are configurable runner
+options. An arbitrary lease/pause backend ignoring context can still block a
+decision. Drain does not cancel work and each call creates a waiter retained
+until that work returns; avoid repeated deadline retries on permanently stuck
+work. A task that ignores cancellation continues in one tracked execution slot,
+and
 its overlap lease remains heartbeated until it returns. This prevents a local
 execution timeout from authorizing a concurrent replacement. `Drain` waits for
 tracked work or returns at its caller deadline. Go cannot safely terminate an

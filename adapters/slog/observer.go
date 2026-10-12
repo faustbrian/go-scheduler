@@ -1,4 +1,5 @@
 // Package schedulerslog records scheduler lifecycle events with log/slog.
+// Use New with a borrowed logger; handler blocking and redaction remain application-owned.
 package schedulerslog
 
 import (
@@ -14,10 +15,11 @@ var ErrInvalidConfiguration = errors.New("scheduler slog: logger is required")
 
 // Config supplies the application-owned logger.
 type Config struct {
+	// Logger is borrowed; handler blocking, redaction and shutdown remain application-owned.
 	Logger *slog.Logger
 }
 
-// Observer records bounded scheduler lifecycle fields. It starts no goroutines
+// Observer records structured scheduler lifecycle fields. It starts no goroutines
 // and retains neither event contexts nor event values.
 type Observer struct {
 	logger *slog.Logger
@@ -31,7 +33,9 @@ func New(config Config) (*Observer, error) {
 	return &Observer{logger: config.Logger}, nil
 }
 
-// Observe records one scheduler lifecycle event.
+// Observe synchronously logs diagnostic names/owner and unredacted Err through
+// the caller handler. Handler blocking, concurrent safety and secret filtering
+// remain application-owned; a runner timeout does not terminate handler work.
 func (observer *Observer) Observe(event scheduler.Event) {
 	ctx := eventContext(event.Context)
 	observer.logger.LogAttrs(

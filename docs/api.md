@@ -2,9 +2,12 @@
 
 ## Definitions and registry
 
-`NewSchedule(name, task, interval, options...)` creates a validated immutable
-definition. `Compile` validates cron expressions and IANA time zones, rejects
-duplicate names, and returns an immutable `Registry`. Registry methods return
+`NewSchedule(name, task, interval, options...)` admits selected resource limits
+and copies a definition. Its public fields remain mutable; use the builder
+and do not mutate published values concurrently. Custom options and callback
+closures are trusted, not frozen. `Compile` validates cron/location inputs,
+rejects
+duplicate names, and returns a privately held `Registry`. Registry methods return
 copies and provide `Schedules`, `Next`, and bounded `Due` calculations.
 
 The `cron` package exposes the same five-field, optional-seconds, last-day, and
@@ -71,7 +74,8 @@ the definition, and the runner selects its current environment with
 after a caller-supplied non-zero cursor, then continues the same schedule loop
 without a startup gap.
 `Tick` exposes deterministic range processing. `Drain` rejects new ticks and
-waits for in-flight decisions, foreground and background managed executions,
+does not cancel Run or active work: cancel their contexts first. It waits for
+in-flight decisions, foreground and background managed executions,
 and callbacks until its context ends. `RunInBackground()` lets `Tick` continue
 starting later due tasks before that execution completes. Its eventual failure
 is emitted through failure and completed lifecycle events rather than returned
@@ -96,9 +100,10 @@ bound with `WithMaxConcurrentExecutions`; capacity exhaustion returns
 `ErrExecutionCapacity`. Go cannot forcibly terminate arbitrary application
 code, so in-process executors remain suitable only for short operational work.
 
-Every lease backend call has a five-second default deadline, configurable with
+Every lease backend call receives a five-second default context deadline,
+configurable with
 `WithLeaseOperationTimeout`. Conditions, hooks, and observers have a one-second
-default deadline and share 128 managed slots. Configure these with
+default wait deadline and share 128 managed slots. Configure these with
 `WithCallbackTimeout` and `WithMaxConcurrentCallbacks`. A condition timeout or
 capacity failure fails the occurrence. Lifecycle hooks and observers are
 best-effort once callback capacity is exhausted.
@@ -109,8 +114,10 @@ best-effort once callback capacity is exhausted.
 correlation-aware runner from a
 caller-owned registry, lease store, executor, and runner options. `Plan`
 returns one long-running task plus a final drain component. Under `service`,
-task cancellation stops new scheduling, `Runner.Drain` joins retained
-executions, and supplied facility components close afterward.
+task cancellation stops new scheduling and `Runner.Drain` attempts to join
+retained executions before facility Stop callbacks. Service v1.1.2 still
+attempts later stops when Drain fails; successful join must not be inferred
+from a shutdown timeout.
 
 Every occurrence starts a new workflow through `correlation/adapters/schedule` by
 default. `CorrelationTrustedMetadata` explicitly continues trusted correlation
@@ -142,21 +149,24 @@ reported as an execution failure.
 ## Events
 
 Runner events are `before`, `success`, `failure`, `skipped`, `overlap`,
-`finished`, and `completed`. `finished` and the `After` hook occur only after a
-started executor returns. Their order is `before`, `success` or `failure`,
-`finished`, then `completed`. `completed` still terminates every scheduling
-decision, including skips and failures before execution. `Event.Background`
-identifies schedules configured with `RunInBackground`; the core intentionally
+`finished`, and `completed`. `finished` and the `After` hook occur after the
+runner finishes waiting for started work. Timeout or heartbeat failure can emit
+them while an executor still runs; neither event proves cleanup or lease release.
+Emission order is
+`before`, `success` or `failure`, `finished`, then `completed`. The terminal
+`completed` emission also covers skips and failures before execution.
+`Event.Background` identifies schedules configured with `RunInBackground`; the core intentionally
 does not capture task output or add a separate background-finished event.
 Per-schedule hooks and global observers are panic-contained and bounded by the
-runner callback deadline and capacity.
+runner callback wait and capacity. Timed-out callbacks retain slots until actual
+return and can complete out of order; saturated lifecycle callbacks are omitted.
 `history.Buffer` is a bounded observer. `schedulerslog.Observer` and
 `schedulerotel.Observer` from the target-specific adapters emit structured
 logs, metrics, and spans.
 
 ## Control surfaces
 
-`Registry.Overview(after)` combines immutable definitions and enabled next-run
+`Registry.Overview(after)` combines copied definitions and enabled next-run
 instants for caller-owned inspection surfaces. The built-in HTTP list accepts
 an optional `after` query and the CLI list accepts optional `--after`; both add
 next-run data without owning the trigger time.

@@ -1,5 +1,6 @@
 // Package schedulerhttp is the target-oriented path for scheduler HTTP
 // inspection and recovery.
+// Use New; authentication, server lifetime and recovery authorization remain caller-owned.
 package schedulerhttp
 
 //lint:file-ignore SA1019 This successor imports the deprecated package to preserve released identities.
@@ -20,6 +21,8 @@ type Schedule = legacy.Schedule
 type Handler = legacy.Handler
 
 // New constructs an administrative handler without registering global routes.
+// It delegates to the retained administrative handler; the application must
+// supply authentication, authorization and server deadlines.
 func New(registry *scheduler.Registry, leases schedulerlease.Store) (*Handler, error) {
 	return legacy.New(registry, leases)
 }

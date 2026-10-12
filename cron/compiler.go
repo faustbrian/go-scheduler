@@ -1,5 +1,8 @@
 // Package cron compiles documented five- or six-field cron expressions in an
-// explicit IANA time zone without exposing the underlying parser implementation.
+// explicit location using pinned robfig/cron/v3 v3.0.1 grammar plus exact L
+// day-of-month support. Use Compile/Next; runtime tzdata, parser-specific DST
+// behavior and location loading are not a portable cron-standard certification.
+// No worker/timer is owned; direct Compile has no input-byte admission cap.
 package cron
 
 import (
@@ -20,6 +23,7 @@ var (
 
 // Schedule calculates the first occurrence strictly after a timestamp.
 type Schedule interface {
+	// Next returns the first boundary strictly after its argument, or zero when search finds none.
 	Next(time.Time) time.Time
 }
 
@@ -86,6 +90,9 @@ type localized struct {
 	location *time.Location
 }
 
+// The pinned parser searches five years per call. Advancing its search origin
+// covers eighty such windows (400 years), including non-leap-century gaps; this
+// is a calendar horizon, not an independent arbitrary-timezone completeness proof.
 func (schedule localized) Next(after time.Time) time.Time {
 	cursor := after.In(schedule.location)
 	for range 80 {

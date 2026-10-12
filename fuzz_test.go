@@ -7,6 +7,8 @@ import (
 	scheduler "github.com/faustbrian/go-scheduler/v2"
 )
 
+// FuzzScheduleCompilation exercises hostile names/cron/zone admission and a
+// fixed-instant Next call for panic safety; it is not a separate cron oracle.
 func FuzzScheduleCompilation(f *testing.F) {
 	f.Add("report", "task", "0 0 * * *", "UTC")
 	f.Add("dst", "task", "30 3 * * *", "Europe/Helsinki")
@@ -23,6 +25,8 @@ func FuzzScheduleCompilation(f *testing.F) {
 	})
 }
 
+// FuzzScheduleOptions exercises metadata, jitter and missed-run policy bounds
+// for panic safety; application callback behavior is outside its input space.
 func FuzzScheduleOptions(f *testing.F) {
 	f.Add("owner", "value", int64(0), uint8(0))
 	f.Fuzz(func(_ *testing.T, metadataKey, metadataValue string, jitterNanos int64, policy uint8) {

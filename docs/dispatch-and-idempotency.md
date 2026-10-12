@@ -20,3 +20,10 @@ idempotency completion. A retry is suppressed while ownership remains in
 progress, but a stale takeover can submit again after the lease expires.
 Consumers must treat the envelope key as idempotent. Neither Kubernetes,
 leases, nor this wrapper provide exactly-once delivery.
+
+Queue submission is synchronous and the Enqueuer port has no context argument;
+cancellation is checked before submission, not forced during a blocked backend
+call. The wrapper's ownership lease is not renewed during inner work. Failure
+release detaches cancellation without adding its own deadline. Supply bounded
+backends and a lease covering the intended work; completion can fail after the
+effect committed. Neither adapter closes clients or filters secret data.

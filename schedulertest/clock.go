@@ -1,4 +1,6 @@
-// Package schedulertest provides deterministic runner test utilities.
+// Package schedulertest provides a mutex-protected manual clock for runner
+// tests. Use NewFakeClock and Advance; no real-time worker or timer cancellation
+// is owned. Unadvanced timers remain retained until a later Advance.
 package schedulertest
 
 import (
@@ -32,7 +34,8 @@ func (clock *FakeClock) Now() time.Time {
 	return clock.now
 }
 
-// After registers a timer completed by a future Advance call.
+// After registers an owned buffered channel, completed and closed only by
+// Advance. Even a nonpositive duration waits for Advance; callers must not close it.
 func (clock *FakeClock) After(duration time.Duration) <-chan time.Time {
 	clock.mu.Lock()
 	defer clock.mu.Unlock()
@@ -42,7 +45,8 @@ func (clock *FakeClock) After(duration time.Duration) <-chan time.Time {
 	return ch
 }
 
-// Advance moves time forward and completes every due timer.
+// Advance adds duration (negative values can move backward) and completes due
+// timers with the new clock time, not each timer's originally requested boundary.
 func (clock *FakeClock) Advance(duration time.Duration) {
 	clock.mu.Lock()
 	defer clock.mu.Unlock()

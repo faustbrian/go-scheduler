@@ -7,12 +7,15 @@ import (
 
 // PauseSource reports whether ordinary schedules should be paused.
 type PauseSource interface {
+	// Paused must cooperate with its non-nil context; an error fails affected occurrences closed.
 	Paused(context.Context) (bool, error)
 }
 
 // PauseController idempotently changes an application's scheduler pause state.
 type PauseController interface {
+	// Pause requests paused state; ordinary in-flight work is not canceled by this interface.
 	Pause(context.Context) error
+	// Resume requests resumed state; skipped occurrences are not automatically replayed.
 	Resume(context.Context) error
 }
 

@@ -1,5 +1,6 @@
 // Package schedulerqueue is the target-oriented path for scheduler queue dispatch.
 // Its public types and behavior retain the released package identities.
+// Use New; queue blocking/durability, worker deduplication and client lifetime remain caller-owned.
 package schedulerqueue
 
 //lint:file-ignore SA1019 This successor imports the deprecated package to preserve released identities.
@@ -19,4 +20,6 @@ type Envelope = legacy.Envelope
 type Dispatcher = legacy.Dispatcher
 
 // New constructs a queue-backed scheduler executor.
+// It borrows the backend. Queue has no context argument; durability, blocking
+// and worker deduplication remain backend/application responsibilities.
 func New(queue Enqueuer) (*Dispatcher, error) { return legacy.New(queue) }

@@ -1,5 +1,6 @@
 // Package schedulerlease is the target-oriented path for scheduler lease contracts.
 // Its public types and behavior retain the released package identities.
+// Choose a provider implementing Store; downstream fencing and client lifetime remain caller-owned.
 package schedulerlease
 
 //lint:file-ignore SA1019 This successor imports the deprecated package to preserve released identities.

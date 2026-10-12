@@ -24,9 +24,8 @@ helpers keep grouping explicit, typed, and immutable without introducing a
 mutable configuration DSL.
 
 **Why are queue name and connection absent from a schedule?** The schedule owns
-timing. `schedulerqueue.Dispatcher` from `adapters/queue` owns durable delivery,
-and an application adapter may
-route by task identity if it needs multiple queues or backends.
+timing. `schedulerqueue.Dispatcher` from `adapters/queue` submits to a backend
+whose durability remains caller-selected, and an application adapter may route by task identity if it needs multiple queues or backends.
 
 **How do applications pause or interrupt scheduling?** Supply a shared
 `PauseSource`, invoke its application-owned `PauseController`, and use

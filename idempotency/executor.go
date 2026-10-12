@@ -1,4 +1,7 @@
-// Package idempotency integrates occurrence ownership with idempotency.
+// Package idempotency wraps an executor with occurrence ownership from a
+// borrowed go-idempotency store. New introduces no store closure or heartbeat.
+// Submission and completion are separate operations; stale takeover can repeat
+// effects, so downstream deduplication/fencing remains necessary.
 //
 // Deprecated: use github.com/faustbrian/go-scheduler/v2/adapters/idempotency.
 package idempotency
@@ -22,8 +25,10 @@ var (
 
 // Options configures the tenant namespace and ownership lease.
 type Options struct {
+	// Tenant namespaces occurrence ownership; empty is rejected.
 	Tenant string
-	Lease  time.Duration
+	// Lease is positive and at most go-idempotency MaxLease; no renewal is performed here.
+	Lease time.Duration
 }
 
 // Executor deduplicates schedule occurrences before invoking another executor.
@@ -42,7 +47,11 @@ func New(store goidempotency.Store, inner scheduler.Executor, options Options) (
 	return &Executor{store: store, inner: inner, tenant: options.Tenant, lease: options.Lease}, nil
 }
 
-// Execute acquires occurrence ownership and completes it after successful work.
+// Execute suppresses replay/in-progress outcomes and invokes the inner executor
+// for acquired ownership. Inner failure releases with cancellation detached and
+// no new deadline; success completes using ctx and may fail after effects commit.
+// The ownership lease is not renewed during long work. No error redaction or
+// independent panic recovery is added by this wrapper.
 func (executor *Executor) Execute(ctx context.Context, scheduled scheduler.Context) error {
 	if err := ctx.Err(); err != nil {
 		return err

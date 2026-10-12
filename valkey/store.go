@@ -33,7 +33,10 @@ type scriptExecutor interface {
 	Check(context.Context) error
 }
 
-// Store persists atomic TTL leases and monotonic fencing counters in Valkey.
+// Store issues atomic Lua operations with server TIME; supplied now is ignored.
+// Concurrency follows the borrowed client. TTLs are truncated to milliseconds;
+// sub-millisecond positives can produce immediately expired hashes, unlike the
+// PostgreSQL admission rule. Unique-key counters have no automatic expiry.
 type Store struct {
 	executor scriptExecutor
 	prefix   string
@@ -176,6 +179,8 @@ func (store *Store) executeOK(ctx context.Context, op operation, key string, arg
 	return nil
 }
 
+// Hash tags co-locate lease and persistent counter for atomic cluster scripts.
+// Never expire/reset the counter while old downstream fencing tokens matter.
 func (store *Store) keys(logical string) (string, string) {
 	digest := sha256.Sum256([]byte(logical))
 	tag := hex.EncodeToString(digest[:])

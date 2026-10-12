@@ -38,10 +38,10 @@ var (
 // DefaultMaxConcurrentExecutions bounds managed in-process executions.
 const DefaultMaxConcurrentExecutions = 128
 
-// DefaultLeaseOperationTimeout bounds each distributed lease backend call.
+// DefaultLeaseOperationTimeout supplies the default cooperative lease/pause context deadline.
 const DefaultLeaseOperationTimeout = 5 * time.Second
 
-// DefaultCallbackTimeout bounds conditions, hooks, and observers.
+// DefaultCallbackTimeout bounds waiting for conditions, hooks and observers, not termination.
 const DefaultCallbackTimeout = time.Second
 
 // DefaultMaxConcurrentCallbacks bounds active and timed-out callbacks.
@@ -78,23 +78,35 @@ const (
 	EventOverlap
 	// EventCompleted terminates every emitted lifecycle.
 	EventCompleted
-	// EventFinished is emitted after a started executor returns.
+	// EventFinished is emitted when the runner finishes waiting for started work.
+	// Timeout/heartbeat failure can leave the executor running afterward.
 	EventFinished
 )
 
-// Event carries a bounded, structured scheduler lifecycle record.
+// Event carries structured lifecycle metadata. Err and context values remain
+// application data; no total byte cap or redaction is enforced by this record.
 type Event struct {
-	Type       EventType
-	Result     Result
+	// Type identifies the lifecycle emission boundary, not guaranteed callback completion order.
+	Type EventType
+	// Result classifies the decision; EventBefore uses the zero succeeded value.
+	Result Result
+	// Occurrence is value metadata for the physical schedule boundary.
 	Occurrence Occurrence
-	Context    context.Context
-	Owner      string
-	Fencing    uint64
-	At         time.Time
-	Err        error
+	// Context is the originating tick context and may already be canceled when delivered.
+	Context context.Context
+	// Owner is the runner identity, not an authenticated principal.
+	Owner string
+	// Fencing is the admitted token or zero before ownership.
+	Fencing uint64
+	// At is the tick endpoint carried through completion, not measured callback time.
+	At time.Time
+	// Err is application/backend error data; the core does not redact it.
+	Err error
+	// Background reports the schedule option, including pre-execution failures.
 	Background bool
 }
 
+// String returns the stable outcome label, or unknown for an invalid value.
 func (result Result) String() string {
 	switch result {
 	case ResultSucceeded:
@@ -108,6 +120,7 @@ func (result Result) String() string {
 	}
 }
 
+// String returns the stable lifecycle label, or unknown for an invalid value.
 func (eventType EventType) String() string {
 	switch eventType {
 	case EventBefore:
@@ -131,6 +144,7 @@ func (eventType EventType) String() string {
 
 // Observer consumes scheduler lifecycle events.
 type Observer interface {
+	// Observe may run concurrently; it must not rely on ordered completion or guaranteed delivery.
 	Observe(Event)
 }
 
@@ -140,14 +154,19 @@ type ObserverFunc func(Event)
 // Observe invokes the adapted observer function.
 func (observe ObserverFunc) Observe(event Event) { observe(event) }
 
-// Executor performs or dispatches one scheduled occurrence.
+// Executor performs or dispatches an occurrence. Execute may run concurrently;
+// failure/panic errors remain visible and may contain application-sensitive text.
+// Cancellation is cooperative; the runner does not retry or forcibly terminate it.
 type Executor interface {
+	// Execute must cooperate with cancellation and enforce downstream fencing/idempotency as needed.
 	Execute(context.Context, Context) error
 }
 
 // Clock provides current time and exact-boundary timers to a Runner.
 type Clock interface {
+	// Now returns a usable instant; concurrent runner calls require a concurrency-safe clock.
 	Now() time.Time
+	// After returns a timer channel; runner cancellation stops waiting, not an arbitrary custom timer.
 	After(time.Duration) <-chan time.Time
 }
 
@@ -160,7 +179,11 @@ func (realClock) After(duration time.Duration) <-chan time.Time { return time.Af
 // RunnerOption configures a Runner during construction.
 type RunnerOption func(*Runner) error
 
-// Runner calculates due occurrences and coordinates their fenced execution.
+// Runner coordinates decisions and tracks execution/callback goroutines until
+// they return. Concurrent Tick/Drain use is synchronized; custom dependencies
+// must support concurrency and honor contexts. Drain permanently rejects ticks
+// but does not cancel Run or active work: cancel their contexts first. Backend
+// deadlines require cooperation; callback/executor timeouts only stop waiting.
 type Runner struct {
 	registry          *Registry
 	leases            lease.Store
@@ -213,7 +236,10 @@ type pauseSnapshot struct {
 	err     error
 }
 
-// NewRunner validates dependencies and distributed safety capabilities.
+// NewRunner requires usable dependencies and an owner, and checks advertised
+// heartbeat/replacement support. Nil interfaces fail; arbitrary typed-nil
+// dependencies or custom options are not universally guarded. Dependencies are
+// borrowed: no backend/client/provider is closed by the runner.
 func NewRunner(registry *Registry, leases lease.Store, executor Executor, options ...RunnerOption) (*Runner, error) {
 	if registry == nil {
 		return nil, ErrInvalidRunner
@@ -265,7 +291,8 @@ func NewRunner(registry *Registry, leases lease.Store, executor Executor, option
 	return runner, nil
 }
 
-// WithCallbackTimeout bounds individual conditions, hooks, and observers.
+// WithCallbackTimeout bounds waiting for conditions, hooks and observers,
+// not their termination. Timed-out callbacks retain slots until they return.
 func WithCallbackTimeout(timeout time.Duration) RunnerOption {
 	return func(runner *Runner) error {
 		if timeout <= 0 {
@@ -287,7 +314,8 @@ func WithMaxConcurrentCallbacks(limit int) RunnerOption {
 	}
 }
 
-// WithLeaseOperationTimeout bounds individual lease backend operations.
+// WithLeaseOperationTimeout supplies deadlines to lease and pause lookups.
+// A provider ignoring context can still block the calling decision.
 func WithLeaseOperationTimeout(timeout time.Duration) RunnerOption {
 	return func(runner *Runner) error {
 		if timeout <= 0 {
@@ -427,7 +455,10 @@ func (runner *Runner) next(after time.Time) (time.Time, bool) {
 	return earliest, !earliest.IsZero()
 }
 
-// Tick processes every bounded decision in an explicit instant range.
+// Tick processes (after,through] in sorted schedule-name order and joins
+// foreground decision errors. Background completion errors use events instead.
+// Each tick lazily shares one pause snapshot; concurrent ticks may duplicate
+// non-leased work. Callback completion order is not event emission order.
 func (runner *Runner) Tick(ctx context.Context, after, through time.Time) error {
 	if err := runner.begin(); err != nil {
 		return err
@@ -452,7 +483,10 @@ func (runner *Runner) Tick(ctx context.Context, after, through time.Time) error 
 	return errors.Join(errs...)
 }
 
-// Drain rejects new ticks and waits for active decisions until ctx ends.
+// Drain permanently rejects new ticks and joins decisions, executions,
+// background waits and callbacks. It does not cancel them or close dependencies.
+// A deadline returns ctx.Err while retained work and its waiter remain; repeated
+// calls each allocate a waiter until all work returns. Do not call from a callback.
 func (runner *Runner) Drain(ctx context.Context) error {
 	runner.stateMu.Lock()
 	runner.draining = true
@@ -641,6 +675,10 @@ func (runner *Runner) runCondition(
 	}
 }
 
+// Retain execution capacity and renew task ownership beyond the caller wait.
+// Otherwise a timeout would let an uncooperative executor overlap a successor.
+// Cleanup/release starts only after Execute returns; occurrence leases expire
+// independently and are intentionally not released here.
 func (runner *Runner) startExecution(
 	ctx context.Context,
 	runCtx context.Context,
@@ -843,6 +881,9 @@ func (runner *Runner) emit(event Event) {
 	}
 }
 
+// Completion is best-effort: saturated callbacks are dropped, and a timeout
+// lets later events proceed while the old callback still owns its slot. Keeping
+// that slot until actual return bounds retained goroutines, not caller code.
 func (runner *Runner) runCallback(ctx context.Context, callback func()) {
 	if ctx.Err() != nil {
 		return

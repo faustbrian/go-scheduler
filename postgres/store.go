@@ -43,6 +43,8 @@ const inspectSQL = `
 SELECT lease_key, owner, fencing_token, acquired_at, expires_at
 FROM scheduler_leases WHERE lease_key = $1 AND active`
 
+// Mark rows inactive instead of deleting: a future takeover must retain and
+// increment the previous fence. Release/recovery compare the observed token.
 const releaseSQL = `
 WITH changed AS (
     UPDATE scheduler_leases SET active = false
@@ -100,7 +102,10 @@ var defaultQueries = querySet{
 	state:     stateSQL,
 }
 
-// Store persists fenced leases in PostgreSQL server time.
+// Store uses clock_timestamp and retains inactive rows to avoid token reuse.
+// Concurrent use relies on the borrowed pool; caller now is ignored. Positive
+// TTLs must encode at least one millisecond and are truncated to milliseconds.
+// The default table follows the connection search_path; it is not schema-qualified.
 type Store struct {
 	database database
 	queries  querySet
@@ -208,7 +213,8 @@ func (store *Store) Heartbeat(
 	return current, err
 }
 
-// Inspect returns the active lease for a key.
+// Inspect returns an active row even if its expiry has passed; takeover and
+// heartbeat enforce expiry in server time. Transport/scan errors are not redacted.
 func (store *Store) Inspect(ctx context.Context, key string) (lease.Lease, error) {
 	if err := validateIdentity(ctx, key, "owner"); err != nil {
 		return lease.Lease{}, err

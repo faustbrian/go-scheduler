@@ -1,5 +1,6 @@
 // Package schedulerotel records scheduler lifecycle metrics and traces with
 // OpenTelemetry.
+// Use New/NewRuntime with borrowed providers; no exporter shutdown or execution-context propagation is owned.
 package schedulerotel
 
 import (
@@ -25,8 +26,10 @@ var ErrInvalidConfiguration = errors.New("scheduler otel: providers are required
 
 // Config supplies application-owned OpenTelemetry providers.
 type Config struct {
+	// TracerProvider is borrowed; shutdown/exporter lifetime remains application-owned.
 	TracerProvider trace.TracerProvider
-	MeterProvider  metric.MeterProvider
+	// MeterProvider is borrowed; instrument creation can return provider errors.
+	MeterProvider metric.MeterProvider
 }
 
 type activeSpan struct {
@@ -34,7 +37,9 @@ type activeSpan struct {
 	started time.Time
 }
 
-// Observer records lifecycle metrics and execution spans.
+// Observer records lifecycle metrics and spans using borrowed providers. Use
+// New/NewRuntime; its zero value is not usable. A mutex protects active entries,
+// but provider calls can be concurrent and must support the caller workload.
 type Observer struct {
 	tracer   trace.Tracer
 	events   metric.Int64Counter
@@ -73,7 +78,11 @@ func NewRuntime(runtime *gotelemetry.Runtime) (*Observer, error) {
 	})
 }
 
-// Observe records one scheduler lifecycle event.
+// Observe records names/task labels and unredacted failure errors through
+// caller providers. Active spans are keyed by occurrence and retained until
+// Completed or supersession; omitted/reordered callbacks can leave them active.
+// No active-span cap, Close, provider shutdown or execution-context injection
+// is supplied by this observer.
 func (observer *Observer) Observe(event scheduler.Event) {
 	ctx := eventContext(event.Context)
 	attributes := []attribute.KeyValue{

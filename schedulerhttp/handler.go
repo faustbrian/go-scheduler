@@ -1,4 +1,7 @@
-// Package schedulerhttp provides bounded scheduler inspection and recovery endpoints.
+// Package schedulerhttp routes inspection and token-checked administrative
+// recovery through New. It owns no authentication, authorization, listener or
+// server deadline. Wrap it in application controls; names/metadata/backend
+// errors may be exposed. Recovery decodes one bounded object, not trailing EOF.
 //
 // Deprecated: use github.com/faustbrian/go-scheduler/v2/adapters/http.
 package schedulerhttp
@@ -22,25 +25,44 @@ var ErrInvalidDependencies = errors.New("scheduler http: registry and lease stor
 
 // Schedule is the bounded public inspection view of a schedule.
 type Schedule struct {
-	Name               string                    `json:"name"`
-	Task               string                    `json:"task"`
-	Expression         string                    `json:"expression"`
-	Timezone           string                    `json:"timezone"`
-	Enabled            bool                      `json:"enabled"`
-	Environments       []string                  `json:"environments,omitempty"`
-	DaysOfWeek         []time.Weekday            `json:"days_of_week,omitempty"`
-	TimeWindows        []scheduler.TimeWindow    `json:"time_windows,omitempty"`
-	MissedRunPolicy    scheduler.MissedRunPolicy `json:"missed_run_policy"`
-	MaxCatchUp         int                       `json:"max_catch_up"`
-	OverlapPolicy      scheduler.OverlapPolicy   `json:"overlap_policy"`
-	OnOneServer        bool                      `json:"on_one_server"`
-	WithoutOverlapping bool                      `json:"without_overlapping"`
-	RunInBackground    bool                      `json:"run_in_background"`
-	EvenWhenPaused     bool                      `json:"even_when_paused"`
-	OneServerTTL       string                    `json:"one_server_ttl,omitempty"`
-	OverlapTTL         string                    `json:"overlap_ttl,omitempty"`
-	Metadata           map[string]string         `json:"metadata,omitempty"`
-	Next               *time.Time                `json:"next,omitempty"`
+	// Name is the configured registry name.
+	Name string `json:"name"`
+	// Task is the application work identity.
+	Task string `json:"task"`
+	// Expression is the compiled cron input.
+	Expression string `json:"expression"`
+	// Timezone is the configured location loader name.
+	Timezone string `json:"timezone"`
+	// Enabled reports definition enablement.
+	Enabled bool `json:"enabled"`
+	// Environments is an exact-match environment filter; absent means unrestricted.
+	Environments []string `json:"environments,omitempty"`
+	// DaysOfWeek contains local weekday restrictions.
+	DaysOfWeek []time.Weekday `json:"days_of_week,omitempty"`
+	// TimeWindows contains inclusive local windows and exclusions.
+	TimeWindows []scheduler.TimeWindow `json:"time_windows,omitempty"`
+	// MissedRunPolicy selects skipped/newest/bounded-tail behavior.
+	MissedRunPolicy scheduler.MissedRunPolicy `json:"missed_run_policy"`
+	// MaxCatchUp is the retained catch-up cap.
+	MaxCatchUp int `json:"max_catch_up"`
+	// OverlapPolicy reports task-lease overlap behavior.
+	OverlapPolicy scheduler.OverlapPolicy `json:"overlap_policy"`
+	// OnOneServer reports occurrence-lease enablement.
+	OnOneServer bool `json:"on_one_server"`
+	// WithoutOverlapping reports renewable task-lease enablement.
+	WithoutOverlapping bool `json:"without_overlapping"`
+	// RunInBackground reports managed asynchronous execution.
+	RunInBackground bool `json:"run_in_background"`
+	// EvenWhenPaused reports pause exemption, not other policy bypass.
+	EvenWhenPaused bool `json:"even_when_paused"`
+	// OneServerTTL is the positive explicit duration string, omitted when unset.
+	OneServerTTL string `json:"one_server_ttl,omitempty"`
+	// OverlapTTL is the positive explicit duration string, omitted when unset.
+	OverlapTTL string `json:"overlap_ttl,omitempty"`
+	// Metadata is copied diagnostic data and is not redacted by the HTTP view.
+	Metadata map[string]string `json:"metadata,omitempty"`
+	// Next is optional enabled next-run data when the request supplies after.
+	Next *time.Time `json:"next,omitempty"`
 }
 
 // Handler exposes bounded scheduler inspection and fenced recovery endpoints.
@@ -50,7 +72,9 @@ type Handler struct {
 	mux      *http.ServeMux
 }
 
-// New constructs a scheduler HTTP handler with no arbitrary execution surface.
+// New borrows a compiled registry/store and registers private routes, not
+// global handlers. Inspection never executes a task; recovery can remove an
+// active lease, so callers must isolate old effects and authorize that operation.
 func New(registry *scheduler.Registry, leases lease.Store) (*Handler, error) {
 	if registry == nil || leases == nil {
 		return nil, ErrInvalidDependencies
@@ -72,6 +96,8 @@ func (handler *Handler) validate(response http.ResponseWriter, _ *http.Request) 
 	})
 }
 
+// ServeHTTP routes the request; authentication, authorization and server deadlines
+// must be supplied by the application before exposing administrative recovery.
 func (handler *Handler) ServeHTTP(response http.ResponseWriter, request *http.Request) {
 	handler.mux.ServeHTTP(response, request)
 }

@@ -1,4 +1,9 @@
-// Package scheduler defines code-based schedules and distributed execution.
+// Package scheduler compiles code-defined schedules and coordinates occurrence
+// decisions through application-owned executors and lease stores. Construct
+// definitions with NewSchedule, freeze them with Compile, then use NewRunner.
+// Registry reads are reusable concurrently; callbacks, backend IO and downstream
+// side effects remain caller-owned. The core owns no retry loop, durable queue,
+// timezone database, administrative authentication or forced goroutine termination.
 package scheduler
 
 //lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
@@ -34,12 +39,18 @@ const MaxOccurrenceScan = 10_000
 
 // Occurrence is one deterministic physical schedule boundary.
 type Occurrence struct {
-	ScheduleID     string    `json:"schedule_id"`
-	ScheduleName   string    `json:"schedule_name"`
-	Task           string    `json:"task"`
-	ScheduledAt    time.Time `json:"scheduled_at"`
-	Attempt        int       `json:"attempt"`
-	IdempotencyKey string    `json:"idempotency_key"`
+	// ScheduleID identifies the timing revision, distinct from rollout coordination.
+	ScheduleID string `json:"schedule_id"`
+	// ScheduleName is the configured name used by inspection and lifecycle hooks.
+	ScheduleName string `json:"schedule_name"`
+	// Task is the application executor or queue-worker task identity.
+	Task string `json:"task"`
+	// ScheduledAt is the physical boundary, including deterministic jitter.
+	ScheduledAt time.Time `json:"scheduled_at"`
+	// Attempt starts at one; the runner owns no retry increment loop.
+	Attempt int `json:"attempt"`
+	// IdempotencyKey hashes coordination identity and the physical UTC boundary.
+	IdempotencyKey string `json:"idempotency_key"`
 }
 
 type compiledSchedule struct {
@@ -47,20 +58,27 @@ type compiledSchedule struct {
 	cron     schedulercron.Schedule
 }
 
-// Registry is an immutable compiled set of named schedules.
+// Registry retains copied definitions and compiled timing. Concurrent read-only
+// use is supported; function closures and application dependencies are shared.
+// Construct it with Compile; a nil registry is not a usable method receiver.
 type Registry struct {
 	entries map[string]compiledSchedule
 	names   []string
 }
 
-// ScheduleOverview combines an immutable schedule definition with its next
+// ScheduleOverview combines a copied schedule definition with its next
 // enabled execution boundary. Next is zero for a disabled schedule.
 type ScheduleOverview struct {
+	// Schedule is a copied definition; callback functions retain their closures.
 	Schedule Schedule
-	Next     time.Time
+	// Next is the calculated timing boundary; disabled definitions return zero.
+	Next time.Time
 }
 
-// Compile validates and freezes a complete named schedule set.
+// Compile checks registry size, duplicate names, cron and locations, joining
+// failures without a partial registry. Supply NewSchedule-built definitions;
+// arbitrary manually mutated Schedule fields are not comprehensively revalidated.
+// Slices/maps are copied, but callback closures retain their application state.
 func Compile(schedules ...Schedule) (*Registry, error) {
 	if len(schedules) > MaxSchedules {
 		return nil, fmt.Errorf("%w: registry exceeds %d schedules", ErrResourceLimit, MaxSchedules)
@@ -114,6 +132,9 @@ type constrainedSchedule struct {
 	location *time.Location
 }
 
+// Local constraints are intersected before jitter. Skipping to a day/minute
+// boundary avoids visiting every rejected second; the search cap can return zero
+// without proving that an arbitrary combined constraint has no future match.
 func (schedule constrainedSchedule) Next(after time.Time) time.Time {
 	cursor := after
 	for range 200_000 {
@@ -162,6 +183,8 @@ func (schedule jitteredSchedule) Next(after time.Time) time.Time {
 	return schedule.Schedule.Next(after.Add(-schedule.offset)).Add(schedule.offset)
 }
 
+// A revision-stable offset keeps coordinating replicas on the same physical
+// boundary; it is not per-tick randomness or a distributed fairness guarantee.
 func deterministicJitter(identity string, maximum time.Duration) time.Duration {
 	if maximum <= 0 {
 		return 0
@@ -172,7 +195,8 @@ func deterministicJitter(identity string, maximum time.Duration) time.Duration {
 	return time.Duration(value)
 }
 
-// Schedules returns immutable copies sorted by schedule name.
+// Schedules returns independent value/map/slice copies sorted by name; callback
+// closures remain shared. Returned exported fields may be changed by the caller.
 func (registry *Registry) Schedules() []Schedule {
 	result := make([]Schedule, 0, len(registry.names))
 	for _, name := range registry.names {
@@ -181,7 +205,7 @@ func (registry *Registry) Schedules() []Schedule {
 	return result
 }
 
-// Overview returns immutable schedule definitions and their next boundaries,
+// Overview returns copied schedule definitions and their timing boundaries,
 // sorted by schedule name. Callers supply the reference instant so inspection
 // remains deterministic and can be exposed through any application surface.
 func (registry *Registry) Overview(after time.Time) []ScheduleOverview {
@@ -235,7 +259,10 @@ func (registry *Registry) ClearCache(ctx context.Context, store lease.Store) (in
 
 func taskLeaseKey(schedule Schedule) string { return "task:" + schedule.CoordinationID }
 
-// Next returns the first occurrence strictly after an instant.
+// Next calculates the next timing boundary without checking Enabled or date
+// bounds; use Due for execution decisions. Unknown names return ErrScheduleNotFound.
+// Exhausted cron results are passed through jitter addition, so a nonzero offset
+// can turn the zero sentinel into a year-one value rather than a future boundary.
 func (registry *Registry) Next(name string, after time.Time) (time.Time, error) {
 	entry, ok := registry.entries[name]
 	if !ok {
@@ -244,7 +271,12 @@ func (registry *Registry) Next(name string, after time.Time) (time.Time, error) 
 	return entry.cron.Next(after), nil
 }
 
-// Due applies the schedule's bounded missed-run policy to an instant range.
+// Due selects occurrences in (after,through], applying enablement and inclusive
+// date bounds. Skip selects only an exact through boundary; Once/CatchUp retain
+// the newest admitted tail. ErrOccurrenceLimit returns no partial tail.
+// Exhausted/nonadvancing timing can exhaust the scan cap instead of yielding an
+// empty result. This is calculation only: conditions, pause and leases are
+// Runner decisions.
 func (registry *Registry) Due(name string, after, through time.Time) ([]Occurrence, error) {
 	entry, ok := registry.entries[name]
 	if !ok {

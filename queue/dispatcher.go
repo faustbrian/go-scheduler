@@ -1,4 +1,7 @@
-// Package queue dispatches schedule occurrences through queue.
+// Package queue encodes occurrences for application-owned queue backends.
+// New borrows an Enqueuer; neither worker execution nor backend closure is owned.
+// Context is checked before submission but Queue itself has no context argument;
+// blocking, durability, retries and worker deduplication remain backend policy.
 //
 // Deprecated: use github.com/faustbrian/go-scheduler/v2/adapters/queue.
 package queue
@@ -22,23 +25,36 @@ var ErrInvalidQueue = errors.New("scheduler queue: queue is required")
 
 // Enqueuer is the minimal durable queue submission contract.
 type Enqueuer interface {
+	// Queue synchronously submits copied message bytes; durability, blocking and retries belong to the backend.
 	Queue(queuecore.QueuedMessage, ...queuejob.AllowOption) error
 }
 
 // Envelope is the version-independent occurrence payload sent to workers.
 type Envelope struct {
-	ScheduleID     string            `json:"schedule_id"`
-	CoordinationID string            `json:"coordination_id"`
-	ScheduleName   string            `json:"schedule_name"`
-	Task           string            `json:"task"`
-	Occurrence     time.Time         `json:"occurrence"`
-	Attempt        int               `json:"attempt"`
-	IdempotencyKey string            `json:"idempotency_key"`
-	Owner          string            `json:"owner"`
-	FencingToken   uint64            `json:"fencing_token"`
-	Parameters     map[string]any    `json:"parameters,omitempty"`
-	Metadata       map[string]string `json:"metadata,omitempty"`
-	TraceContext   map[string]string `json:"trace_context,omitempty"`
+	// ScheduleID identifies the timing revision.
+	ScheduleID string `json:"schedule_id"`
+	// CoordinationID identifies logical work across timing/version rollouts.
+	CoordinationID string `json:"coordination_id"`
+	// ScheduleName is the application registry name.
+	ScheduleName string `json:"schedule_name"`
+	// Task selects the application worker task.
+	Task string `json:"task"`
+	// Occurrence is the physical scheduled boundary.
+	Occurrence time.Time `json:"occurrence"`
+	// Attempt is metadata, not a worker retry instruction.
+	Attempt int `json:"attempt"`
+	// IdempotencyKey is the supplied occurrence key or a revision-based fallback.
+	IdempotencyKey string `json:"idempotency_key"`
+	// Owner is diagnostic lease-owner text, not authenticated identity.
+	Owner string `json:"owner"`
+	// FencingToken must be enforced by ownership-sensitive worker effects.
+	FencingToken uint64 `json:"fencing_token"`
+	// Parameters is JSON task data, not secret-filtered or schema-validated by dispatch.
+	Parameters map[string]any `json:"parameters,omitempty"`
+	// Metadata is occurrence metadata, falling back to schedule metadata when nil.
+	Metadata map[string]string `json:"metadata,omitempty"`
+	// TraceContext contains W3C trace propagation, not an authenticated trust assertion.
+	TraceContext map[string]string `json:"trace_context,omitempty"`
 }
 
 // Dispatcher encodes schedule occurrences and submits them to queue.
@@ -55,7 +71,10 @@ func New(queue Enqueuer) (*Dispatcher, error) {
 	return &Dispatcher{queue: queue, propagator: propagation.TraceContext{}}, nil
 }
 
-// Execute encodes and submits one occurrence with trace propagation.
+// Execute JSON-encodes borrowed occurrence data and submits a byte-copying
+// message with W3C trace propagation. It checks ctx before Queue, but cannot
+// cancel that synchronous backend call. No secret filtering or exactly-once
+// guarantee is added; empty keys use a revision-based fallback.
 func (dispatcher *Dispatcher) Execute(ctx context.Context, scheduled scheduler.Context) error {
 	if err := ctx.Err(); err != nil {
 		return err

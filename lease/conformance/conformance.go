@@ -1,4 +1,7 @@
-// Package conformance provides the shared lease-store contract suite.
+// Package conformance exercises retained lease ownership, fencing and recovery
+// through caller-isolated Harness factories. TestStore includes concurrency and
+// provider-visible expiry; it is a contract suite, not a deployment failover proof.
+// The factory owns backend setup/cleanup and advancing the correct clock domain.
 package conformance
 
 //lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
@@ -16,8 +19,11 @@ import (
 
 // Harness supplies a store and controllable backend time to conformance tests.
 type Harness struct {
-	Store   lease.Store
-	Now     func() time.Time
+	// Store is an isolated provider instance for each subtest; the factory owns cleanup.
+	Store lease.Store
+	// Now returns an instant compatible with this provider's clock domain.
+	Now func() time.Time
+	// Advance advances provider-visible expiry time or waits for a real backend clock.
 	Advance func(time.Duration)
 }
 

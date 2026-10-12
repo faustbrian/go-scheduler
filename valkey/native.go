@@ -1,4 +1,7 @@
-// Package valkey provides atomic fenced leases backed by Valkey 9 or newer.
+// Package valkey provides atomic server-time leases with caller-owned Valkey
+// clients. Open checks Valkey 9/noeviction; New deliberately skips those checks.
+// Lease hashes expire but counters remain in the same cluster slot. Backend
+// durability, failover, counter retention and client closure are deployment-owned.
 package valkey
 
 //lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
@@ -18,7 +21,8 @@ type nativeExecutor struct {
 	client valkeygo.Client
 }
 
-// New constructs a Valkey lease store without performing server checks.
+// New borrows a client without server checks; use Open for startup admission.
+// Neither constructor closes the client, including on admission failure.
 func New(client valkeygo.Client, prefix string) (*Store, error) {
 	if client == nil {
 		return nil, lease.ErrInvalid

@@ -1,4 +1,7 @@
-// Package postgres provides persistent server-time fenced leases.
+// Package postgres provides atomic server-time fenced leases through a borrowed
+// pgx pool. Apply SchemaMigration/SchemaMigrationFor yourself before New; no
+// schema setup, pool closure, retry or replication policy is owned here.
+// Inactive rows retain counters and require deployment-managed storage policy.
 package postgres
 
 //lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
@@ -12,10 +15,14 @@ import (
 
 // Migration contains the versioned lease-table schema transition.
 type Migration struct {
+	// Version identifies the schema transition; it is not applied automatically.
 	Version uint
-	Name    string
-	Up      string
-	Down    string
+	// Name is the stable application migration label.
+	Name string
+	// Up is executable creation SQL for caller-controlled migration execution.
+	Up string
+	// Down is destructive rollback SQL; callers own its authorization and sequencing.
+	Down string
 }
 
 // SchemaMigration returns the PostgreSQL lease-table migration.

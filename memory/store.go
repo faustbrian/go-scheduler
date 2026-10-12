@@ -1,4 +1,6 @@
-// Package memory provides a deterministic process-local lease store.
+// Package memory provides mutex-protected, process-local leases using supplied
+// time. Use New for tests/tools; tokens survive release only within this store
+// instance and are lost at restart. No cleanup worker or persistence is owned.
 package memory
 
 //lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
@@ -12,7 +14,9 @@ import (
 	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Backend implements the retained domain port.
 )
 
-// Store keeps fenced leases in memory for tests and single-process tools.
+// Store keeps leases and per-key counters under one mutex. Use New; the zero
+// store cannot acquire. Expired records are not pruned and per-key counters
+// are never removed, so unique logical keys are not globally memory-bounded.
 type Store struct {
 	mu     sync.Mutex
 	leases map[string]lease.Lease
@@ -106,7 +110,8 @@ func (store *Store) Release(ctx context.Context, owned lease.Lease) error {
 	return nil
 }
 
-// Inspect returns the current lease for a key.
+// Inspect returns retained ownership, including expired leases; it does not
+// consult a clock or prune data. Use Lease.Expired with the same clock domain.
 func (store *Store) Inspect(ctx context.Context, key string) (lease.Lease, error) {
 	if err := ctx.Err(); err != nil {
 		return lease.Lease{}, err

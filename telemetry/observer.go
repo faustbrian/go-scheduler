@@ -27,9 +27,12 @@ var ErrInvalidConfiguration = errors.New("scheduler telemetry: logger and provid
 
 // Config supplies structured logging and OpenTelemetry providers.
 type Config struct {
-	Logger         *slog.Logger
+	// Logger is borrowed; handler blocking and redaction remain application-owned.
+	Logger *slog.Logger
+	// TracerProvider is borrowed; observer construction does not own provider shutdown.
 	TracerProvider trace.TracerProvider
-	MeterProvider  metric.MeterProvider
+	// MeterProvider is borrowed; exporter lifetime remains application-owned.
+	MeterProvider metric.MeterProvider
 }
 
 type activeSpan struct {
@@ -37,7 +40,9 @@ type activeSpan struct {
 	started time.Time
 }
 
-// Observer preserves the released combined logging and telemetry contract.
+// Observer preserves combined logging/telemetry through borrowed facilities.
+// Use New/NewRuntime; the zero value is not usable. Active entries use a mutex,
+// while caller providers/handlers must support concurrent Observe calls.
 type Observer struct {
 	logger   *slog.Logger
 	tracer   trace.Tracer
@@ -77,7 +82,11 @@ func NewRuntime(runtime *gotelemetry.Runtime, logger *slog.Logger) (*Observer, e
 	})
 }
 
-// Observe records one scheduler lifecycle event.
+// Observe records names/task labels and unredacted failure errors through
+// caller providers. Active spans are keyed by occurrence and retained until
+// Completed or supersession; omitted/reordered callbacks can leave them active.
+// No active-span cap, Close, provider shutdown or execution-context injection
+// is supplied by this observer.
 func (observer *Observer) Observe(event scheduler.Event) {
 	ctx := eventContext(event.Context)
 	attributes := []attribute.KeyValue{

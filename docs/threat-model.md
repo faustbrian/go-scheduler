@@ -25,8 +25,9 @@ Trust boundaries are:
 - A stale owner cannot heartbeat, release, or recover the current lease.
 - Matching rollout revisions use the same coordination and occurrence keys.
 - A timeout, malformed response, or outage never proves ownership.
-- Missed-run work, callback goroutines, executor goroutines, history, payloads,
-  registry size, and backend waits remain within documented budgets.
+- Selected input counts/bytes and managed callback/executor slots use documented
+  budgets; backend/pause deadlines require context cooperation. These are not
+  total retained-byte or unique-key storage bounds.
 - Civil-time calculation is deterministic for the same definition, instant,
   Go runtime, and IANA data.
 - The public contract never claims exactly-once execution.
@@ -48,7 +49,7 @@ Trust boundaries are:
 | queue redelivery or scheduler crash | occurrence idempotency key and optional durable wrapper | queue and idempotency completion are not one transaction |
 | split rollout identity | stable coordination ID and rollout matrix | renamed tasks or changed parameters deliberately diverge |
 | unauthorized recovery | exact fencing token plus external authentication and network policy | core HTTP package does not implement application identity |
-| secret disclosure | no credential fields in definitions or envelopes; Kubernetes Secrets | application metadata can still leak data if misused |
+| secret disclosure | application secret management and caller filtering | metadata, parameters, backend errors and panic text are not universally redacted |
 | shell injection | core has no shell executor | an application-added process adapter owns isolation and escaping |
 
 ## Operational assumptions

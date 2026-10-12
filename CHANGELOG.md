@@ -16,6 +16,9 @@ and releases use Semantic Versioning.
 
 ### Changed
 
+- Clarify scheduling copy/identity, runner wait-versus-cleanup, callback delivery,
+  provider clocks and administrative/telemetry ownership without runtime changes.
+
 - Adopt OpenTelemetry API v1.47.0 while retaining SDK v1.46.0,
   scheduler instrumentation and caller-owned provider lifecycles.
 

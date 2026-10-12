@@ -1,4 +1,6 @@
-// Package schedulercli provides bounded scheduler inspection and recovery commands.
+// Package schedulercli provides synchronous inspection and token-checked
+// recovery through Run. Callers own authorization, writers and backend deadlines;
+// inspection does not execute tasks. Backend errors may contain sensitive data.
 //
 // Deprecated: use github.com/faustbrian/go-scheduler/v2/adapters/cli.
 package schedulercli
@@ -19,7 +21,9 @@ import (
 	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // The released implementation retains the domain port.
 )
 
-// Run executes one bounded scheduler control command and returns an exit code.
+// Run executes a control command: zero is success, one is operation/output
+// failure, two is invalid input/dependencies. It borrows writers/store, checks
+// contexts through recovery operations, and imposes no writer/backend deadline.
 func Run(
 	ctx context.Context,
 	args []string,
