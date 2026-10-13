@@ -17,9 +17,15 @@ duplicate dispatch, and jobs must remain idempotent.
 ## Adoption entry points
 
 The root module is `github.com/faustbrian/go-scheduler/v2` (stable).
-It requires Go 1.27.0. Pin the published `v2.0.0` root tag
-with `go get github.com/faustbrian/go-scheduler/v2@v2.0.0`.
+It requires Go 1.27.0. Pin the published `v2.0.1` root tag
+with `go get github.com/faustbrian/go-scheduler/v2@v2.0.1`.
 Root subpackages share this module; they need no separate installation.
+
+The prepared v2.0.2 patch preserves exhausted cron timing before jitter and
+replay. Select `github.com/faustbrian/go-scheduler/v2@v2.0.2` after its public
+tag and module artifacts are available; metadata preparation does not publish
+it. API/import and storage identities remain unchanged. See
+[compatibility and patch adoption](docs/compatibility.md#v202-patch-adoption).
 
 Start with the [documentation map](docs/index.md) for package selection,
 examples, operational constraints, and contributor references.
@@ -33,7 +39,7 @@ examples, operational constraints, and contributor references.
 ## Installation
 
 ```sh
-go get github.com/faustbrian/go-scheduler/v2@v2.0.0
+go get github.com/faustbrian/go-scheduler/v2@v2.0.1
 ```
 
 All packages in this repository share that module version. PostgreSQL, Valkey,

@@ -5,6 +5,14 @@ and releases use Semantic Versioning.
 
 ## [Unreleased]
 
+## [2.0.2] - 2026-10-13
+
+Prepared patch candidate; this entry does not claim tag or module publication.
+The frozen source range is public v2.0.1 (`b75de2142298721a4d6acdc5936dfec1c0559a59`)
+through `bbca89240589d9fbbf7b840afa6596716f6264f1`. Release metadata preparation
+is outside that range. Dependency notes retain the intermediate Telemetry/API
+1.46 adoption; the final OpenTelemetry API is 1.47.0 and SDK is 1.46.0.
+
 ### Fixed
 
 - Preserve an exhausted cron's zero sentinel before deterministic jitter,
@@ -22,6 +30,11 @@ and releases use Semantic Versioning.
 
 ### Changed
 
+- Adopt PGX v5.11.0, Queue v1.1.2, Service v1.1.2 and Correlation v1.1.3
+  with their compatible dependency graph. Scheduler lease/fencing, queue
+  submission, correlation identity and caller-owned service lifecycles remain
+  explicit; this patch does not force cancellation of trusted callbacks.
+
 - Clarify scheduling copy/identity, runner wait-versus-cleanup, callback delivery,
   provider clocks and administrative/telemetry ownership without runtime changes.
 
@@ -34,6 +47,39 @@ and releases use Semantic Versioning.
 - Adopt Telemetry v2.0.1 and OpenTelemetry API and SDK v1.46.0 while
   preserving scheduler instrumentation and caller-owned runtime lifecycles.
   Runtime resources now identify the selected SDK version.
+
+### Source accountability
+
+Each non-merge commit in the frozen range is accounted for exactly once:
+
+- Exhausted occurrences, finite replay tails and mixed runner timers:
+  [bbca892405](https://github.com/faustbrian/go-scheduler/commit/bbca89240589d9fbbf7b840afa6596716f6264f1).
+- PostgreSQL driver adoption:
+  [9ed779b86f](https://github.com/faustbrian/go-scheduler/commit/9ed779b86fd47bcd547c67cd17bc368ac51bce7a).
+- Service/Correlation dependency adoption and the later Correlation patch:
+  [5f63f080f2](https://github.com/faustbrian/go-scheduler/commit/5f63f080f23dc8b284a2fc2d86abb8260ef808a0),
+  [c913f03cd9](https://github.com/faustbrian/go-scheduler/commit/c913f03cd954ba37f0d2855fbf6805e4102295d8).
+- Compatible Queue dependency adoption:
+  [2eac149fbb](https://github.com/faustbrian/go-scheduler/commit/2eac149fbb1c40959b2b24e43545685534bf9529).
+- Telemetry, patched HTTP/2 and subsequent OpenTelemetry API adoption:
+  [d4a131b26f](https://github.com/faustbrian/go-scheduler/commit/d4a131b26f0d327198b4624b6a09863eedf5c84b),
+  [34424e0896](https://github.com/faustbrian/go-scheduler/commit/34424e0896467ab116111f3ac88685a9ca0dfe09).
+- Patched Go CI selection and bounded fixture startup diagnostics:
+  [4ffe15f750](https://github.com/faustbrian/go-scheduler/commit/4ffe15f75036d6e48df44986ea6706590f14e198),
+  [85ad2afe78](https://github.com/faustbrian/go-scheduler/commit/85ad2afe78c6cbd58376601983d72ae4f30330a0).
+- Immutable CI actions, documentation tooling, bounded verification, causal fuzz selection and supply-chain tooling:
+  [eeb92362a3](https://github.com/faustbrian/go-scheduler/commit/eeb92362a3b2582b8a9c0c14e3640a2f48deed55),
+  [1060e7025a](https://github.com/faustbrian/go-scheduler/commit/1060e7025a4de49b2964d62c47e166f5feb0b2ad),
+  [416dc9948d](https://github.com/faustbrian/go-scheduler/commit/416dc9948d1f231f725ce7e22c66eca2afc4bc10),
+  [b11667444a](https://github.com/faustbrian/go-scheduler/commit/b11667444a3d9051aa5c234c248186f5b6bf0f37),
+  [e708d5e3c8](https://github.com/faustbrian/go-scheduler/commit/e708d5e3c86ce37b69b0dd374b3101f4f707ab17).
+- Development policy and non-Go dependency update coverage:
+  [70d5230ad7](https://github.com/faustbrian/go-scheduler/commit/70d5230ad7fb2baaf254cd8f4ab69df941bf8df6),
+  [3fe27863b9](https://github.com/faustbrian/go-scheduler/commit/3fe27863b9d0bbab483d64aa33fdc44b9e5a8e1b).
+- Scheduling/lifecycle contracts, source-documentation enforcement and adoption navigation:
+  [667b96cfc7](https://github.com/faustbrian/go-scheduler/commit/667b96cfc73965faab50b2f7c180b4bc9b43ae47),
+  [bdb447ff75](https://github.com/faustbrian/go-scheduler/commit/bdb447ff75e8903537339276dcb590da08084b0a),
+  [9f9fc1f57d](https://github.com/faustbrian/go-scheduler/commit/9f9fc1f57d2115bec455587efa570d713050680c).
 
 ## [2.0.1] - 2026-09-28
 
