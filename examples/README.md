@@ -1,5 +1,8 @@
 # Examples
 
+[Documentation map](../docs/index.md) · [Repository README](../README.md)
+[Next: Documentation map](../docs/index.md)
+
 - [`basic`](basic/main.go) is a runnable single-process example using the
   memory lease backend and a short cooperative executor.
 - [`distributed-singleton`](distributed-singleton/main.go) runs two contenders

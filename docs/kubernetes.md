@@ -1,5 +1,8 @@
 # Kubernetes architecture
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 Run the scheduler as a small Deployment with two or more replicas. Give every
 pod a unique owner value, connect all replicas to one persistent lease backend,
 use the same lease namespace and IANA data, and dispatch durable work to a

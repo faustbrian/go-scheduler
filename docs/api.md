@@ -1,5 +1,8 @@
 # API reference
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: Operations and recovery](operations.md)
+
 ## Definitions and registry
 
 `NewSchedule(name, task, interval, options...)` admits selected resource limits

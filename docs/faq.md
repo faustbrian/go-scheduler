@@ -1,5 +1,8 @@
 # FAQ
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 **Is this a Kubernetes controller?** No. It runs as an ordinary Deployment.
 
 **Why not use CronJobs?** Use them for infrastructure and isolated commands.

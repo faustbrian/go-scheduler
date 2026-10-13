@@ -1,5 +1,8 @@
 # Service lifecycle integration
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 Package `adapters/service` connects an explicit scheduler runner to the
 `service` lifecycle. It does not define schedules, select a lease backend,
 choose retry policy, or own business commands.

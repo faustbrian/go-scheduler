@@ -1,5 +1,8 @@
 # Resilience and resource budgets
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 This report records the scheduler's bounded inputs, distributed failure model,
 test evidence, and residual risks. It is not an exactly-once claim. A release
 is blocked by an unbounded wait, deadlock, data race, panic, goroutine growth

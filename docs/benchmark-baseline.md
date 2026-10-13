@@ -1,5 +1,8 @@
 # Benchmark baseline
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 This baseline was captured on 2026-07-16 with Go 1.26.5 on darwin/arm64, an
 Apple M4 Max with 16 logical CPUs, and 128 GiB RAM. Commands used a 500 ms
 benchmark window and five samples:

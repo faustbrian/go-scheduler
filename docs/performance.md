@@ -1,5 +1,8 @@
 # Performance
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 Schedule calculation is in memory after startup compilation. Runner wakeups are
 set to the exact next occurrence; there is no mandatory one-minute polling
 loop. Registry scans and catch-up are bounded.

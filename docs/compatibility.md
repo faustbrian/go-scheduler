@@ -1,5 +1,8 @@
 # Compatibility
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 The module currently requires Go 1.27.0 because its pinned `idempotency`
 dependency requires that toolchain. Cron behavior is pinned to
 `robfig/cron/v3`. PostgreSQL support targets currently maintained releases 14

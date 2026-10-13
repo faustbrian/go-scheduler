@@ -1,5 +1,8 @@
 # Operations and recovery
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 Startup must compile the full registry, check backend safety, apply or verify
 the PostgreSQL migration, and expose readiness only afterward. Monitor failure,
 overlap, skipped, and completed event counts plus execution duration, lease

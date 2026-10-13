@@ -1,5 +1,8 @@
 # Composition recipe: pause-aware runner
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 Use `NewPauseState` with `WithPauseSource` when a process-local administrative
 pause is sufficient. The runner owns schedule execution and lease cleanup; the
 pause state owns only the atomic paused flag and never starts a goroutine.

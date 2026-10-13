@@ -1,5 +1,8 @@
 # Documentation
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: Documentation map](index.md)
+
 Start with [installation](../README.md#installation), the
 [five-minute quickstart](../README.md#five-minute-quickstart), and
 [scheduler-versus-sequencer selection](../README.md#scheduler-or-sequencer).

@@ -1,5 +1,8 @@
 # Lease backends and fencing
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 The memory backend is deterministic and process-local. It is appropriate for
 tests and single-replica tools only.
 

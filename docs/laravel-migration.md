@@ -1,5 +1,8 @@
 # Laravel scheduler migration
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 Treat migration as a behavior inventory, not a syntax translation. Record each
 Laravel event's command or closure, parameters, time zone, filters, maintenance
 policy, mutex name and TTL, background behavior, output handling, and hooks.

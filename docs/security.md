@@ -1,5 +1,8 @@
 # Security
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: Operations and recovery](operations.md)
+
 - Do not expose arbitrary task registration or shell execution over HTTP.
 - Authenticate and authorize inspection and recovery endpoints externally.
 - Keep database and Valkey credentials in Kubernetes Secrets and rotate them.

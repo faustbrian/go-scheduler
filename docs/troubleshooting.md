@@ -1,5 +1,8 @@
 # Troubleshooting
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 **A schedule never appears:** compile errors report duplicate names, invalid
 cron, or unavailable time zones. Run CLI `validate` and `list` during startup.
 

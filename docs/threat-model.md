@@ -1,5 +1,8 @@
 # Threat model
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: Operations and recovery](operations.md)
+
 ## Scope and assets
 
 The protected assets are schedule definitions, physical occurrence identity,

@@ -1,5 +1,8 @@
 # Queue dispatch and idempotency
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 `schedulerqueue.Dispatcher` from `adapters/queue` sends a JSON envelope through
 a caller-owned `go-queue` backend containing schedule
 revision ID, coordination ID, name, task, occurrence, attempt, idempotency key,
