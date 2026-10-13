@@ -67,11 +67,11 @@ type Registry struct {
 }
 
 // ScheduleOverview combines a copied schedule definition with its next
-// enabled execution boundary. Next is zero for a disabled schedule.
+// enabled execution boundary. Next is zero for disabled or exhausted timing.
 type ScheduleOverview struct {
 	// Schedule is a copied definition; callback functions retain their closures.
 	Schedule Schedule
-	// Next is the calculated timing boundary; disabled definitions return zero.
+	// Next is the calculated timing boundary; disabled or exhausted timing returns zero.
 	Next time.Time
 }
 
@@ -180,7 +180,11 @@ type jitteredSchedule struct {
 }
 
 func (schedule jitteredSchedule) Next(after time.Time) time.Time {
-	return schedule.Schedule.Next(after.Add(-schedule.offset)).Add(schedule.offset)
+	next := schedule.Schedule.Next(after.Add(-schedule.offset))
+	if next.IsZero() {
+		return time.Time{}
+	}
+	return next.Add(schedule.offset)
 }
 
 // A revision-stable offset keeps coordinating replicas on the same physical
@@ -259,10 +263,10 @@ func (registry *Registry) ClearCache(ctx context.Context, store lease.Store) (in
 
 func taskLeaseKey(schedule Schedule) string { return "task:" + schedule.CoordinationID }
 
-// Next calculates the next timing boundary without checking Enabled or date
-// bounds; use Due for execution decisions. Unknown names return ErrScheduleNotFound.
-// Exhausted cron results are passed through jitter addition, so a nonzero offset
-// can turn the zero sentinel into a year-one value rather than a future boundary.
+// Next calculates the first timing boundary strictly after the supplied instant,
+// or zero when
+// timing is exhausted. It does not check Enabled or date bounds; use Due for
+// execution decisions. Unknown names return ErrScheduleNotFound.
 func (registry *Registry) Next(name string, after time.Time) (time.Time, error) {
 	entry, ok := registry.entries[name]
 	if !ok {
@@ -274,9 +278,9 @@ func (registry *Registry) Next(name string, after time.Time) (time.Time, error) 
 // Due selects occurrences in (after,through], applying enablement and inclusive
 // date bounds. Skip selects only an exact through boundary; Once/CatchUp retain
 // the newest admitted tail. ErrOccurrenceLimit returns no partial tail.
-// Exhausted/nonadvancing timing can exhaust the scan cap instead of yielding an
-// empty result. This is calculation only: conditions, pause and leases are
-// Runner decisions.
+// Exhausted timing ends the scan without adding a candidate; any admitted tail
+// is retained. This is calculation only: conditions, pause and leases are Runner
+// decisions.
 func (registry *Registry) Due(name string, after, through time.Time) ([]Occurrence, error) {
 	entry, ok := registry.entries[name]
 	if !ok {
@@ -290,7 +294,7 @@ func (registry *Registry) Due(name string, after, through time.Time) ([]Occurren
 	switch entry.schedule.MissedRunPolicy {
 	case MissedRunSkip:
 		candidate := entry.cron.Next(through.Add(-time.Nanosecond))
-		if !candidate.Equal(through) || !withinBounds(entry.schedule, candidate) {
+		if candidate.IsZero() || !candidate.Equal(through) || !withinBounds(entry.schedule, candidate) {
 			return nil, nil
 		}
 		return []Occurrence{newOccurrence(entry.schedule, candidate)}, nil
@@ -302,7 +306,7 @@ func (registry *Registry) Due(name string, after, through time.Time) ([]Occurren
 	}
 
 	occurrences := make([]Occurrence, 0, limit)
-	for scanned, next := 0, entry.cron.Next(after); !next.After(through); scanned, next = scanned+1, entry.cron.Next(next) {
+	for scanned, next := 0, entry.cron.Next(after); !next.IsZero() && !next.After(through); scanned, next = scanned+1, entry.cron.Next(next) {
 		if scanned == MaxOccurrenceScan {
 			return nil, ErrOccurrenceLimit
 		}

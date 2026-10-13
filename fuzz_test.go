@@ -8,12 +8,14 @@ import (
 )
 
 // FuzzScheduleCompilation exercises hostile names/cron/zone admission and a
-// fixed-instant Next call for panic safety; it is not a separate cron oracle.
+// fixed-instant jittered Next for future-or-zero timing and panic safety; it is
+// not a separate cron oracle.
 func FuzzScheduleCompilation(f *testing.F) {
 	f.Add("report", "task", "0 0 * * *", "UTC")
 	f.Add("dst", "task", "30 3 * * *", "Europe/Helsinki")
-	f.Fuzz(func(_ *testing.T, name, task, expression, timezone string) {
-		schedule, err := scheduler.NewSchedule(name, task, scheduler.Cron(expression), scheduler.WithTimezone(timezone))
+	f.Add("exhausted", "task", "0 0 31 2 *", "UTC")
+	f.Fuzz(func(t *testing.T, name, task, expression, timezone string) {
+		schedule, err := scheduler.NewSchedule(name, task, scheduler.Cron(expression), scheduler.WithTimezone(timezone), scheduler.WithJitter(time.Hour))
 		if err != nil {
 			return
 		}
@@ -21,7 +23,14 @@ func FuzzScheduleCompilation(f *testing.F) {
 		if err != nil {
 			return
 		}
-		_, _ = registry.Next(name, time.Unix(1_700_000_000, 0))
+		after := time.Unix(1_700_000_000, 0)
+		next, err := registry.Next(name, after)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !next.IsZero() && !next.After(after) {
+			t.Fatalf("Next = %v; want a future boundary or zero", next)
+		}
 	})
 }
 

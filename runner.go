@@ -448,6 +448,9 @@ func (runner *Runner) next(after time.Time) (time.Time, bool) {
 			continue
 		}
 		next := entry.cron.Next(after)
+		if next.IsZero() {
+			continue
+		}
 		if earliest.IsZero() || next.Before(earliest) {
 			earliest = next
 		}

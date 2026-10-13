@@ -18,10 +18,10 @@ Jitter is a stable per-schedule offset in `[0, maximum)`. It is identical on all
 replicas and preserves occurrence ordering. Wall-clock jumps are processed from
 the last runner cursor to the injected clock's current instant.
 
-The cron compiler can return zero for an unsatisfiable future pattern. Registry
-Next/Overview pass that value through jitter addition, so nonzero jitter can
-produce a year-one offset value rather than a future instant. Due assumes timing
-advances and can return ErrOccurrenceLimit for exhausted/nonadvancing patterns
-instead of an empty result. Do not interpret arbitrary calculated boundaries as
-proof of an executable future occurrence. This limitation is not repaired by
-the documentation pass.
+A zero cron result means no future occurrence within the compiler's supported
+search. Jitter preserves that sentinel. Registry Next/Overview expose zero for
+exhausted timing, and Due stops without manufacturing a candidate or discarding
+an already admitted tail. The runner ignores exhausted schedules when choosing
+its next timer; if no enabled schedule has a next boundary, it waits for context
+cancellation. Actual candidate scans still fail with `ErrOccurrenceLimit` when
+they exceed `MaxOccurrenceScan`; exhaustion is not unbounded downtime.

@@ -5,6 +5,12 @@ and releases use Semantic Versioning.
 
 ## [Unreleased]
 
+### Fixed
+
+- Preserve an exhausted cron's zero sentinel before deterministic jitter,
+  terminate missed-run replay without fabricated year-one occurrences or lost
+  finite tails, and retain valid runner timers alongside exhausted schedules.
+
 ### Security
 
 - Select Go 1.27.2 for CI and development to include standard-library
