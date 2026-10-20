@@ -6,7 +6,7 @@ require (
 	github.com/faustbrian/go-correlation v1.1.3
 	github.com/faustbrian/go-idempotency v1.2.0
 	github.com/faustbrian/go-queue v1.1.2
-	github.com/faustbrian/go-service v1.1.2
+	github.com/faustbrian/go-service v1.1.4
 	github.com/faustbrian/go-telemetry/v2 v2.0.1
 	github.com/jackc/pgx/v5 v5.11.0
 	github.com/robfig/cron/v3 v3.0.1
@@ -23,7 +23,7 @@ require (
 require (
 	github.com/cenkalti/backoff/v5 v5.0.3 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/faustbrian/go-cli v1.0.0 // indirect
+	github.com/faustbrian/go-cli v1.1.1 // indirect
 	github.com/faustbrian/go-clock v1.1.0 // indirect
 	github.com/faustbrian/go-identifier/v2 v2.0.1 // indirect
 	github.com/go-logr/logr v1.4.4 // indirect
