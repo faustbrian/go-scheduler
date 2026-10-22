@@ -123,6 +123,89 @@ func TestPlanStopsSchedulingDrainsExecutionsThenClosesFacilities(t *testing.T) {
 	}
 }
 
+// A drain that outlives the shutdown deadline must surface as a shutdown
+// failure, not a clean exit, while later facilities still close.
+func TestPlanReportsDrainDeadlineAndStillClosesFacilities(t *testing.T) {
+	start := time.Date(2026, time.January, 1, 0, 0, 30, 0, time.UTC)
+	clock := schedulertest.NewFakeClock(start)
+	factory, err := correlation.NewFactory(correlation.FactoryOptions{})
+	if err != nil {
+		t.Fatalf("correlation.NewFactory() error = %v", err)
+	}
+	executionStarted := make(chan struct{})
+	releaseExecution := make(chan struct{})
+	facilityClosed := make(chan struct{})
+	adapter, err := schedulerservice.New(schedulerservice.Options{
+		Name:        "scheduler",
+		Registry:    registry(t, nil),
+		Leases:      memory.New(),
+		Correlation: factory,
+		Executor: executorFunc(func(context.Context, scheduler.Context) error {
+			close(executionStarted)
+			<-releaseExecution
+
+			return nil
+		}),
+		RunnerOptions: []scheduler.RunnerOption{
+			scheduler.WithOwner("replica-a"),
+			scheduler.WithClock(clock),
+		},
+		Facilities: []service.Component{{
+			Name:  "lease-store",
+			Start: func(context.Context) error { return nil },
+			Stop: func(context.Context) error {
+				close(facilityClosed)
+
+				return nil
+			},
+		}},
+	})
+	if err != nil {
+		t.Fatalf("schedulerservice.New() error = %v", err)
+	}
+	t.Cleanup(func() {
+		select {
+		case <-releaseExecution:
+		default:
+			close(releaseExecution)
+		}
+	})
+
+	plan := adapter.Plan()
+	runtime, err := service.New(service.Config{Components: plan.Components})
+	if err != nil {
+		t.Fatalf("service.New() error = %v", err)
+	}
+	if err := runtime.Start(context.Background()); err != nil {
+		t.Fatalf("Start() error = %v", err)
+	}
+	if err := runtime.Go(plan.Tasks[0].Name, plan.Tasks[0].Run); err != nil {
+		t.Fatalf("Go() error = %v", err)
+	}
+	waitCtx, waitCancel := context.WithTimeout(context.Background(), time.Second)
+	defer waitCancel()
+	if !clock.WaitForTimers(waitCtx, 1) {
+		t.Fatal("scheduler did not register its timer")
+	}
+	clock.Advance(30 * time.Second)
+	select {
+	case <-executionStarted:
+	case <-time.After(time.Second):
+		t.Fatal("scheduled execution did not start")
+	}
+
+	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 50*time.Millisecond)
+	defer shutdownCancel()
+	if err := runtime.Shutdown(shutdownCtx); err == nil || !errors.Is(err, context.DeadlineExceeded) {
+		t.Fatalf("Shutdown() error = %v, want a drain deadline failure", err)
+	}
+	select {
+	case <-facilityClosed:
+	case <-time.After(time.Second):
+		t.Fatal("facility stayed open after the drain deadline")
+	}
+}
+
 func TestTrustedMetadataContinuesAnExplicitCorrelationWorkflow(t *testing.T) {
 	factory, err := correlation.NewFactory(correlation.FactoryOptions{})
 	if err != nil {

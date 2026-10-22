@@ -70,4 +70,19 @@ func TestExecutorOccurrenceIdentityMatchesRetainedRecords(t *testing.T) {
 	if got := request.Fingerprint.Version() + ":" + hex.EncodeToString(request.Fingerprint.Sum()); got != wantFingerprint {
 		t.Fatalf("fingerprint = %s, want %s", got, wantFingerprint)
 	}
+
+	// The due time is normalised to UTC with nanosecond RFC 3339 before
+	// hashing, so a zoned, fractional due time keeps its retained identity.
+	// The expected value is sha256(CoordinationID + NUL + "2026-01-01T08:00:00.123456789Z").
+	const wantZonedFingerprint = "scheduler-occurrence-v1:21f9ae7f204d58df0bf9f8450141a8c505c9eb9cb4e2dc773860db64c3389fae"
+	zoned := scheduled
+	zoned.IdempotencyKey = "occurrence-2"
+	zoned.Due = time.Date(2026, time.January, 1, 10, 0, 0, 123456789, time.FixedZone("UTC+2", 2*60*60))
+	if err := executor.Execute(context.Background(), zoned); err != nil {
+		t.Fatalf("Execute(zoned) error = %v", err)
+	}
+	zonedRequest := store.requests[len(store.requests)-1]
+	if got := zonedRequest.Fingerprint.Version() + ":" + hex.EncodeToString(zonedRequest.Fingerprint.Sum()); got != wantZonedFingerprint {
+		t.Fatalf("zoned fingerprint = %s, want %s", got, wantZonedFingerprint)
+	}
 }
