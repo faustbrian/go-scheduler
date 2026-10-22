@@ -34,8 +34,6 @@ and releases use Semantic Versioning.
 - Build with Go 1.27.3 to address GO-2026-6809 in `crypto/x509`.
   Consumers should use Go 1.27.3 or newer.
 
-## [Unreleased]
-
 ## [2.0.2] - 2026-10-13
 
 Prepared patch candidate; this entry does not claim tag or module publication.
@@ -281,7 +279,7 @@ Each non-merge commit in the frozen range is accounted for exactly once:
 - threat model, rollout and crash matrices, and benchmark release baseline
 - bounded runner observer registration
 
-[Unreleased]: https://github.com/faustbrian/go-scheduler/compare/v2.0.1...HEAD
+[2.0.2]: https://github.com/faustbrian/go-scheduler/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/faustbrian/go-scheduler/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/faustbrian/go-scheduler/compare/v1.1.0...v2.0.0
 [1.1.0]: https://github.com/faustbrian/go-scheduler/releases/tag/v1.1.0
