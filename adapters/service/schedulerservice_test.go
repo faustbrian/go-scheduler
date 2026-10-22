@@ -204,6 +204,15 @@ func TestPlanReportsDrainDeadlineAndStillClosesFacilities(t *testing.T) {
 	case <-time.After(time.Second):
 		t.Fatal("facility stayed open after the drain deadline")
 	}
+	// The first caller sees its own deadline; the kept result must still
+	// record the drain component's failure for later callers.
+	err = runtime.Shutdown(context.Background())
+	var shutdownErr *service.ShutdownError
+	var componentErr *service.ComponentError
+	if !errors.As(err, &shutdownErr) || !errors.As(err, &componentErr) ||
+		componentErr.Component != "scheduler-drain" || !errors.Is(err, context.DeadlineExceeded) {
+		t.Fatalf("kept Shutdown() error = %v, want the scheduler-drain deadline failure", err)
+	}
 }
 
 func TestTrustedMetadataContinuesAnExplicitCorrelationWorkflow(t *testing.T) {
