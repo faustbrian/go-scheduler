@@ -13,12 +13,13 @@ Public API compatibility is checked before release. Major releases may make
 breaking changes, which are recorded in `CHANGELOG.md`. Time-zone behavior also
 depends on the zone database shipped with the Go runtime or host.
 
-## v2.0.2 patch adoption
+## v3 adoption
 
-The prepared v2.0.2 patch keeps `/v2` imports, the Go 1.27.0 minimum, lease
-storage schemas, queue submission identities and existing API contracts.
-Select the patch explicitly once its public tag and module artifacts are
-available; the latest published root baseline before this preparation is v2.0.1.
+V3 moves the module to `/v3`, removes the v2 compatibility packages in favour
+of `adapters/*`, and adopts Telemetry v4, Idempotency v3, Queue v2 and Service
+v3. Lease storage schemas, lease keys and occurrence idempotency identities are
+unchanged; see [`COMPATIBILITY.md`](../COMPATIBILITY.md) for the rolling-upgrade
+and migration-ledger steps.
 
 An exhausted cron result remains zero before jitter. Registry replay stops
 without fabricated occurrences or lost admitted tails, and runner timer
@@ -29,5 +30,5 @@ Real candidate scans still enforce `MaxOccurrenceScan`; see
 [Go Service composition](service-integration.md) remains explicit through
 `adapters/service` (package `schedulerservice`). Callers own
 facilities, callbacks and shutdown deadlines. Runner cancellation and Drain
-remain cooperative: a timed-out wait does not prove cleanup has joined and
-this patch cannot force a blocking callback to return.
+remain cooperative: a timed-out wait does not prove cleanup has joined, and
+the scheduler cannot force a blocking callback to return.

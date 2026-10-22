@@ -34,10 +34,14 @@ func TestObserverValidatesLoggerAndRecordsLifecycleLevels(t *testing.T) {
 	observer.Observe(scheduler.Event{
 		Type: scheduler.EventFailure, Result: scheduler.ResultFailed,
 		Occurrence: occurrence, Context: context.Background(), Err: errors.New("failed"),
+		Owner: "replica-1", Fencing: 42,
 	})
 
 	logs := output.String()
-	for _, want := range []string{`"level":"INFO"`, `"level":"ERROR"`, `"schedule":"daily"`, `"task":"reports"`} {
+	for _, want := range []string{
+		`"level":"INFO"`, `"level":"ERROR"`, `"schedule":"daily"`, `"task":"reports"`,
+		`"owner":"replica-1"`, `"fencing_token":42`, `"error":"failed"`,
+	} {
 		if !strings.Contains(logs, want) {
 			t.Fatalf("logs do not contain %s: %s", want, logs)
 		}

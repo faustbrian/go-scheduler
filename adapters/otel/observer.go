@@ -17,8 +17,8 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-// Keep the released instrumentation scope so adopting the target-oriented
-// package does not split dashboards, alerts, or trace queries.
+// The scope follows the module major; changing it splits dashboards, alerts
+// and trace queries keyed on the previous scope, so it changes only with one.
 const scopeName = "github.com/faustbrian/go-scheduler/v3"
 
 // ErrInvalidConfiguration reports missing OpenTelemetry providers.

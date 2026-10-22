@@ -3,6 +3,7 @@ package schedulerhttp_test
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -128,14 +129,14 @@ func TestHandlerRejectsInvalidRequests(t *testing.T) {
 	t.Parallel()
 
 	registry, _ := scheduler.Compile()
-	if _, err := schedulerhttp.New(nil, nil); err == nil {
-		t.Fatal("New(nil) error = nil")
+	if _, err := schedulerhttp.New(nil, nil); !errors.Is(err, schedulerhttp.ErrInvalidDependencies) {
+		t.Fatalf("New(nil) error = %v, want ErrInvalidDependencies", err)
 	}
-	if _, err := schedulerhttp.New(registry, nil); err == nil {
-		t.Fatal("New(nil store) error = nil")
+	if _, err := schedulerhttp.New(registry, nil); !errors.Is(err, schedulerhttp.ErrInvalidDependencies) {
+		t.Fatalf("New(nil store) error = %v, want ErrInvalidDependencies", err)
 	}
-	if _, err := schedulerhttp.New(nil, memory.New()); err == nil {
-		t.Fatal("New(nil registry) error = nil")
+	if _, err := schedulerhttp.New(nil, memory.New()); !errors.Is(err, schedulerhttp.ErrInvalidDependencies) {
+		t.Fatalf("New(nil registry) error = %v, want ErrInvalidDependencies", err)
 	}
 	handler, _ := schedulerhttp.New(registry, memory.New())
 	tests := []struct {

@@ -70,6 +70,18 @@
         },
         {
           "module_directory": ".",
+          "directory": "adapters/lease/conformance",
+          "name": "conformance",
+          "import_path": "github.com/faustbrian/go-scheduler/v3/adapters/lease/conformance",
+          "kind": "test support",
+          "production": false,
+          "executable": true,
+          "coverage_required": false,
+          "build_required": true,
+          "build_tags": []
+        },
+        {
+          "module_directory": ".",
           "directory": "adapters/otel",
           "name": "schedulerotel",
           "import_path": "github.com/faustbrian/go-scheduler/v3/adapters/otel",
@@ -145,6 +157,18 @@
           "directory": "examples/distributed-singleton",
           "name": "main",
           "import_path": "github.com/faustbrian/go-scheduler/v3/examples/distributed-singleton",
+          "kind": "example",
+          "production": false,
+          "executable": true,
+          "coverage_required": false,
+          "build_required": true,
+          "build_tags": []
+        },
+        {
+          "module_directory": ".",
+          "directory": "examples/pause-state",
+          "name": "main",
+          "import_path": "github.com/faustbrian/go-scheduler/v3/examples/pause-state",
           "kind": "example",
           "production": false,
           "executable": true,
@@ -240,7 +264,8 @@
         "github.com/faustbrian/go-clock",
         "github.com/faustbrian/go-correlation",
         "github.com/faustbrian/go-idempotency/v3",
-        "github.com/faustbrian/go-identifier",
+        "github.com/faustbrian/go-identifier/v2",
+        "github.com/faustbrian/go-migrations/v4",
         "github.com/faustbrian/go-queue/v2",
         "github.com/faustbrian/go-service/v3",
         "github.com/faustbrian/go-telemetry/v4"
@@ -316,6 +341,7 @@
           "github.com/faustbrian/go-scheduler/v3/adapters/http": "Use to expose bounded scheduler inspection and fenced recovery through caller-authenticated HTTP routing.",
           "github.com/faustbrian/go-scheduler/v3/adapters/idempotency": "Use to wrap scheduler execution with durable idempotency ownership and completion policy.",
           "github.com/faustbrian/go-scheduler/v3/adapters/lease": "Use to implement or consume the scheduler's fenced lease-store contract.",
+          "github.com/faustbrian/go-scheduler/v3/adapters/lease/conformance": "Use when implementing a lease store to verify the public fencing and lifecycle contract.",
           "github.com/faustbrian/go-scheduler/v3/adapters/otel": "Use for bounded scheduler metrics and traces through caller-configured OpenTelemetry providers.",
           "github.com/faustbrian/go-scheduler/v3/adapters/queue": "Use to dispatch durable scheduled work through a caller-selected go-queue backend.",
           "github.com/faustbrian/go-scheduler/v3/adapters/service": "Use to compose runner and drain ownership into a caller-owned go-service lifecycle plan.",
@@ -367,6 +393,7 @@
           "github.com/faustbrian/go-scheduler/v3/valkey"
         ],
         "companions": [
+          "github.com/faustbrian/go-scheduler/v3/adapters/lease/conformance",
           "github.com/faustbrian/go-scheduler/v3/cron",
           "github.com/faustbrian/go-scheduler/v3/history",
           "github.com/faustbrian/go-scheduler/v3/schedulertest"

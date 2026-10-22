@@ -64,6 +64,18 @@
     },
     {
       "module_directory": ".",
+      "directory": "adapters/lease/conformance",
+      "name": "conformance",
+      "import_path": "github.com/faustbrian/go-scheduler/v3/adapters/lease/conformance",
+      "kind": "test support",
+      "production": false,
+      "executable": true,
+      "coverage_required": false,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
       "directory": "adapters/otel",
       "name": "schedulerotel",
       "import_path": "github.com/faustbrian/go-scheduler/v3/adapters/otel",
@@ -139,6 +151,18 @@
       "directory": "examples/distributed-singleton",
       "name": "main",
       "import_path": "github.com/faustbrian/go-scheduler/v3/examples/distributed-singleton",
+      "kind": "example",
+      "production": false,
+      "executable": true,
+      "coverage_required": false,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "examples/pause-state",
+      "name": "main",
+      "import_path": "github.com/faustbrian/go-scheduler/v3/examples/pause-state",
       "kind": "example",
       "production": false,
       "executable": true,

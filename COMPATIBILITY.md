@@ -17,12 +17,9 @@ Specification-backed modules MUST NOT diverge from their declared standards.
 Ambiguities require documented decisions and stable tests. Deprecated APIs
 follow [`DEPRECATION.md`](DEPRECATION.md).
 
-The target-oriented packages under `adapters/` are the canonical integration
-paths beginning with v1.1.0. The released top-level integration paths remain
-source-compatible for the longer of 180 days after v1.1.0 publication and two
-subsequently published stable minor releases. The combined `telemetry` package
-preserves its logging, metrics, and tracing behavior while new consumers may
-select `adapters/slog` and `adapters/otel` independently.
+The packages under `adapters/` are the only integration paths. The
+top-level integration paths and the combined `telemetry` observer were removed
+in v3; compose `adapters/slog` and `adapters/otel` instead.
 
 `adapters/lease` owns the lease contract used by the root scheduler and its
 storage backends. Version 3 removed the v2 compatibility packages; their
@@ -37,5 +34,8 @@ it. The OpenTelemetry instrumentation scope is now
 `github.com/faustbrian/go-scheduler/v3`; move dashboard and alert selectors
 keyed on the previous `github.com/faustbrian/go-scheduler` scope. Metric names
 and units are unchanged. Lease keys, the PostgreSQL schema and occurrence
-idempotency identities are unchanged, so v2 and v3 replicas coordinate during
-a rolling upgrade.
+idempotency identities are unchanged, so v2 and v3 scheduler replicas
+coordinate during a rolling upgrade. Applications that apply the
+go-idempotency PostgreSQL migration move to the go-migrations v4 ledger:
+stop every older migration runner and complete the
+[ledger name upgrade](https://github.com/faustbrian/go-migrations/blob/v4.0.0/docs/operations.md#ledger-name-upgrade) before the first v4 run.

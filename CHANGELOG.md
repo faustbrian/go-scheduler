@@ -14,6 +14,8 @@ and releases use Semantic Versioning.
   unchanged.
 - Lease keys, the PostgreSQL schema and occurrence idempotency identities are
   unchanged, so v2 and v3 replicas coordinate during a rolling upgrade.
+  Applications that apply the go-idempotency PostgreSQL migration must first
+  complete the go-migrations [ledger name upgrade](https://github.com/faustbrian/go-migrations/blob/v4.0.0/docs/operations.md#ledger-name-upgrade).
 
 ### Removed
 

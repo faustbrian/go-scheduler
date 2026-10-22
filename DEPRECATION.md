@@ -18,11 +18,8 @@ Version 3 removed the `idempotency`, `lease`, `queue`, `schedulercli`,
 deprecated in favor of the `adapters/*` packages. The removal preceded the
 announced window because the owned consumers move with v3.
 
-Migration requires only changing imports to the corresponding `adapters/*`
-path; the one-to-one successors preserve released type and sentinel identities.
-Telemetry consumers construct `adapters/slog` and `adapters/otel` separately
-and register either or both observers as their application composition needs.
-The earliest possible removal version is v2.0.0, and removal may not occur
-before both 180 days after v1.1.0 publication and two later stable minor
-releases have elapsed. Removal additionally requires migration of owned
-consumers and current external-consumer compatibility evidence.
+Migrating to v3 changes the scheduler import paths to `/v3`, replaces each
+removed package with its `adapters/*` path, moves the dependency majors listed
+in [`COMPATIBILITY.md`](COMPATIBILITY.md) and moves scope-keyed telemetry
+selectors. Telemetry consumers construct `adapters/slog` and `adapters/otel`
+separately and register either or both observers.
