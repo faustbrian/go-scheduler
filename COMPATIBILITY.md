@@ -24,16 +24,18 @@ subsequently published stable minor releases. The combined `telemetry` package
 preserves its logging, metrics, and tracing behavior while new consumers may
 select `adapters/slog` and `adapters/otel` independently.
 
-`adapters/lease` is an additive identity-preserving successor. The released
-`lease` package remains the implementation owner used by the root scheduler and
-its storage backends because reversing that dependency would either create a
-cycle or change released named-type and reflection identities. New external
-composition may import `adapters/lease`; the two paths expose the same contract.
-No compatibility path may be removed before v2.0.0 and the interval and
-consumer-evidence conditions in [`DEPRECATION.md`](DEPRECATION.md) are met.
+`adapters/lease` owns the lease contract used by the root scheduler and its
+storage backends. Version 3 removed the v2 compatibility packages; their
+implementations now live at the matching `adapters/*` paths with the same
+package names except `schedulerqueue`, `schedulerlease` and
+`scheduleridempotency`.
 
-The v2 scheduler module requires `go-telemetry/v2` for both exported
-`NewRuntime` constructors. Applications migrating from scheduler v1 must update
-scheduler import paths to `/v2` and pass a telemetry v2 runtime. The existing
-OpenTelemetry instrumentation scope remains unchanged so dashboards and trace
-queries can span the module transition.
+The v3 scheduler module requires `go-telemetry/v4`, `go-idempotency/v3`,
+`go-queue/v2` and `go-service/v3`. Applications migrating from scheduler v2
+must update scheduler import paths to `/v3` and move those dependencies with
+it. The OpenTelemetry instrumentation scope is now
+`github.com/faustbrian/go-scheduler/v3`; move dashboard and alert selectors
+keyed on the previous `github.com/faustbrian/go-scheduler` scope. Metric names
+and units are unchanged. Lease keys, the PostgreSQL schema and occurrence
+idempotency identities are unchanged, so v2 and v3 replicas coordinate during
+a rolling upgrade.

@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler/v2"
-	gotelemetry "github.com/faustbrian/go-telemetry/v2"
+	scheduler "github.com/faustbrian/go-scheduler/v3"
+	gotelemetry "github.com/faustbrian/go-telemetry/v4"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
@@ -19,7 +19,7 @@ import (
 
 // Keep the released instrumentation scope so adopting the target-oriented
 // package does not split dashboards, alerts, or trace queries.
-const scopeName = "github.com/faustbrian/go-scheduler"
+const scopeName = "github.com/faustbrian/go-scheduler/v3"
 
 // ErrInvalidConfiguration reports missing OpenTelemetry providers.
 var ErrInvalidConfiguration = errors.New("scheduler otel: providers are required")

@@ -1,15 +1,13 @@
 package memory_test
 
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
-
 import (
 	"context"
 	"errors"
 	"testing"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Tests the retained domain port.
-	"github.com/faustbrian/go-scheduler/v2/memory"
+	lease "github.com/faustbrian/go-scheduler/v3/adapters/lease"
+	"github.com/faustbrian/go-scheduler/v3/memory"
 )
 
 func TestStoreRejectsInvalidAcquireArguments(t *testing.T) {

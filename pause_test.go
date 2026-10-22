@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler/v2"
-	"github.com/faustbrian/go-scheduler/v2/memory"
+	scheduler "github.com/faustbrian/go-scheduler/v3"
+	"github.com/faustbrian/go-scheduler/v3/memory"
 )
 
 type pauseSourceFunc func(context.Context) (bool, error)

@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/faustbrian/go-scheduler/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/faustbrian/go-scheduler/actions/workflows/ci.yml)
 [![Documentation](https://img.shields.io/badge/docs-adoption_and_API-blue)](docs/index.md)
-[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-scheduler/v2.svg)](https://pkg.go.dev/github.com/faustbrian/go-scheduler/v2)
+[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-scheduler/v3.svg)](https://pkg.go.dev/github.com/faustbrian/go-scheduler/v3)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-scheduler?sort=semver)](https://github.com/faustbrian/go-scheduler/releases)
 [![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -11,21 +11,15 @@
 on Kubernetes. Multiple scheduler replicas coordinate through fenced leases,
 while durable business work is dispatched to `queue` workers.
 
-The module follows stable v2 compatibility. It does not claim exactly-once execution: leases reduce
+The module follows stable v3 compatibility. It does not claim exactly-once execution: leases reduce
 duplicate dispatch, and jobs must remain idempotent.
 
 ## Adoption entry points
 
-The root module is `github.com/faustbrian/go-scheduler/v2` (stable).
-It requires Go 1.27.0. Pin the published `v2.0.1` root tag
-with `go get github.com/faustbrian/go-scheduler/v2@v2.0.1`.
+The root module is `github.com/faustbrian/go-scheduler/v3` (stable).
+It requires Go 1.27.0. Pin the published `v3.0.0` root tag
+with `go get github.com/faustbrian/go-scheduler/v3@v3.0.0`.
 Root subpackages share this module; they need no separate installation.
-
-The prepared v2.0.2 patch preserves exhausted cron timing before jitter and
-replay. Select `github.com/faustbrian/go-scheduler/v2@v2.0.2` after its public
-tag and module artifacts are available; metadata preparation does not publish
-it. API/import and storage identities remain unchanged. See
-[compatibility and patch adoption](docs/compatibility.md#v202-patch-adoption).
 
 Start with the [documentation map](docs/index.md) for package selection,
 examples, operational constraints, and contributor references.
@@ -39,7 +33,7 @@ examples, operational constraints, and contributor references.
 ## Installation
 
 ```sh
-go get github.com/faustbrian/go-scheduler/v2@v2.0.1
+go get github.com/faustbrian/go-scheduler/v3@v3.0.0
 ```
 
 All packages in this repository share that module version. PostgreSQL, Valkey,
@@ -52,7 +46,7 @@ Run the complete process-local example and stop it with `Ctrl-C` after an
 occurrence:
 
 ```sh
-go run github.com/faustbrian/go-scheduler/v2/examples/basic@v2.0.0
+go run github.com/faustbrian/go-scheduler/v3/examples/basic@v3.0.0
 ```
 
 The production-shaped construction path for a multi-replica service is:
@@ -198,7 +192,7 @@ boundary they adapt:
 | HTTP administration | `adapters/http` | exposes inspection and recovery behind caller authentication |
 | CLI administration | `adapters/cli` | writes inspection/control output through caller-owned streams |
 | observations | `history`, `adapters/slog`, `adapters/otel` | retains bounded events or emits through caller facilities |
-| deterministic tests | `schedulertest`, `lease/conformance` | provides fake time or validates a store implementation |
+| deterministic tests | `schedulertest`, `adapters/lease/conformance` | provides fake time or validates a store implementation |
 
 For a direct process, combine the root package, one lease store, and an
 application `Executor`. For durable work, use `schedulerqueue.Dispatcher` as that
@@ -212,10 +206,10 @@ only to an authenticated application control surface. See the
 [dispatch](docs/dispatch-and-idempotency.md), and [composition recipe](docs/composition-recipes.md)
 contracts before selecting those paths.
 
-The released `lease`, `queue`, `idempotency`, `schedulerservice`,
-`schedulerhttp`, `schedulercli`, and `telemetry` paths remain supported
-compatibility paths. New integrations should use the target-oriented `adapters/*` paths;
-the split `slog` and `otel` observers can be selected independently.
+Version 3 removed the former `lease`, `queue`, `idempotency`, `schedulerservice`,
+`schedulerhttp`, `schedulercli`, and `telemetry` paths; use the matching
+`adapters/*` path. The split `slog` and `otel` observers replace the combined
+`telemetry` observer and can be selected independently.
 
 ## Documentation
 

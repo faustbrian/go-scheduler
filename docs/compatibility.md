@@ -27,7 +27,7 @@ Real candidate scans still enforce `MaxOccurrenceScan`; see
 [time and missed runs](time-and-missed-runs.md).
 
 [Go Service composition](service-integration.md) remains explicit through
-`adapters/service` or the retained `schedulerservice` package. Callers own
+`adapters/service` (package `schedulerservice`). Callers own
 facilities, callbacks and shutdown deadlines. Runner cancellation and Drain
 remain cooperative: a timed-out wait does not prove cleanup has joined and
 this patch cannot force a blocking callback to return.

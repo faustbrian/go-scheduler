@@ -1,32 +1,102 @@
-// Package scheduleridempotency is the target-oriented path for scheduler idempotency.
-// Its public types and behavior retain the released package identities.
-// Use New; no store lifecycle, ownership renewal or atomic external completion is added.
+// Package scheduleridempotency wraps an executor with occurrence ownership from a
+// borrowed go-idempotency store. New introduces no store closure or heartbeat.
+// Submission and completion are separate operations; stale takeover can repeat
+// effects, so downstream deduplication/fencing remains necessary.
 package scheduleridempotency
 
-//lint:file-ignore SA1019 This successor imports the deprecated package to preserve released identities.
-
 import (
-	goidempotency "github.com/faustbrian/go-idempotency"
-	scheduler "github.com/faustbrian/go-scheduler/v2"
-	legacy "github.com/faustbrian/go-scheduler/v2/idempotency" //nolint:staticcheck // Identity-preserving successor.
+	"context"
+	"errors"
+	"fmt"
+	"time"
+
+	goidempotency "github.com/faustbrian/go-idempotency/v3"
+	scheduler "github.com/faustbrian/go-scheduler/v3"
 )
 
 var (
 	// ErrInvalidConfiguration reports missing or unsafe wrapper dependencies.
-	ErrInvalidConfiguration = legacy.ErrInvalidConfiguration
+	ErrInvalidConfiguration = errors.New("scheduler idempotency: invalid configuration")
 	// ErrOccurrenceConflict reports an occurrence owned by incompatible work.
-	ErrOccurrenceConflict = legacy.ErrOccurrenceConflict
+	ErrOccurrenceConflict = errors.New("scheduler idempotency: occurrence conflict")
 )
 
 // Options configures the tenant namespace and ownership lease.
-type Options = legacy.Options
+type Options struct {
+	// Tenant namespaces occurrence ownership; empty is rejected.
+	Tenant string
+	// Lease is positive and at most go-idempotency MaxLease; no renewal is performed here.
+	Lease time.Duration
+}
 
 // Executor deduplicates schedule occurrences before invoking another executor.
-type Executor = legacy.Executor
+type Executor struct {
+	store  goidempotency.Store
+	inner  scheduler.Executor
+	tenant string
+	lease  time.Duration
+}
 
 // New constructs an occurrence-deduplicating executor.
-// It borrows both dependencies; ownership is not renewed during inner work
-// and completion is not atomic with external effects.
 func New(store goidempotency.Store, inner scheduler.Executor, options Options) (*Executor, error) {
-	return legacy.New(store, inner, options)
+	if store == nil || inner == nil || options.Tenant == "" || options.Lease <= 0 || options.Lease > goidempotency.MaxLease {
+		return nil, ErrInvalidConfiguration
+	}
+	return &Executor{store: store, inner: inner, tenant: options.Tenant, lease: options.Lease}, nil
+}
+
+// Execute suppresses replay/in-progress outcomes and invokes the inner executor
+// for acquired ownership. Inner failure releases with cancellation detached and
+// no new deadline; success completes using ctx and may fail after effects commit.
+// The ownership lease is not renewed during long work. No error redaction or
+// independent panic recovery is added by this wrapper.
+func (executor *Executor) Execute(ctx context.Context, scheduled scheduler.Context) error {
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	if scheduled.IdempotencyKey == "" || scheduled.Schedule.Task == "" {
+		return fmt.Errorf("%w: occurrence identity", ErrInvalidConfiguration)
+	}
+	key, err := goidempotency.NewKey(
+		"go-scheduler",
+		executor.tenant,
+		scheduled.Schedule.Task,
+		"go-scheduler",
+		scheduled.IdempotencyKey,
+	)
+	if err != nil {
+		return err
+	}
+	canonical := []byte(scheduled.Schedule.CoordinationID + "\x00" + scheduled.Due.UTC().Format(time.RFC3339Nano))
+	fingerprint, _ := goidempotency.NewFingerprint("scheduler-occurrence-v1", canonical)
+	acquired, err := executor.store.Acquire(ctx, goidempotency.AcquireRequest{
+		Key: key, Fingerprint: fingerprint, Lease: executor.lease,
+	})
+	if err != nil {
+		return err
+	}
+	switch acquired.Outcome {
+	case goidempotency.OutcomeReplayed, goidempotency.OutcomeInProgress:
+		return nil
+	case goidempotency.OutcomeAcquired, goidempotency.OutcomeStaleOwnerTakeover:
+	case goidempotency.OutcomeConflict, goidempotency.OutcomeTerminalFailure:
+		return fmt.Errorf("%w: %s", ErrOccurrenceConflict, acquired.Outcome)
+	case goidempotency.OutcomeUnavailable:
+		return fmt.Errorf("%w: durable ownership unavailable", ErrOccurrenceConflict)
+	default:
+		return fmt.Errorf("%w: unexpected outcome %s", ErrOccurrenceConflict, acquired.Outcome)
+	}
+
+	if err := executor.inner.Execute(ctx, scheduled); err != nil {
+		_, releaseErr := executor.store.Release(context.WithoutCancel(ctx), acquired.Record.Ownership())
+		return errors.Join(err, releaseErr)
+	}
+	_, err = executor.store.Complete(ctx, goidempotency.CompleteRequest{
+		Ownership: acquired.Record.Ownership(),
+		Metadata: map[string]string{
+			"schedule_id": scheduled.Schedule.Identity,
+			"occurrence":  scheduled.Due.UTC().Format(time.RFC3339Nano),
+		},
+	})
+	return err
 }

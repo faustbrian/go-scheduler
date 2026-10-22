@@ -5,10 +5,10 @@ import (
 	"errors"
 	"testing"
 
-	scheduler "github.com/faustbrian/go-scheduler/v2"
-	schedulerotel "github.com/faustbrian/go-scheduler/v2/adapters/otel"
-	gotelemetry "github.com/faustbrian/go-telemetry/v2"
-	"github.com/faustbrian/go-telemetry/v2/testtelemetry"
+	scheduler "github.com/faustbrian/go-scheduler/v3"
+	schedulerotel "github.com/faustbrian/go-scheduler/v3/adapters/otel"
+	gotelemetry "github.com/faustbrian/go-telemetry/v4"
+	"github.com/faustbrian/go-telemetry/v4/testtelemetry"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
 	metricnoop "go.opentelemetry.io/otel/metric/noop"
@@ -137,7 +137,7 @@ func TestNewRuntimeUsesRuntimeProviders(t *testing.T) {
 	}
 }
 
-func TestObserverPreservesReleasedInstrumentationScope(t *testing.T) {
+func TestObserverUsesModuleInstrumentationScope(t *testing.T) {
 	t.Parallel()
 
 	provider := &scopeMeterProvider{MeterProvider: metricnoop.NewMeterProvider()}
@@ -147,7 +147,7 @@ func TestObserverPreservesReleasedInstrumentationScope(t *testing.T) {
 	}); err != nil {
 		t.Fatalf("New() error = %v", err)
 	}
-	if provider.scope != "github.com/faustbrian/go-scheduler" {
+	if provider.scope != "github.com/faustbrian/go-scheduler/v3" {
 		t.Fatalf("instrumentation scope = %q", provider.scope)
 	}
 }

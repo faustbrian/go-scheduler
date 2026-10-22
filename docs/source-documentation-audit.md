@@ -3,6 +3,10 @@
 [Documentation map](index.md) · [Repository README](../README.md)
 [Next: API reference](api.md)
 
+This is a historical audit of the v2 source at the commit below. Its rows for
+the `idempotency`, `lease`, `queue`, `schedulercli`, `schedulerhttp`,
+`schedulerservice` and `telemetry` packages describe paths v3 removes.
+
 ## Acceptance and owned boundary
 
 This Tier A pass owns source comments and directly contradicted maintained

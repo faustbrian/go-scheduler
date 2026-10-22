@@ -4,8 +4,6 @@
 // durability, failover, counter retention and client closure are deployment-owned.
 package valkey
 
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
-
 import (
 	"context"
 	"errors"
@@ -13,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Backend implements the retained domain port.
+	lease "github.com/faustbrian/go-scheduler/v3/adapters/lease"
 	valkeygo "github.com/valkey-io/valkey-go"
 )
 

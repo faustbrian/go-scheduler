@@ -1,16 +1,16 @@
 package postgres
 
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
-
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"reflect"
 	"strings"
 	"testing"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Exercises the retained domain port.
+	lease "github.com/faustbrian/go-scheduler/v3/adapters/lease"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -157,5 +157,17 @@ func TestSchemaMigrationForQualifiesCallerOwnedSchema(t *testing.T) {
 		) {
 			t.Fatalf("SchemaMigrationFor(%q) error = %v", schema, err)
 		}
+	}
+}
+
+// Deployed databases hold this exact schema; any change needs a new migration.
+func TestSchemaMigrationMatchesRetainedSchema(t *testing.T) {
+	t.Parallel()
+
+	migration := SchemaMigration()
+	sum := sha256.Sum256([]byte(migration.Up + "\x00" + migration.Down))
+	if migration.Version != 1 || migration.Name != "create_scheduler_leases" ||
+		hex.EncodeToString(sum[:]) != "181f7bd049546af0ad2001a543d5e9504abfa7e1664c62def0946eefdc21edb2" {
+		t.Fatalf("SchemaMigration() = %d %s %x", migration.Version, migration.Name, sum)
 	}
 }

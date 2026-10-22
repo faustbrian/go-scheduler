@@ -1,14 +1,12 @@
 package valkey
 
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
-
 import (
 	"context"
 	"errors"
 	"testing"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Exercises the retained domain port.
+	lease "github.com/faustbrian/go-scheduler/v3/adapters/lease"
 )
 
 type call struct {
@@ -168,5 +166,21 @@ func TestStoreCapabilitiesAndCheck(t *testing.T) {
 	capabilities := store.Capabilities()
 	if !capabilities.Persistent || !capabilities.Fencing || !capabilities.Heartbeat || !capabilities.CompareAndDelete || !capabilities.ManualRecovery {
 		t.Fatalf("Capabilities() = %+v", capabilities)
+	}
+}
+
+// Retained lease and fence keys use this derivation; changing it would
+// restart fencing tokens beside a live owner during a rolling upgrade.
+func TestKeysMatchRetainedFormat(t *testing.T) {
+	t.Parallel()
+
+	store, err := newStore(&fakeExecutor{}, "scheduler")
+	if err != nil {
+		t.Fatalf("newStore() error = %v", err)
+	}
+	const tag = "1703d48ac59158c4ac8f51a2e7f5932b6b51d7d41b5f4b18674c83e1e79ac581"
+	leaseKey, fenceKey := store.keys("schedule:report")
+	if leaseKey != "scheduler:{"+tag+"}:lease" || fenceKey != "scheduler:{"+tag+"}:fence" {
+		t.Fatalf("keys() = %q, %q", leaseKey, fenceKey)
 	}
 }

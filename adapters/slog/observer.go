@@ -7,7 +7,7 @@ import (
 	"errors"
 	"log/slog"
 
-	scheduler "github.com/faustbrian/go-scheduler/v2"
+	scheduler "github.com/faustbrian/go-scheduler/v3"
 )
 
 // ErrInvalidConfiguration reports a missing logger.

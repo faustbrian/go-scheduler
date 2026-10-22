@@ -33,16 +33,9 @@ api:
         - ./adapters/slog
         - ./cron
         - ./history
-        - ./idempotency
-        - ./lease
         - ./memory
         - ./postgres
-        - ./queue
-        - ./schedulercli
-        - ./schedulerhttp
-        - ./schedulerservice
         - ./schedulertest
-        - ./telemetry
         - ./valkey
 
 operations:
@@ -56,7 +49,7 @@ operations:
         race: true
         timeout: 90s
       - type: go-test
-        packages: ["./schedulerservice"]
+        packages: ["./adapters/service"]
         run: '^TestPlanStopsSchedulingDrainsExecutionsThenClosesFacilities$'
         count: 1
         race: true

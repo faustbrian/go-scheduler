@@ -1,7 +1,5 @@
 package schedulerservice_test
 
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
-
 import (
 	"context"
 	"errors"
@@ -11,11 +9,11 @@ import (
 	"github.com/faustbrian/go-correlation"
 	queuecorrelation "github.com/faustbrian/go-correlation/adapters/queue"
 	schedulecorrelation "github.com/faustbrian/go-correlation/adapters/schedule"
-	"github.com/faustbrian/go-scheduler/v2"
-	"github.com/faustbrian/go-scheduler/v2/memory"
-	"github.com/faustbrian/go-scheduler/v2/schedulerservice" //nolint:staticcheck // Exercises the retained compatibility package.
-	"github.com/faustbrian/go-scheduler/v2/schedulertest"
-	"github.com/faustbrian/go-service"
+	"github.com/faustbrian/go-scheduler/v3"
+	schedulerservice "github.com/faustbrian/go-scheduler/v3/adapters/service"
+	"github.com/faustbrian/go-scheduler/v3/memory"
+	"github.com/faustbrian/go-scheduler/v3/schedulertest"
+	"github.com/faustbrian/go-service/v3"
 )
 
 type executorFunc func(context.Context, scheduler.Context) error

@@ -1,16 +1,14 @@
 package scheduler_test
 
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
-
 import (
 	"context"
 	"errors"
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler/v2"
-	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Exercises the retained compatibility/domain contract.
-	"github.com/faustbrian/go-scheduler/v2/memory"
+	scheduler "github.com/faustbrian/go-scheduler/v3"
+	lease "github.com/faustbrian/go-scheduler/v3/adapters/lease"
+	"github.com/faustbrian/go-scheduler/v3/memory"
 )
 
 type clearCacheStore struct {

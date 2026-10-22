@@ -1,7 +1,5 @@
 package scheduler
 
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
-
 import (
 	"context"
 	"errors"
@@ -10,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Exercises the retained domain port.
-	"github.com/faustbrian/go-scheduler/v2/memory"
+	lease "github.com/faustbrian/go-scheduler/v3/adapters/lease"
+	"github.com/faustbrian/go-scheduler/v3/memory"
 )
 
 type internalExecutorFunc func(context.Context, Context) error

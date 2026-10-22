@@ -2,8 +2,6 @@
 
 package postgres_test
 
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
-
 import (
 	"context"
 	"errors"
@@ -11,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	schedulerlease "github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Exercises the retained domain port.
-	"github.com/faustbrian/go-scheduler/v2/lease/conformance"
-	schedulerpostgres "github.com/faustbrian/go-scheduler/v2/postgres"
+	schedulerlease "github.com/faustbrian/go-scheduler/v3/adapters/lease"
+	"github.com/faustbrian/go-scheduler/v3/adapters/lease/conformance"
+	schedulerpostgres "github.com/faustbrian/go-scheduler/v3/postgres"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 

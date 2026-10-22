@@ -1,12 +1,10 @@
 package conformance
 
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
-
 import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Tests the retained domain port.
+	lease "github.com/faustbrian/go-scheduler/v3/adapters/lease"
 )
 
 func TestConformanceValidators(t *testing.T) {

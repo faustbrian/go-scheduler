@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/v2/memory"
+	"github.com/faustbrian/go-scheduler/v3/memory"
 )
 
 func TestRunSingletonDispatchesOnceAndDrainsBothReplicas(t *testing.T) {

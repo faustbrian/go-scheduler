@@ -17,7 +17,7 @@
 Run the released process-local example without cloning the repository:
 
 ```sh
-go run github.com/faustbrian/go-scheduler/v2/examples/basic@v2.0.0
+go run github.com/faustbrian/go-scheduler/v3/examples/basic@v3.0.0
 ```
 
 From a source checkout, run `go run ./examples/basic`. The process waits for

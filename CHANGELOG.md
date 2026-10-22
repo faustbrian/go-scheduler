@@ -3,6 +3,27 @@
 All notable changes are documented here. The format follows Keep a Changelog,
 and releases use Semantic Versioning.
 
+## 3.0.0 - 2026-10-22
+
+### Changed
+
+- Move the module to `github.com/faustbrian/go-scheduler/v3` and adopt
+  `go-telemetry/v4`, `go-idempotency/v3`, `go-queue/v2` and `go-service/v3`.
+- The OpenTelemetry instrumentation scope follows the module path:
+  `github.com/faustbrian/go-scheduler/v3`. Metric names and units are
+  unchanged.
+- Lease keys, the PostgreSQL schema and occurrence idempotency identities are
+  unchanged, so v2 and v3 replicas coordinate during a rolling upgrade.
+
+### Removed
+
+- Remove the deprecated `idempotency`, `lease`, `queue`, `schedulercli`,
+  `schedulerhttp`, `schedulerservice` and `telemetry` packages. Their
+  implementations now live at the matching `adapters/*` paths; compose
+  `adapters/slog` and `adapters/otel` instead of `telemetry`. The removal
+  precedes the announced window because owned consumers move with this
+  release.
+
 ## 2.0.3 - 2026-10-22
 
 ### Changed

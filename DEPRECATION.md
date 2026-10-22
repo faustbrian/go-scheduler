@@ -13,12 +13,10 @@ Silent behavior changes, undocumented aliases, and indefinite deprecated code
 are prohibited. Deprecations are checked during compatibility and release
 review.
 
-The `idempotency`, `lease`, `queue`, `schedulercli`, `schedulerhttp`, and
-`schedulerservice` packages are deprecated in favor of their corresponding
-`adapters/*` packages. The combined `telemetry` package is deprecated in favor
-of composing `adapters/slog` and `adapters/otel`. The target-oriented paths make
-adaptation direction clear and avoid generic package-name collisions when an
-application imports several libraries' adapters.
+Version 3 removed the `idempotency`, `lease`, `queue`, `schedulercli`,
+`schedulerhttp`, `schedulerservice`, and combined `telemetry` packages that v2
+deprecated in favor of the `adapters/*` packages. The removal preceded the
+announced window because the owned consumers move with v3.
 
 Migration requires only changing imports to the corresponding `adapters/*`
 path; the one-to-one successors preserve released type and sentinel identities.

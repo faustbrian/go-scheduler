@@ -1,13 +1,11 @@
-package queue_test
-
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+package schedulerqueue_test
 
 import (
 	"context"
 	"testing"
 
-	scheduler "github.com/faustbrian/go-scheduler/v2"
-	schedulerqueue "github.com/faustbrian/go-scheduler/v2/queue" //nolint:staticcheck // Measures compatibility behavior.
+	scheduler "github.com/faustbrian/go-scheduler/v3"
+	schedulerqueue "github.com/faustbrian/go-scheduler/v3/adapters/queue"
 )
 
 // BenchmarkDispatchEnvelope measures JSON dispatch of one prebuilt parameterized

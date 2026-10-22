@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler/v2"
-	"github.com/faustbrian/go-scheduler/v2/memory"
-	"github.com/faustbrian/go-scheduler/v2/schedulertest"
+	scheduler "github.com/faustbrian/go-scheduler/v3"
+	"github.com/faustbrian/go-scheduler/v3/memory"
+	"github.com/faustbrian/go-scheduler/v3/schedulertest"
 	robfigcron "github.com/robfig/cron/v3"
 )
 

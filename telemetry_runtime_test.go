@@ -1,25 +1,19 @@
 package scheduler_test
 
-//lint:file-ignore SA1019 This file exercises the retained telemetry compatibility contract.
-
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
-	"log/slog"
 	"math"
 	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler/v2"
-	schedulerotel "github.com/faustbrian/go-scheduler/v2/adapters/otel"
-	"github.com/faustbrian/go-scheduler/v2/memory"
-	schedulertelemetry "github.com/faustbrian/go-scheduler/v2/telemetry" //nolint:staticcheck // Retained public compatibility path.
-	gotelemetry "github.com/faustbrian/go-telemetry/v2"
-	"github.com/faustbrian/go-telemetry/v2/testtelemetry"
+	scheduler "github.com/faustbrian/go-scheduler/v3"
+	schedulerotel "github.com/faustbrian/go-scheduler/v3/adapters/otel"
+	"github.com/faustbrian/go-scheduler/v3/memory"
+	gotelemetry "github.com/faustbrian/go-telemetry/v4"
+	"github.com/faustbrian/go-telemetry/v4/testtelemetry"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/sdk"
@@ -30,12 +24,8 @@ import (
 )
 
 func TestTelemetryRuntimeExportsSchedulerLifecycles(t *testing.T) {
-	for _, compatibility := range []bool{false, true} {
-		name := "canonical"
-		if compatibility {
-			name = "compatibility"
-		}
-		t.Run(name, func(t *testing.T) {
+	{
+		t.Run("canonical", func(t *testing.T) {
 			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 			defer cancel()
 			spans := &schedulerSpanExporter{InMemoryExporter: tracetest.NewInMemoryExporter()}
@@ -56,13 +46,7 @@ func TestTelemetryRuntimeExportsSchedulerLifecycles(t *testing.T) {
 					t.Errorf("Shutdown: %v", err)
 				}
 			}()
-			var logs bytes.Buffer
-			var observer scheduler.Observer
-			if compatibility {
-				observer, err = schedulertelemetry.NewRuntime(runtime, slog.New(slog.NewJSONHandler(&logs, nil)))
-			} else {
-				observer, err = schedulerotel.NewRuntime(runtime)
-			}
+			observer, err := schedulerotel.NewRuntime(runtime)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -106,7 +90,7 @@ func TestTelemetryRuntimeExportsSchedulerLifecycles(t *testing.T) {
 				t.Fatalf("spans = %d, want superseded, failed and succeeded", len(got))
 			}
 			for _, span := range got {
-				if span.Name != "scheduler.execute" || span.InstrumentationScope.Name != "github.com/faustbrian/go-scheduler" || span.SpanKind != trace.SpanKindInternal {
+				if span.Name != "scheduler.execute" || span.InstrumentationScope.Name != "github.com/faustbrian/go-scheduler/v3" || span.SpanKind != trace.SpanKindInternal {
 					t.Fatalf("span identity = %+v", span)
 				}
 				if !span.Parent.Equal(parent) || span.SpanContext.TraceID() != parent.TraceID() {
@@ -120,25 +104,6 @@ func TestTelemetryRuntimeExportsSchedulerLifecycles(t *testing.T) {
 			}
 			if len(got[1].Events) != 1 || got[1].Events[0].Name != "exception" {
 				t.Fatal("failure did not export its exception")
-			}
-			if compatibility {
-				lines := bytes.Split(bytes.TrimSpace(logs.Bytes()), []byte("\n"))
-				if len(lines) != len(events) {
-					t.Fatalf("log records = %d, want %d", len(lines), len(events))
-				}
-				for index, line := range lines {
-					var record map[string]any
-					if err := json.Unmarshal(line, &record); err != nil {
-						t.Fatal(err)
-					}
-					level := "INFO"
-					if index >= 2 && index <= 4 {
-						level = "ERROR"
-					}
-					if record["level"] != level || record["schedule"] != "fixture" || record["task"] != "fixture.task" || record["owner"] != "fixture-owner" || record["fencing_token"] != float64(42) {
-						t.Fatalf("log record = %v", record)
-					}
-				}
 			}
 			if spans.shutdowns.Load() != 0 || metrics.shutdowns.Load() != 0 {
 				t.Fatal("observer shut down caller-owned exporters")
@@ -275,7 +240,7 @@ func (exporter *schedulerMetricExporter) Export(_ context.Context, data *metricd
 	exporter.points = nil
 	exporter.resource = attribute.NewSet(data.Resource.Attributes()...)
 	for _, scope := range data.ScopeMetrics {
-		if scope.Scope.Name != "github.com/faustbrian/go-scheduler" {
+		if scope.Scope.Name != "github.com/faustbrian/go-scheduler/v3" {
 			exporter.invalid = true
 		}
 		for _, metric := range scope.Metrics {

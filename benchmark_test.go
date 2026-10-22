@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler/v2"
-	"github.com/faustbrian/go-scheduler/v2/memory"
+	scheduler "github.com/faustbrian/go-scheduler/v3"
+	"github.com/faustbrian/go-scheduler/v3/memory"
 )
 
 // BenchmarkCompileSchedules measures compilation of 1000 prebuilt minute definitions; setup is excluded.

@@ -1,6 +1,4 @@
-package queue_test
-
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+package schedulerqueue_test
 
 import (
 	"context"
@@ -9,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	queuecore "github.com/faustbrian/go-queue/core"
-	queuejob "github.com/faustbrian/go-queue/job"
-	scheduler "github.com/faustbrian/go-scheduler/v2"
-	schedulerqueue "github.com/faustbrian/go-scheduler/v2/queue" //nolint:staticcheck // Exercises compatibility behavior.
+	queuecore "github.com/faustbrian/go-queue/v2/core"
+	queuejob "github.com/faustbrian/go-queue/v2/job"
+	scheduler "github.com/faustbrian/go-scheduler/v3"
+	schedulerqueue "github.com/faustbrian/go-scheduler/v3/adapters/queue"
 	"go.opentelemetry.io/otel/trace"
 )
 

@@ -4,12 +4,10 @@
 // Inactive rows retain counters and require deployment-managed storage policy.
 package postgres
 
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
-
 import (
 	"fmt"
 
-	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Backend implements the retained domain port.
+	lease "github.com/faustbrian/go-scheduler/v3/adapters/lease"
 	"github.com/jackc/pgx/v5"
 )
 

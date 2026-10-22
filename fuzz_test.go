@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler/v2"
+	scheduler "github.com/faustbrian/go-scheduler/v3"
 )
 
 // FuzzScheduleCompilation exercises hostile names/cron/zone admission and a

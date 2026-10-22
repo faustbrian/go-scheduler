@@ -63,7 +63,7 @@ make ci
 
 Both Make routes run bounded local checks. One selected root race verifies
 that 32 concurrent replicas dispatch exactly one physical occurrence; another
-in `schedulerservice` verifies drain before facility closure and rejects ticks
+in `adapters/service` verifies drain before facility closure and rejects ticks
 after shutdown. Each runs once within 90 seconds, three minutes total. Hosted
 PR and main CI use the same immutable public workflow without building the
 verifier release from source; Required fails unless it succeeds. Shared setup

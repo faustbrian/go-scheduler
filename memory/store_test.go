@@ -1,13 +1,11 @@
 package memory_test
 
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
-
 import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/v2/lease/conformance"
-	"github.com/faustbrian/go-scheduler/v2/memory"
+	"github.com/faustbrian/go-scheduler/v3/adapters/lease/conformance"
+	"github.com/faustbrian/go-scheduler/v3/memory"
 )
 
 func TestConformance(t *testing.T) {

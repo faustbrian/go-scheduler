@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	scheduler "github.com/faustbrian/go-scheduler/v2"
-	"github.com/faustbrian/go-scheduler/v2/memory"
-	"github.com/faustbrian/go-scheduler/v2/schedulertest"
+	scheduler "github.com/faustbrian/go-scheduler/v3"
+	"github.com/faustbrian/go-scheduler/v3/memory"
+	"github.com/faustbrian/go-scheduler/v3/schedulertest"
 )
 
 type executorFunc func(context.Context, scheduler.Context) error

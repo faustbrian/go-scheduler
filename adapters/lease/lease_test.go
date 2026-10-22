@@ -1,12 +1,10 @@
-package lease_test
-
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
+package schedulerlease_test
 
 import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Exercises the retained domain port.
+	lease "github.com/faustbrian/go-scheduler/v3/adapters/lease"
 )
 
 func TestLeaseExpiryBoundary(t *testing.T) {

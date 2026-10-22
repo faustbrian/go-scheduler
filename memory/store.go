@@ -3,15 +3,13 @@
 // instance and are lost at restart. No cleanup worker or persistence is owned.
 package memory
 
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
-
 import (
 	"context"
 	"fmt"
 	"sync"
 	"time"
 
-	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // Backend implements the retained domain port.
+	lease "github.com/faustbrian/go-scheduler/v3/adapters/lease"
 )
 
 // Store keeps leases and per-key counters under one mutex. Use New; the zero

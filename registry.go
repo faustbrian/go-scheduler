@@ -6,8 +6,6 @@
 // timezone database, administrative authentication or forced goroutine termination.
 package scheduler
 
-//lint:file-ignore SA1019 This file intentionally exercises or implements the retained compatibility contract.
-
 import (
 	"context"
 	"crypto/sha256"
@@ -17,8 +15,8 @@ import (
 	"slices"
 	"time"
 
-	schedulercron "github.com/faustbrian/go-scheduler/v2/cron"
-	"github.com/faustbrian/go-scheduler/v2/lease" //nolint:staticcheck // The root retains the released domain port.
+	lease "github.com/faustbrian/go-scheduler/v3/adapters/lease"
+	schedulercron "github.com/faustbrian/go-scheduler/v3/cron"
 )
 
 var (
