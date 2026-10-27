@@ -3,7 +3,7 @@ module github.com/faustbrian/go-scheduler/v3
 go 1.27.0
 
 require (
-	github.com/faustbrian/go-correlation v1.1.3
+	github.com/faustbrian/go-correlation v1.1.4
 	github.com/faustbrian/go-idempotency/v3 v3.0.0
 	github.com/faustbrian/go-queue/v2 v2.0.0
 	github.com/faustbrian/go-service/v3 v3.0.0
