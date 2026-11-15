@@ -33,7 +33,7 @@ that hide a failing package.
 
 ## Verification
 
-Use the declared Go 1.27.2 producer; the module minimum remains Go 1.27.0.
+Use the declared Go 1.27.4 producer; the module minimum remains Go 1.27.0.
 Test independently of sibling checkouts:
 
 ```bash
