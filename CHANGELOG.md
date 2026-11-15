@@ -3,6 +3,13 @@
 All notable changes are documented here. The format follows Keep a Changelog,
 and releases use Semantic Versioning.
 
+## 3.0.1 - 2026-11-15
+
+### Security
+
+- Build with Go 1.27.4 to address GO-2026-6859 in `net/http`.
+  Consumers should use Go 1.27.4 or newer.
+
 ## 3.0.0 - 2026-10-22
 
 ### Changed
